@@ -1,0 +1,7 @@
+album_homepage:
+    path:     /albums
+    defaults: { _controller: AlbumBundle:Default:index }
+
+album_add:
+    path:     /albums/dd
+    defaults: { _controller: AlbumBundle:Album:addAlbum }

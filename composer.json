@@ -4,7 +4,9 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "AppBundle\\": "src/AppBundle"
+            "AppBundle\\": "src/AppBundle",
+            "UserBundle\\": "src/UserBundle",
+            "AlbumBundle\\": "src/AlbumBundle"
         },
         "classmap": [
             "app/AppKernel.php",
@@ -22,8 +24,12 @@
     "require": {
         "php": ">=5.5.9",
         "doctrine/doctrine-bundle": "^1.6",
+        "doctrine/doctrine-migrations-bundle": "^2.1",
         "doctrine/orm": "^2.5",
+        "doctrine/persistence": "=1.2.9",
+        "friendsofsymfony/user-bundle": "^2.1",
         "incenteev/composer-parameter-handler": "^2.0",
+        "paragonie/random_compat": "^2.0",
         "sensio/distribution-bundle": "^5.0.19",
         "sensio/framework-extra-bundle": "^5.0.0",
         "symfony/monolog-bundle": "^3.1.0",
