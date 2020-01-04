@@ -2,8 +2,7 @@
 # https://symfony.com/doc/current/security.html
 security:
     encoders:
-        # FOS\UserBundle\Model\UserInterface: bcrypt tell harry as well
-        UserBundle\Entity\User: bcrypt
+        UserBundle\Entity\User: bcrypt # algorithm to use before saving the user
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -11,22 +10,32 @@ security:
 
     providers:
         fos_userbundle:
-            id: fos_user.user_provider.username
+            id: fos_user.user_provider.username_email # or  fos_user.user_provider.username --> if emails does not exist
 
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+
+
         main:
             pattern: ^/
             user_checker: security.user_checker
-            form_login:
-                provider: fos_userbundle
-                csrf_token_generator: security.csrf.token_manager
+            guard: # can be used in time for API authentication on top of form_login
+                authenticators:
+                    - app.security.login_form_authenticator
+
+#            form_login:
+#                provider: fos_userbundle
+#                csrf_token_generator: security.csrf.token_manager
+#                success_handler: app.authentication.success_handler
 
             logout:       true
             anonymous:    true
+            logout_on_user_change:  true # to address deprecation
+            remember_me:
+                secret: '%secret%' # to enable remember me
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -1,0 +1,10 @@
+registration:
+  flash:
+    user_created: "Welcome! Now let's have a look at music albums"
+#
+##  request:
+##    username: 'Email address'
+##
+##security:
+##  login:
+##    username: 'Email'

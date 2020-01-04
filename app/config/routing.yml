@@ -1,3 +1,11 @@
+#review:
+#    resource: "@ReviewBundle/Controller/"
+#    type:     annotation
+#    prefix:   /
+review:
+    resource: "@ReviewBundle/Resources/config/routing.yml"
+    prefix:   /
+
 album:
     resource: "@AlbumBundle/Resources/config/routing.yml"
     prefix:   /

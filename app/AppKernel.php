@@ -17,12 +17,15 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
 
+            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
 
             new UserBundle\UserBundle(),
             new AlbumBundle\AlbumBundle(),
             new AppBundle\AppBundle(),
+            new ReviewBundle\ReviewBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

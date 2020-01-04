@@ -4,6 +4,7 @@
 namespace AlbumBundle\Repository;
 
 use AlbumBundle\Entity\Album;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * In order to isolate, reuse and test Album queries, it is a good practice to create a custom repository class for
@@ -12,7 +13,7 @@ use AlbumBundle\Entity\Album;
  * Class AlbumRepository
  * @package AlbumBundle\Repository
  */
-class AlbumRepository
+class AlbumRepository extends EntityRepository
 {
     /**
      * Return all teh albums (Album Entity)
