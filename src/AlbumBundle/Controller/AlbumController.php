@@ -40,7 +40,7 @@ class AlbumController extends Controller
 
         $review = new Review();
         $review->setRating(2);
-        $rating[19] = '3';
+        $rating[1] = '1';
 
         return $this->render('AlbumBundle:Default:index.html.twig', [
             "albums" => $albums,
@@ -66,7 +66,7 @@ class AlbumController extends Controller
      * @return RedirectResponse|Response
      * @throws AlbumExistsException
      */
-    public function newAlbumAction(Request $request)
+    public function addAlbumAction(Request $request)
     {
         $album = new Album();
         $form = $this->createForm(AddAlbumType::class, $album);

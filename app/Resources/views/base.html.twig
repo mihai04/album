@@ -7,15 +7,17 @@
     <title>{% block title %} Symblo g{% endblock %} -Symblog</title>
     {% block stylesheets %}
         {% stylesheets
+            'bundles/starrating/css/rating.css'
             'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'
             'https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css'
             '../app/Resources/public/css/screen.css'
-            'bundles/starrating/css/rating.css'
             filter="cssrewrite"
         %}
-            <script src="https://kit.fontawesome.com/3b2377687f.js" crossorigin="anonymous"></script>
-{#            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"#}
-{#                  integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">#}
+{#            <script src="https://kit.fontawesome.com/3b2377687f.js" crossorigin="anonymous"></script>#}
+            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+            <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+            {#            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"#}
+{#           css       integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">#}
             <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
         {% endstylesheets %}
     {% endblock %}
@@ -53,16 +55,19 @@
             </div>
         </div>
     </nav>
+
+
     <div class="row">
-        <section class="col-md-8">{% block body %}{% endblock %}</section>
-        <section class="col-md-4">{% block sidebar %}{% endblock %}</section>
+        <section class="col-md-3 col-sm-2 col-xs-1">
+            {% if is_granted('ROLE_USER') %}
+                {% include 'sidebar.html.twig' %}
+            {% endif %}
+        </section>
+        <section id="mainContent" class="col-md-9 col-sm-10 col-xs-10">
+            {% block body %}{% endblock %}
+        </section>
     </div>
 
-    <div class="col-md-3 col-sm-2 col-xs-1">
-        {% if is_granted('ROLE_USER') %}
-            {% include 'sidebar.html.twig' %}
-        {% endif %}
-    </div>
     <div class="footer">
         {% block footer %}
             <p>Album Review Blog</p>

@@ -3,5 +3,5 @@ album_homepage:
     defaults: { _controller: AlbumBundle:Album:index }
 
 album_new:
-    path:     /new
-    defaults: { _controller: AlbumBundle:Album:newAlbum }
+    path:     /addAlbum
+    defaults: { _controller: AlbumBundle:Album:addAlbum }

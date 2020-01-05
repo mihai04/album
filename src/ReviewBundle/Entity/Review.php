@@ -29,7 +29,6 @@ class Review
 
     /**
      * @var string
-     * @Assert\NotBlank()
      *
      * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
@@ -44,7 +43,7 @@ class Review
     private $review;
 
     /**
-     * @var string
+     * @var int
      * @Assert\NotBlank()
      * @Assert\Range(min=0, max=5)
      *
@@ -53,9 +52,11 @@ class Review
     private $rating;
 
     /**
-     * @var DateTime
+     * CHANGE HERE
      *
-     * @ORM\Column(type="string")
+     * @var string
+     *
+     * @ORM\Column(name="timestamp", type="string")
      */
     private $timestamp;
 
@@ -74,7 +75,7 @@ class Review
      * This is the owning side of the relationship.
      *
      * @ORM\ManyToOne(targetEntity="AlbumBundle\Entity\Album", inversedBy="entries")
-     * @ORM\JoinColumn(name="album", referencedColumnName="id", )
+     * @ORM\JoinColumn(name="album", referencedColumnName="id", nullable=false)
      */
     private $album;
 
@@ -94,12 +95,14 @@ class Review
         return $this->title;
     }
 
+
     /**
-     * @param string $title
+     * @param $title
+     * @return mixed
      */
     public function setTitle($title)
     {
-        $this->title = $title;
+        return $this->title = $title;
     }
 
     /**
@@ -113,7 +116,7 @@ class Review
     /**
      * @param User $review
      */
-    public function setReview(User $review)
+    public function setReview($review)
     {
         $this->review = $review;
     }
@@ -127,7 +130,7 @@ class Review
     }
 
     /**
-     * @param string $rating
+     * @param int $rating
      */
     public function setRating($rating)
     {
@@ -143,11 +146,15 @@ class Review
     }
 
     /**
-     * @param DateTime $timestamp
+     * @param string $timestamp
+     *
+     * @return Review
      */
     public function setTimestamp($timestamp)
     {
         $this->timestamp = $timestamp;
+
+        return $this;
     }
 
     /**

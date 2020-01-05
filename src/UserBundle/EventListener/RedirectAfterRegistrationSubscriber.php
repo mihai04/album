@@ -10,11 +10,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use UserBundle\Entity\User;
 
 
 class RedirectAfterRegistrationSubscriber implements EventSubscriberInterface
 {
     use TargetPathTrait;
+    const ROLE_USER = 'ROLE_USER';
 
     /**
      * @var RouterInterface
@@ -23,6 +25,7 @@ class RedirectAfterRegistrationSubscriber implements EventSubscriberInterface
 
     /**
      * RedirectAfterRegistrationSubscriber constructor.
+     * @param RouterInterface $router
      */
     public function __construct(RouterInterface $router)
     {
@@ -59,6 +62,11 @@ class RedirectAfterRegistrationSubscriber implements EventSubscriberInterface
      */
     public function onRegistrationSuccess(FormEvent $event)
     {
+        /** @var User $user  */
+        $user = $event->getForm()->getData();
+        $user->addRole(self::ROLE_USER);
+
+
         $url = $this->getTargetPath($event->getRequest()->getSession(), 'main');
 
         if (!$url) {

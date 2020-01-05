@@ -1,3 +1,5 @@
 review_new:
-    path:     /addReview
-    defaults: { _controller: ReviewBundle:Review:addReviewAction }
+    path:     /reviews/addReview
+    defaults: { _controller: ReviewBundle:Review:addReview }
+#    requirements:
+#        id: '\d+'

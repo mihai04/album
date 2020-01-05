@@ -86,4 +86,20 @@ class User extends BaseUser
     {
         $this->fullName = $fullName;
     }
+
+
+    /**
+     * @param $role
+     * @return $this|BaseUser|UserInterface
+     */
+    public function addRole($role)
+    {
+        $role = strtoupper($role);
+
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
 }
