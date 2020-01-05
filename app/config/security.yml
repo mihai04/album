@@ -17,8 +17,6 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-
-
         main:
             pattern: ^/
             user_checker: security.user_checker
@@ -41,4 +39,6 @@ security:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/profile/, role: ROLE_USER }
+        - { path: ^/new, role: ROLE_USER }
         - { path: ^/admin/, role: ROLE_ADMIN }

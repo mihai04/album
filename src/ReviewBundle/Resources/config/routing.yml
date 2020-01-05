@@ -1,0 +1,3 @@
+review_new:
+    path:     /addReview
+    defaults: { _controller: ReviewBundle:Review:addReviewAction }

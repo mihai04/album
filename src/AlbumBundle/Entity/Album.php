@@ -51,21 +51,13 @@ class Album
     private $isrc;
 
     /**
-     * @var  string
-     *
-     * @Assert\NotBlank()
-     * @ORM\Column(name="summary", type="text", nullable=false)
-     */
-    private $summary;
-
-    /**
      * @var string
      *
-     * @Assert\NotBlank()
-     * @Assert\Image()
-     * @ORM\Column(name="image_name", type="string", length=255, nullable=false)
+//     * @Assert\NotBlank()
+//     * @Assert\Image()
+     * @ORM\Column(name="image", type="string", length=255, nullable=true)
      */
-    private $imageName;
+    private $image;
 
     /**
      * @var bool
@@ -148,33 +140,17 @@ class Album
     /**
      * @return string
      */
-    public function getSummary()
+    public function getImage()
     {
-        return $this->summary;
+        return $this->image;
     }
 
     /**
-     * @param string $summary
+     * @param string $image
      */
-    public function setSummary($summary)
+    public function setImage($image)
     {
-        $this->summary = $summary;
-    }
-
-    /**
-     * @return string
-     */
-    public function getImageName()
-    {
-        return $this->imageName;
-    }
-
-    /**
-     * @param string $imageName
-     */
-    public function setImageName($imageName)
-    {
-        $this->imageName = $imageName;
+        $this->image = $image;
     }
 
     /**
@@ -194,7 +170,7 @@ class Album
     }
 
     /**
-     * @return ArrayCollection|Review[] added for methods autocompletion
+     * @return ArrayCollection|Review[] added for methods autocompletion.
      */
     public function getEntries()
     {

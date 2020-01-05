@@ -63,7 +63,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
      */
     public function getCredentials(Request $request)
     {
-        $isLoginSubmit = $request->getPathInfo() == 'login_check' && $request->isMethod('POST');
+        $isLoginSubmit = $request->getPathInfo() == '/login_check' && $request->isMethod('POST');
         if (!$isLoginSubmit) {
             // skip authentication
             return;
@@ -71,7 +71,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
         $username = $request->request->get('_username');
         $password = $request->request->get('_password');
-        $csrfToken = $request->request->get('_csrf_toke');
+        $csrfToken = $request->request->get('_csrf_token');
 
         if (false === $this->csrfTokenManager->isTokenValid(new CsrfToken('authenticate', $csrfToken))) {
             throw new InvalidCsrfTokenException('Invalid CSRF toke!');
@@ -131,18 +131,18 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     }
 
     /**
-     * @param Request $event
+     * @param Request $request
      * @param TokenInterface $token
      * @param string $provider
      * @return RedirectResponse|RedirectResponse
      */
-    public function onAuthenticationSuccess(Request $event, TokenInterface $token, $provider)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $provider)
     {
         $targetPath = null;
 
         // if the person who registered accesses a secure page and start() was invoked, this was the
         // URL they were onm, and it is the place where you want to redirect them as well
-        $targetPath = $this->getTargetPath($event->getRequest()->getSession(), $provider);
+        $targetPath = $this->getTargetPath($request->getSession(), $provider);
 
         if (!$targetPath) {
             $targetPath = $this->router->generate('homepage');

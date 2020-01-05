@@ -3,3 +3,7 @@ services:
          class: UserBundle\Form\RegistrationFormType
          tags:
            - { name: form.type }
+     user.form.profile_edit:
+          class: UserBundle\Form\ProfileFormType
+          tags:
+            - { name: form.type }

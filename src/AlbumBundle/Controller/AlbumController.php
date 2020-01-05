@@ -3,10 +3,16 @@
 namespace AlbumBundle\Controller;
 
 use AlbumBundle\Entity\Album;
+use AlbumBundle\Exceptions\AlbumExistsException;
 use AlbumBundle\Form\AddAlbumType;
+use Doctrine\DBAL\Exception\TableNotFoundException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Exception;
 use Knp\Component\Pager\Paginator;
+use ReviewBundle\Entity\Review;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,11 +33,19 @@ class AlbumController extends Controller
         $paginator = $this->get('knp_paginator');
         $albums = $paginator->paginate(
             $query,
-            $request->query->getInt('page', 1), 1
+            $request->query->getInt('page', 1), 5
         );
 
+        $rating = [];
+
+        $review = new Review();
+        $review->setRating(2);
+        $rating[19] = '3';
+
         return $this->render('AlbumBundle:Default:index.html.twig', [
-            "albums" => $albums
+            "albums" => $albums,
+            "rating" => $rating,
+            "review" => $review
         ]);
     }
 
@@ -43,26 +57,52 @@ class AlbumController extends Controller
      */
     private static function hashImageName(FormInterface $file)
     {
-        return md5(uniqid()).'.'.$file->getData()->guessExtension();
+        return md5(uniqid()) . '.' . $file->getData()->guessExtension();
     }
 
     /**
      * @param Request $request
      *
      * @return RedirectResponse|Response
+     * @throws AlbumExistsException
      */
-    public function addAlbumAction(Request $request)
+    public function newAlbumAction(Request $request)
     {
         $album = new Album();
         $form = $this->createForm(AddAlbumType::class, $album);
         $form->handleRequest($request);
 
-        if ($form->isValid() && $form->isSubmitted()) {
-            $file = $form->get('image');
-            $fileName = $this->hashImageName($file);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $uploadedFile */
+            $uploadedFile = $form['image']->getData();
+
+            $originalFileName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFileName = $originalFileName . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
+
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $album->setImage($newFileName);
+                $em->persist($album);
+                $em->flush();
+            } catch (UniqueConstraintViolationException $e) {
+                $message = sprintf('DBALException [%i]: %s'.$e->getMessage(), $e->getCode(), "");
+            } catch (TableNotFoundException $e) {
+                $message = sprintf('ORMException [%i]: %s', $e->getCode(), $e->getMessage());
+            } catch (Exception $e) {
+                $message = sprintf('Exception [%i]: %s', $e->getCode(), $e->getMessage());
+            }
+
+            if (isset($message)) {
+                throw new AlbumExistsException($message);
+            }
+
+            // https://symfony.com/doc/current/security/access_denied_handler.html
+
+            $destination = $this->getParameter('uploads_directory');
+            $uploadedFile->move($destination, $newFileName);
         }
-
-
-        return $this->render('AlbumBundle:Default:index.html.twig');
+        return $this->render('AlbumBundle:Default:add_album.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 }

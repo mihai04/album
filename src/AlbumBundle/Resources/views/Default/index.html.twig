@@ -14,42 +14,6 @@
         {% for album in albums %}
 
             <article>
-{#                <div class="row">#}
-{#                    <div class="col-xs-6">#}
-{#                        <img src="{{ asset('uploads/images/' ~ book.image ) }}">#}
-{#                    </div>#}
-{#                    <div class="col-xs-6">#}
-{#                        {% if is_granted('ROLE_USER') %}#}
-{#                            <a href="{{ path('blog_create', {id: book.id}) }}">#}
-{#                                <button class="btn btn-success">Add review</button>#}
-{#                            </a>#}
-{#                        {% endif %}#}
-{#                        <div class="row">#}
-{#                            <div class="col-xs-6">#}
-{#                                <a href="{{ path('blog_view_by_book', {id: book.id}) }}">#}
-{#                                    <button class="btn btn-primary">View reviews</button>#}
-{#                                </a>#}
-{#                            </div>#}
-{#                        </div>#}
-
-{#                        {% if googleUrls[book.id] is not null %}#}
-{#                            <div class="row">#}
-{#                                <div class="col-xs-6">#}
-{#                                    <a href="{{ googleUrls[book.id] }}" target="_blank">#}
-{#                                        <button class="btn btn-danger">Google Books</button>#}
-{#                                    </a>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        {% endif %}#}
-
-{#                        <div class="row">#}
-{#                            <div class="col-xs-6">#}
-{#                                {{ rating[book.id]|rating(5, 'fa-norm') }}#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-
                 <h4 class="row col-xs-12">
                     {{ album.title }}
                 </h4>
@@ -57,13 +21,12 @@
                 <small class="row col-xs-12">
                     <b>by {{ album.artist }}</b>
                 </small>
-
-                <div class="row">
-                    <div class="col-xs-12">
-                        {{ album.summary }}
+                <div class="riw">
+                    <div class="col-xs-6">
+                        {{ rating[album.id]|rating(3, "fa-norm") }}
                     </div>
                 </div>
-                <div class="row col-xs-12"><hr></div>
+
             </article>
 
         {% endfor %}

@@ -1,0 +1,14 @@
+<nav class="sidebar">
+
+    <div>
+        <h5>{{ app.user.getFullName() }}</h5>
+    </div>
+
+    <ul class="list">
+        <li class="dropdown-item"><a href="{{ path('fos_user_profile_edit') }}">Edit Profile</a></li>
+        <li class="dropdown-item"><a href="{{ path('fos_user_change_password') }}">Change Password</a></li>
+        <li class="dropdown-item"><a href="{{ path('fos_user_security_logout') }}">Logout</a></li>
+        <li></li>
+    </ul>
+
+</nav>
