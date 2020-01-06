@@ -7,7 +7,9 @@
             "AppBundle\\": "src/AppBundle",
             "UserBundle\\": "src/UserBundle",
             "AlbumBundle\\": "src/AlbumBundle",
-            "ReviewBundle\\": "src/ReviewBundle"
+            "ReviewBundle\\": "src/ReviewBundle",
+            "SearchBundle\\": "src/SearchBundle",
+            "Album\\ReusableSearchBundle\\": "src/Album/ReusableSearchBundle"
         },
         "classmap": [
             "app/AppKernel.php",

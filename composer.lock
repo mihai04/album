@@ -4,8 +4,56 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "78d651cce4c8d02cc82759a954949ed0",
+    "content-hash": "32384966ea9ef59e926247c7777c483b",
     "packages": [
+        {
+            "name": "alexandermatveev/fontawesome-bundle",
+            "version": "1.0",
+            "target-dir": "AlexanderMatveev/FontawesomeBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AlexanderMatveev/fontawesome-bundle.git",
+                "reference": "345b5ead17a5d6e6c8a69f1b42134e6e8ac247e8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/AlexanderMatveev/fontawesome-bundle/zipball/345b5ead17a5d6e6c8a69f1b42134e6e8ac247e8",
+                "reference": "345b5ead17a5d6e6c8a69f1b42134e6e8ac247e8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "symfony/console": "~2.1",
+                "symfony/framework-bundle": "~2.1",
+                "symfony/yaml": "~2.1"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "AlexanderMatveev\\FontawesomeBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksandr Matveev",
+                    "homepage": "https://github.com/AlexanderMatveev"
+                }
+            ],
+            "description": "Fontawesome Bundle for Symfony3+",
+            "homepage": "https://github.com/AlexanderMatveev/fontawesome-bundle",
+            "keywords": [
+                "FontAwesome",
+                "javascript",
+                "symfony"
+            ],
+            "time": "2018-10-09T09:14:10+00:00"
+        },
         {
             "name": "blackknight467/star-rating-bundle",
             "version": "v2.0.1",

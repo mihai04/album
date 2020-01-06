@@ -7,6 +7,8 @@ use AlbumBundle\Exceptions\AlbumExistsException;
 use AlbumBundle\Form\AddAlbumType;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Query as QueryAlias;
 use Exception;
 use Knp\Component\Pager\Paginator;
 use ReviewBundle\Entity\Review;
@@ -26,26 +28,45 @@ class AlbumController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $query = $entityManager->getRepository(Album::class)->getAlbums();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getRepository(Album::class)->getAlbums();
 
         /** @var Paginator $paginator */
         $paginator = $this->get('knp_paginator');
         $albums = $paginator->paginate(
             $query,
-            $request->query->getInt('page', 1), 5
+            $request->query->getInt('page', 1)
         );
 
         $rating = [];
 
-        $review = new Review();
-        $review->setRating(2);
-        $rating[1] = '1';
+        foreach ($albums as $album) {
+            $totalReviews = 0;
+            $totalRating = 0;
+            $albumRating = 0;
+
+            $query = $em->getRepository(Review::class)
+                ->getReviewsByAlbumID($album);
+
+            $reviews = $query->getResult();
+
+            /* @var Review $review */
+            foreach ($reviews as $review) {
+                $totalReviews++;
+                $totalRating  += $review->getRating();
+            }
+
+            if ($totalRating !== 0) {
+                $albumRating = $totalRating / $totalReviews;
+            }
+
+            /* @var Album $album */
+            $rating[$album->getId()] = $albumRating;
+        }
 
         return $this->render('AlbumBundle:Default:index.html.twig', [
             "albums" => $albums,
-            "rating" => $rating,
-            "review" => $review
+            "rating" => $rating
         ]);
     }
 

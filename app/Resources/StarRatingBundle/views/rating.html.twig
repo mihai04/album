@@ -7,7 +7,7 @@
             <div class="rating-well">
                 {{- block('form_widget_simple') -}}
                 {% for star in 1..stars %}
-                    <div id="rating_star_{{ stars - star + 1 }}" class="fa-music" data-value="{{ stars - star + 1 }}"></div>
+                    <div id="rating_star_{{ stars - star + 1 }}" class="fa-star" data-value="{{ stars - star + 1 }}"></div>
                 {% endfor %}
             </div>
         </div>

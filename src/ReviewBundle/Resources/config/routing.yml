@@ -1,5 +1,15 @@
 review_new:
-    path:     /reviews/addReview
+    path:     /addReview
     defaults: { _controller: ReviewBundle:Review:addReview }
-#    requirements:
-#        id: '\d+'
+
+edit_review:
+    path:     /editReview/{id}
+    defaults: { _controller: ReviewBundle:Review:editReview }
+    requirements:
+        id: '\d+'
+
+delete_review:
+    path:     /delete_review/{id}
+    defaults: { _controller: ReviewBundle:Review:deleteReview }
+    requirements:
+        id: '\d+'

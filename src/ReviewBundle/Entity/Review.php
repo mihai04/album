@@ -122,7 +122,9 @@ class Review
     }
 
     /**
-     * @return string
+     * Get rating.
+     *
+     * @return int
      */
     public function getRating()
     {
@@ -138,7 +140,7 @@ class Review
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|string
      */
     public function getTimestamp()
     {

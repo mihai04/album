@@ -5,12 +5,14 @@ imports:
     - { resource: "@UserBundle/Resources/config/services.yml" }
     - { resource: "@AlbumBundle/Resources/config/services.yml" }
     - { resource: "@ReviewBundle/Resources/config/services.yml" }
+    - { resource: "@SearchBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
     uploads_directory: '%kernel.project_dir%/web/public/uploads_directory'
+
 
 framework:
     #esi: ~
@@ -125,3 +127,10 @@ knp_paginator:
         pagination: '@KnpPaginator/Pagination/sliding.html.twig'     # sliding pagination controls template
         sortable: '@KnpPaginator/Pagination/sortable_link.html.twig' # sort link template
         filtration: '@KnpPaginator/Pagination/filtration.html.twig'  # filters template
+
+#album_reusable_search:
+#  - entityName: 'AlbumBundle\Entity\Album'
+#    field: ['title', 'artist']
+#  - entityName: 'UserBundle\Entity\User'
+#    field: ['email', 'full_name']
+
