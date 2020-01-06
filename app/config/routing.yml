@@ -1,16 +1,8 @@
-#album_reusable_search:
-#    resource: "@AlbumReusableSearchBundle/Resources/config/routing.yml"
-#    prefix:   /
-
-#search:
-#    resource: "@SearchBundle/Controller/"
-#    type:     annotation
-#    prefix:   /
-
 #review:
 #    resource: "@ReviewBundle/Controller/"
 #    type:     annotation
 #    prefix:   /
+
 review:
     resource: "@ReviewBundle/Resources/config/routing.yml"
     prefix:   /

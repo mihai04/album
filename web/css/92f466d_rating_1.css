@@ -1,0 +1,97 @@
+.rating {
+    font-size:16px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.rating-well {
+    display: inline-block;
+    direction: rtl;
+}
+
+.rating input.rating {
+    display: none;
+}
+
+.rating div.fa-star {
+    font-family: "Font Awesome 5 Free", serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 25px;
+    display: inline-block;
+}
+
+
+.rating div.fa-star:before {
+    content: "\f004";
+    padding-right: 5px;
+    color: #999;
+}
+
+.rating div.far.fa-star:hover:before,.rating div.fa-star:hover~div.fa-star:before {
+    content: "\f005";
+    color: #e3b700;
+    float: right;
+    padding-bottom: 2px;
+}
+
+.rating div.fas.fa-star {
+    font-family: "Font Awesome 5 Free", serif;
+    font-style: normal;
+    font-size: 25px;
+    display: inline-block;
+}
+
+.rating div.fas.fa-star:before {
+    content: "\f005";
+    padding-right: 5px;
+    color: #e3b700;
+    position: relative;
+}
+
+.rating div.far.fa-star {
+    font-family: "Font Awesome 5 Free", serif;
+    font-style: normal;
+    font-size: 25px;
+    display: inline-block;
+    position: relative;
+    float: right;
+}
+
+.rating div.far.fa-star:before {
+    content: "\f005";
+    padding-right: 5px;
+    color: #999;
+}
+
+.rating div.fas.fa-star.fa-norm,
+.rating div.far.fa-star.fa-norm {
+    font-size: 1em;
+}
+
+.rating div.fas.fa-star.fa-lg,
+.rating div.far.fa-star.fa-lg {
+    font-size: 1.33333333em;
+    line-height: 0.75em;
+    vertical-align: -15%;
+}
+
+.rating div.fas.fa-star.fa-2x,
+.rating div.far.fa-star.fa-2x {
+    font-size: 2em;
+}
+
+.rating div.fas.fa-star.fa-3x,
+.rating div.far.fa-star.fa-3x {
+    font-size: 3em;
+}
+
+.rating div.fas.fa-star.fa-4x,
+.rating div.far.fa-star.fa-4x {
+    font-size: 4em;
+}
+
+.rating div.fas.fa-star.fa-5x,
+.rating div.far.fa-star.fa-5x {
+    font-size: 5em;
+}

@@ -2,14 +2,11 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src/SearchBundle" isTestSource="false" packagePrefix="SearchBundle\" />
-      <sourceFolder url="file://$MODULE_DIR$/src/AlbumBundle" isTestSource="false" packagePrefix="AlbumBundle\" />
-      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" packagePrefix="Tests\" />
-      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/UserBundle" isTestSource="false" packagePrefix="UserBundle\" />
-      <sourceFolder url="file://$MODULE_DIR$/src/Album/ReusableSearchBundle" isTestSource="false" packagePrefix="Album\ReusableSearchBundle\" />
-      <sourceFolder url="file://$MODULE_DIR$/src/AppBundle" isTestSource="false" packagePrefix="AppBundle\" />
       <sourceFolder url="file://$MODULE_DIR$/src/ReviewBundle" isTestSource="false" packagePrefix="ReviewBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/AlbumBundle" isTestSource="false" packagePrefix="AlbumBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/UserBundle" isTestSource="false" packagePrefix="UserBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/AppBundle" isTestSource="false" packagePrefix="AppBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" packagePrefix="Tests\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/alexandermatveev/fontawesome-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/blackknight467/star-rating-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />

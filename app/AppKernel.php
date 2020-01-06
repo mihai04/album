@@ -27,8 +27,6 @@ class AppKernel extends Kernel
             new AlbumBundle\AlbumBundle(),
             new AppBundle\AppBundle(),
             new ReviewBundle\ReviewBundle(),
-            new SearchBundle\SearchBundle(),
-            new Album\ReusableSearchBundle\AlbumReusableSearchBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

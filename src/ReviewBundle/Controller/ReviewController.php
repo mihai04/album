@@ -3,7 +3,6 @@
 namespace ReviewBundle\Controller;
 
 use AlbumBundle\Entity\Album;
-use DateTime;
 use Knp\Component\Pager\Paginator;
 use ReviewBundle\Entity\Review;
 use ReviewBundle\Form\AddReviewFormType;
@@ -16,7 +15,6 @@ use UserBundle\Entity\User;
 
 class ReviewController extends Controller
 {
-
     /**
      * @param Request $request
      * @return Response
@@ -43,7 +41,7 @@ class ReviewController extends Controller
                 /** @var Album $album */
                 $review->setAlbum($album);
                 $review->setTitle($album->getTitle());
-                $review->setTimestamp('date');
+                $review->setTimestamp(new \DateTime());
                 $em->persist($review);
                 $em->flush();
             }

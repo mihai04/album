@@ -1,6 +1,8 @@
-review_new:
-    path:     /addReview
+add_review:
+    path:     /addReview/{id}
     defaults: { _controller: ReviewBundle:Review:addReview }
+    requirements:
+        id: '\d+'
 
 edit_review:
     path:     /editReview/{id}
@@ -11,5 +13,11 @@ edit_review:
 delete_review:
     path:     /delete_review/{id}
     defaults: { _controller: ReviewBundle:Review:deleteReview }
+    requirements:
+        id: '\d+'
+
+view_reviews_by_album:
+    path:     /view_reviews_by_album/{id}
+    defaults: { _controller: ReviewBundle:Review:viewByAlbum }
     requirements:
         id: '\d+'

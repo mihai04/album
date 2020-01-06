@@ -2,7 +2,6 @@
 
 {% block body %}
 
-
     <article>
         <div class="row">
             <div class="col-xs-6">
@@ -10,14 +9,14 @@
             </div>
             {% if is_granted('ROLE_USER') %}
                 <div class="col-xs-6">
-                    <a href="{{ path('review_new', {id: album.id}) }}">
+                    <a href="{{ path('add_review', {id: album.id}) }}">
                         <button class="btn btn-success">Add review</button>
                     </a>
                 </div>
             {% endif %}
         </div>
         <div class="col-xs-6">
-            {{ rating|rating(5, 'fa-norm') }}
+            {{ rating|rating(5, 'fa-star') }}
         </div>
 
         <h3 class="row col-xs-12">
@@ -41,7 +40,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
-                            {{ review.rating|rating(5, 'fa-norm') }}
+                            {{ review.rating|rating(5, 'fa-star') }}
                         </div>
                     </div>
                     <div class="col-xs-6">
