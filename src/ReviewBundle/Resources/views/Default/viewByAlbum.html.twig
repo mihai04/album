@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+
+    <article>
+        <div class="row">
+            <div class="col-xs-6">
+                <img src="{{ asset('public/uploads_directory/' ~ album.image ) }}">
+            </div>
+            {% if is_granted('ROLE_USER') %}
+                <div class="col-xs-6">
+                    <a href="{{ path('review_new', {id: album.id}) }}">
+                        <button class="btn btn-success">Add review</button>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-xs-6">
+            {{ rating|rating(5, 'fa-norm') }}
+        </div>
+
+        <h3 class="row col-xs-12">
+            {{ album.title }}
+        </h3>
+        <small class="row col-xs-12">
+            <b>by {{ album.artist }}</b>
+        </small>
+        <div class="row col-xs-12"><hr></div>
+    </article>
+
+    <div class="row col-md-9 col-sm-10 col-xs-12">
+        {% for review in reviews %}
+            <article>
+                <h3 class="row col-xs-12">
+                    {{ review.title }}
+                </h3>
+                <div class="row">
+                    <div class="col-xs-6">
+{#                        <h4>Created at {{ review.timestamp | date('H:i d/m/y') }} </h4> BUNDEL HERE KNP#}
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            {{ review.rating|rating(5, 'fa-norm') }}
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                {{ review.review }}
+                                <a href="{{ path('view_reviews_by_album', {id: review.id}) }}">
+                                    <button class="btn btn-primary">View review</button>
+                                </a>
+                            </div>
+                        </div>
+                        {%
+                            if (is_granted('ROLE_USER') and review.reviewer == app.user)
+                            or is_granted('ROLE_ADMIN')
+                        %}
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <a href="{{ path('edit_review', {id: review.id}) }}">
+                                        <button class="btn btn-info">Edit review</button>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <a href="{{ path('delete_review', {id: review.id}) }}">
+                                        <button class="btn btn-danger">Delete review</button>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row col-xs-12"><hr></div>
+            </article>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}
+
