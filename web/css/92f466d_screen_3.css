@@ -1,15 +1,41 @@
-
-
-
-
-#register_wrapper {
-    background-color: #FFFFFF;
-    padding: 20px;
-    text-align: center;
+#logo {
+     width: 32px;
+     height: 32px;
 }
 
-#register_wrapper img {
+#MainMenu li{
+    font-family: "Merriweather", serif;
+    text-align: center;
+    background-color: #F2F2F2;
+}
 
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+#MainMenu a {
+    font-style: normal;
+    font-size: 18px;
+    background-color: #F2F2F2;
+    color: #6A6A6A;
+    outline: 0;
+    margin: 10px;
+    padding: 10px;
+}
+
+#MainMenu a:hover {
+    color: #E1D276;
+}
+
+/*#register_wrapper {*/
+/*    background-color: #FFFFFF;*/
+/*    padding: 20px;*/
+/*    text-align: center;*/
+/*}*/
+
+article img {
+    width: 150px;
+    height: 150px;
 }
 
 .container {

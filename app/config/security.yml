@@ -40,6 +40,6 @@ security:
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/profile/, role: ROLE_USER }
-        - { path: ^/new, role: ROLE_USER }
+        - { path: ^/addAlbum, role: ROLE_USER }
         - { path: ^/addReview, role: ROLE_USER }
         - { path: ^/admin/, role: ROLE_ADMIN }

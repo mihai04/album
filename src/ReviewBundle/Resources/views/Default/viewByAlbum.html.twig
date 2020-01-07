@@ -36,7 +36,7 @@
                 </h3>
                 <div class="row">
                     <div class="col-xs-6">
-{#                        <h4>Created at {{ review.timestamp | date('H:i d/m/y') }} </h4> BUNDEL HERE KNP#}
+                        <h4>Created at {{ review.timestamp | date('H:i d/m/y') }} </h4> BUNDEL HERE KNP
                     </div>
                     <div class="row">
                         <div class="col-xs-6">
@@ -44,14 +44,14 @@
                         </div>
                     </div>
                     <div class="col-xs-6">
-                        <div class="row">
-                            <div class="col-xs-6">
-                                {{ review.review }}
-                                <a href="{{ path('view_reviews_by_album', {id: review.id}) }}">
-                                    <button class="btn btn-primary">View review</button>
-                                </a>
-                            </div>
-                        </div>
+{#                        <div class="row">#}
+{#                            <div class="col-xs-6">#}
+{#                                {{ review.review }}#}
+{#                                <a href="{{ path('view_reviews_by_album', {id: review.id}) }}">#}
+{#                                    <button class="btn btn-primary">View review</button>#}
+{#                                </a>#}
+{#                            </div>#}
+{#                        </div>#}
                         {%
                             if (is_granted('ROLE_USER') and review.reviewer == app.user)
                             or is_granted('ROLE_ADMIN')

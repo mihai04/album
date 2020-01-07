@@ -54,9 +54,9 @@ class Review
     /**
      * CHANGE HERE
      *
-     * @var string
+     * @var DateTime
      *
-     * @ORM\Column(name="timestamp", type="string")
+     * @ORM\Column(name="timestamp", type="datetime")
      */
     private $timestamp;
 
@@ -148,7 +148,7 @@ class Review
     }
 
     /**
-     * @param string $timestamp
+     * @param DateTime $timestamp
      *
      * @return Review
      */

@@ -1,37 +1,69 @@
+// $(function(){
+//     var labelWasClicked = function labelWasClicked(){
+//         var input = $(this).siblings().filter('input');
+//         if (input.attr('disabled')) {
+//             return;
+//         }
+//         input.val($(this).attr('data-value'));
+//     }
+//
+//     var turnToStar = function turnToStar(){
+//         if ($(this).find('input').attr('disabled')) {
+//             return;
+//         }
+//         var labels = $(this).find('div');
+//         labels.removeClass();
+//         labels.addClass('star');
+//     }
+//
+//     var turnStarBack = function turnStarBack(){
+//         var rating = parseInt($(this).find('input').val());
+//         if (rating > 0) {
+//             var selectedStar = $(this).children().filter('#rating_star_'+rating)
+//             var prevLabels = $(selectedStar).nextAll();
+//             prevLabels.removeClass();
+//             prevLabels.addClass('star-full');
+//             selectedStar.removeClass();
+//             selectedStar.addClass('star-full');
+//         }
+//     }
+//
+//     $('.star, .rating-well').click(labelWasClicked);
+//     $('.rating-well').each(turnStarBack);
+//     $('.rating-well').hover(turnToStar,turnStarBack);
+//
 $(function(){
-    let starClicked = function starClicked(){
-        let input = $(this).siblings().filter('input');
+    var labelWasClicked = function labelWasClicked(){
+        var input = $(this).siblings().filter('input');
         if (input.attr('disabled')) {
             return;
         }
         input.val($(this).attr('data-value'));
-    };
+    }
 
-    let fullStar = function fullStar(){
+    var turnToStar = function turnToStar(){
         if ($(this).find('input').attr('disabled')) {
             return;
         }
-        let labels = $(this).find('div');
+        var labels = $(this).find('div');
         labels.removeClass();
         labels.addClass('far fa-star');
-    };
+    }
 
-    let emptyStar = function emptyStar(){
-        let rating = parseInt($(this).find('input').val());
+    var turnStarBack = function turnStarBack(){
+        var rating = parseInt($(this).find('input').val());
         if (rating > 0) {
-            let selectedStar = $(this).children().filter('#rating_star_'+rating)
-            let prevLabels = $(selectedStar).nextAll();
+            var selectedStar = $(this).children().filter('#rating_star_'+rating)
+            var prevLabels = $(selectedStar).nextAll();
             prevLabels.removeClass();
             prevLabels.addClass('fas fa-star');
             selectedStar.removeClass();
             selectedStar.addClass('fas fa-star');
         }
-    };
+    }
 
-    $('.fas, .fa-star, .rating-well').click(starClicked);
-    $('.rating-well').each(emptyStar);
-    $('.rating-well').hover(fullStar,emptyStar);
+    $('.fas, .fa-star, .rating-well').click(labelWasClicked);
+    $('.rating-well').each(turnStarBack);
+    $('.rating-well').hover(turnToStar,turnStarBack);
 
 });
-
-/* https://codepen.io/WeeHorse/pen/PQydzW */

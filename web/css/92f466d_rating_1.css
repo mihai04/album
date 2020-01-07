@@ -1,7 +1,7 @@
 .rating {
     font-size:16px;
     display: inline-block;
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 .rating-well {
@@ -19,8 +19,8 @@
     font-style: normal;
     font-size: 25px;
     display: inline-block;
+    position: relative;
 }
-
 
 .rating div.fa-star:before {
     content: "\f004";
@@ -31,8 +31,6 @@
 .rating div.far.fa-star:hover:before,.rating div.fa-star:hover~div.fa-star:before {
     content: "\f005";
     color: #e3b700;
-    float: right;
-    padding-bottom: 2px;
 }
 
 .rating div.fas.fa-star {
@@ -40,13 +38,13 @@
     font-style: normal;
     font-size: 25px;
     display: inline-block;
+    position: relative;
 }
 
-.rating div.fas.fa-star:before {
+.rating div.fas.fa-star:before  {
     content: "\f005";
     padding-right: 5px;
     color: #e3b700;
-    position: relative;
 }
 
 .rating div.far.fa-star {
@@ -55,7 +53,6 @@
     font-size: 25px;
     display: inline-block;
     position: relative;
-    float: right;
 }
 
 .rating div.far.fa-star:before {

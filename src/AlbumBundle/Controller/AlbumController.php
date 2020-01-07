@@ -7,10 +7,9 @@ use AlbumBundle\Exceptions\AlbumExistsException;
 use AlbumBundle\Form\AddAlbumType;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\Query as QueryAlias;
 use Exception;
 use Knp\Component\Pager\Paginator;
+use KnpU\LoremIpsumBundle\KnpUIpsum;
 use ReviewBundle\Entity\Review;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormInterface;
@@ -19,8 +18,20 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+
 class AlbumController extends Controller
 {
+//     private $knpUIpsum;
+//
+//    /**
+//     * AlbumController constructor.
+//     * @param $knpUIpsum
+//     */
+//    public function __construct(KnpUIpsum $knpUIpsum)
+//    {
+//        $this->knpUIpsum = $knpUIpsum;
+//    }
+
     /**
      * @param Request $request
      *
@@ -28,8 +39,10 @@ class AlbumController extends Controller
      */
     public function indexAction(Request $request)
     {
+//        dump($this->knpUIpsum);die;
         $em = $this->getDoctrine()->getManager();
         $query = $em->getRepository(Album::class)->getAlbums();
+
 
         /** @var Paginator $paginator */
         $paginator = $this->get('knp_paginator');

@@ -17,10 +17,11 @@ class ReviewController extends Controller
 {
     /**
      * @param Request $request
+     * @param int
      * @return Response
      * @throws \Exception
      */
-    public function addReviewAction(Request $request)
+    public function addReviewAction(Request $request, $id)
     {
         $review = new Review();
         $form = $this->createForm(AddReviewFormType::class, $review);
@@ -29,7 +30,7 @@ class ReviewController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
-            $album = $em->getRepository(Album::class)->find(1);
+            $album = $em->getRepository(Album::class)->find($id);
 
             if (!$album) {
                 $this->addFlash("error", "Failed to find Album!");
