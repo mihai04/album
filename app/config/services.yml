@@ -43,3 +43,10 @@ services:
     app.security.login_form_authenticator:
         class: UserBundle\EventListener\LoginFormAuthenticator
         autowire: true
+
+
+    app.twig_extension:
+        class: SearchBundle\Twig\Extension\InstanceOfExtension
+        public: false
+        tags:
+            - { name: twig.extension }

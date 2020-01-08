@@ -1,0 +1,93 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+
+    <div class="row col-md-12 col-sm-12 col-xs-12">
+        {% set iBook = 0 %}
+        {% for result in results %}
+
+            {% if result is instanceof('UserBundle\\Entity\\User') %}
+                <article>
+                    <div class="row">
+{#                        <div class="col-xs-6">#}
+{#                            <img src="{{ asset('uploads/images/avatar.jpeg') }}">#}
+{#                        </div>#}
+                        <div class="col-xs-6">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <a href="{{ path('view_reviews_by_album', {id: result.id}) }}">
+                                        <button class="btn btn-primary">View reviews</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="row col-xs-12">
+                        {{ result.fullName }}
+                    </h4>
+
+                    <small class="row col-xs-12">
+                        {{ result.email }}
+                    </small>
+
+                    <div class="row col-xs-12"><hr></div>
+                </article>
+
+            {% elseif result is instanceof('AlbumBundle\\Entity\\Album') %}
+                <article>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <img src="{{ asset('uploads/images/' ~ result.image ) }}">
+                        </div>
+                        <div class="col-xs-6">
+                            {% if is_granted('ROLE_USER') %}
+                                <a href="{{ path('album_new', {id: result.id}) }}">
+                                    <button class="btn btn-success">Add review</button>
+                                </a>
+                            {% endif %}
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <a href="{{ path('view_reviews_by_album', {id: result.id}) }}">
+                                        <button class="btn btn-primary">View reviews</button>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    {% if ratings[iBook] is defined %}
+                                        {{ ratings[iBook]|rating(5, 'fa-norm') }}
+                                        {% set iBook = iBook + 1 %}
+                                    {% else %}
+                                        {{ 0|rating(5, 'fa-star') }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="row col-xs-12">
+                        {{ result.title }}
+                    </h4>
+
+                    <small class="row col-xs-12">
+                        <b>by {{ result.artist }}</b>
+                    </small>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+{#                            {{ result.tracklist }}#}
+                        </div>
+                    </div>
+                    <div class="row col-xs-12"><hr></div>
+                </article>
+            {% endif %}
+
+        {% endfor %}
+    </div>
+
+    <div class="row navigation text-center col-md-9 col-sm-12 col-xs-12">
+        {{ knp_pagination_render(results) }}
+    </div>
+
+{% endblock %}

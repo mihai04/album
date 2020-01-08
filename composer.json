@@ -7,7 +7,8 @@
             "AppBundle\\": "src/AppBundle",
             "UserBundle\\": "src/UserBundle",
             "AlbumBundle\\": "src/AlbumBundle",
-            "ReviewBundle\\": "src/ReviewBundle"
+            "ReviewBundle\\": "src/ReviewBundle",
+            "SearchBundle\\": "src/SearchBundle"
         },
         "classmap": [
             "app/AppKernel.php",
@@ -29,6 +30,7 @@
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-migrations-bundle": "^2.1",
         "doctrine/orm": "^2.5",
+        "elao/enum": "^1.5",
         "fortawesome/font-awesome": "^5.12",
         "friendsofsymfony/user-bundle": "^2.1",
         "incenteev/composer-parameter-handler": "^2.0",

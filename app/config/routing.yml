@@ -1,23 +1,18 @@
-#review:
-#    resource: "@ReviewBundle/Controller/"
-#    type:     annotation
-#    prefix:   /
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 
-review:
-    resource: "@ReviewBundle/Resources/config/routing.yml"
+user:
+    resource: "@UserBundle/Resources/config/routing.yml"
     prefix:   /
 
 album:
     resource: "@AlbumBundle/Resources/config/routing.yml"
     prefix:   /
 
-user:
-    resource: "@UserBundle/Resources/config/routing.yml"
+review:
+    resource: "@ReviewBundle/Resources/config/routing.yml"
     prefix:   /
 
-fos_user:
-    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
-
-app:
-    resource: '@AppBundle/Controller/'
-    type: annotation
+search:
+    resource: "@SearchBundle/Resources/config/routing.yml"
+    prefix:   /

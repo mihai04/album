@@ -27,4 +27,22 @@ class AlbumRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    /**
+     * Gets all reviews for the specified Book id
+     *
+     * @param $albumId
+     *
+     * @return QueryAlias
+     */
+    public function getReviewsByAlbum($albumId)
+    {
+        $queryBuilder = $this->createQueryBuilder('review');
+        $queryBuilder
+            ->where('review.album = :albumId')
+//            ->orderBy('review.timestamp', 'DESC')
+            ->setParameter(':albumId', $albumId);
+
+        return $queryBuilder->getQuery();
+    }
 }

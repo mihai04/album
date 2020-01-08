@@ -1,0 +1,3 @@
+search_homepage:
+  path:     /search
+  defaults: { _controller: SearchBundle\Controller\SearchController::indexAction }
