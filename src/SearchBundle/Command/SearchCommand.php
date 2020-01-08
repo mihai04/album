@@ -4,63 +4,91 @@
 namespace SearchBundle\Command;
 
 use Doctrine\DBAL\DBALException;
-use Helper\MySQLDatabaseHelper;
 use SearchBundle\Entity\Entities;
-use SearchBundle\Entity\SearchIndex;
+use SearchBundle\Entity\Indexes;
+use SearchBundle\Helper\DatabaseHelper;
+use SearchBundle\Helper\DatabaseHelperImpl;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class SearchCommand
+ * @package SearchBundle\Command
+ */
 class SearchCommand extends ContainerAwareCommand
 {
-    //https://github.com/Elao/PhpEnums
-
-    const COMMAND_DESCRIPTION = "Populate indexes for the search function";
-
     const COMMAND_HELP = "This command allows you to populate the search_index relation with inputs defined in the
     search_entities relation";
 
-    const SEARCH_INDEX = 'search_index';
+    const COMMAND_DESCRIPTION = "Populate indices for the search function";
+
+    const COMMAND_NAME = 'populate:search:entities';
 
     /**
-     * Configure command.
+     * @var DatabaseHelper
+     */
+    private $databaseHelper;
+
+    /**
+     * SearchCommand constructor.
+     *
+     * @param DatabaseHelper $databaseHelper
+     */
+    public function __construct(DatabaseHelper $databaseHelper)
+    {
+        $this->databaseHelper = $databaseHelper;
+
+        parent::__construct(self::COMMAND_NAME);
+    }
+
+    /**
+     * Configure Search command.
      */
     protected function configure()
     {
         $this
-            ->setName('populate:search:entities')
             ->setDescription(self::COMMAND_DESCRIPTION)
-            ->setHelp(self::COMMAND_HELP);
+            ->setHelp(self::COMMAND_HELP)
+            ->addArgument('tableName', InputArgument::REQUIRED, 'The table for search indices.');
     }
 
     /**
+     * Executes search:update:entities command.
+     *
      * @param InputInterface $input
      * @param OutputInterface $output
+     *
      * @return int|void|null
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Generating indexes....');
+        $output->writeln('Generating indexes...');
 
         $em = $this
             ->getContainer()
             ->get('doctrine.orm.entity_manager');
 
-        // pass argument?
+        $target = $input->getArgument('tableName');
 
-        MySQLDatabaseHelper::truncate($output, $em, self::SEARCH_INDEX, true);
+        try {
+            $this->databaseHelper->truncate($output, $em, $input->getArgument('tableName'), true);
+        } catch (DBALException $e) {
+            $output->writeln("Error: Failed to truncate table " . $target, $e->getMessage());
+        }
 
         $terms = $em
             ->getRepository(Entities::class)
             ->getEntities();
 
-        /** @var Entities $searchableTerm */
+        /** @var Entities $term */
         foreach($terms as $term) {
             $em
-                ->getRepository(SearchIndex::class)
-                ->generateIndex($term->getEntityName(), $term->getField());
+                ->getRepository(Indexes::class)
+                ->generateIndex($term->getEntityName(), $term->getEntityField());
         }
 
-        $output->writeln('FINISH');
+        $output->writeln('Success');
     }
 }

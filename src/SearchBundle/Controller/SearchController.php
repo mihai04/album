@@ -5,7 +5,8 @@ namespace SearchBundle\Controller;
 use AlbumBundle\Entity\Album;
 use Knp\Component\Pager\Paginator;
 use ReviewBundle\Entity\Review;
-use SearchBundle\Entity\SearchIndex;
+use SearchBundle\Entity\Indexes;
+use SearchBundle\Helper\DatabaseHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -20,38 +21,39 @@ class SearchController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $searchTerm = $request->get('search');
-        $queryResults = $this->getDoctrine()->getRepository(SearchIndex::class)
-            ->getSearchResults($searchTerm);
+        $searchTerm = $request->get('q');
+        $queryResults = $this->getDoctrine()->getRepository(Indexes::class)
+            ->getResults($searchTerm);
 
         $users = [];
         $albums = [];
         $ratings = [];
 
-        /** @var SearchIndex $result */
+        /** @var Indexes $result */
         foreach ($queryResults as $result) {
-            $review = $this->getDoctrine()
+            $entity = $this->getDoctrine()
                 ->getRepository($result->getEntity())
-                ->find($result->getForeignId());
+                ->find($result->getForeignKey());
 
-            if($review instanceof User && !array_key_exists($review->getId(), $users)) {
-                $users[$review->getId()] = $review;
+            $entityId = $entity->getId();
+            if($entity instanceof User && !array_key_exists($entityId, $users)) {
+                $users[$entityId] = $entity;
             }
 
-            if($review instanceof Album && !array_key_exists($review->getId(), $albums)) {
-                $albums[$review->getId()] = $review;
-                $albumReviews = $this->getDoctrine()
+            if($entity instanceof Album && !array_key_exists($entityId, $albums)) {
+                $albums[$entityId] = $entity;
+                $reviews = $this->getDoctrine()
                     ->getRepository(Review::class)
-                    ->getReviewsByAlbumID($review->getId())
+                    ->getReviewsByAlbumID($entityId)
                     ->getResult();
 
                 $totalReviews = 0;
                 $totalRating = 0;
 
                 /** @var Review $review */
-                foreach($albumReviews as $albumReview) {
+                foreach($reviews as $review) {
                     $totalReviews++;
-                    $totalRating += $albumReview->getRating();
+                    $totalRating += $review->getRating();
                 }
 
                 if ($totalReviews !== 0) {
@@ -63,16 +65,13 @@ class SearchController extends Controller
 
         /** @var Paginator $paginator */
         $paginator = $this->get('knp_paginator');
-        $pagedResults = $paginator->paginate(
-            array_merge($users, $albums),
+        $results = $paginator->paginate(array_merge($users, $albums),
             $request->query->getInt('page', 1)
         );
 
-        return $this->render(
-            'SearchBundle:Default:index.html.twig',
-            [
+        return $this->render('SearchBundle:Default:index.html.twig', [
                 'ratings' => $ratings,
-                'results' => $pagedResults
+                'results' => $results
             ]
         );
     }

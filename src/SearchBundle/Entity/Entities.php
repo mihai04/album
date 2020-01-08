@@ -5,10 +5,12 @@ namespace SearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * SearchEntities
+ * Entities class.
  *
- * @ORM\Table(name="`search_entities`")
- * @ORM\Entity(repositoryClass="SearchBundle\Repository\SearchEntitiesRepository")
+ * @ORM\Table(name="`entities`")
+ * @ORM\Entity(repositoryClass="SearchBundle\Repository\EntitiesRepository")
+ *
+ * @package SearchBundle\Entity
  */
 class Entities
 {
@@ -31,14 +33,11 @@ class Entities
     /**
      * @var string
      *
-     * @ORM\Column(name="field", type="string", length=255, nullable=false)
+     * @ORM\Column(name="entityField", type="string", length=255, nullable=false)
      */
-    private $field;
-
+    private $entityField;
 
     /**
-     * Get id.
-     *
      * @return int
      */
     public function getId()
@@ -47,8 +46,14 @@ class Entities
     }
 
     /**
-     * Set entityName.
-     *
+     * @return string
+     */
+    public function getEntityName()
+    {
+        return $this->entityName;
+    }
+
+    /**
      * @param string $entityName
      *
      * @return Entities
@@ -61,36 +66,21 @@ class Entities
     }
 
     /**
-     * Get entityName.
-     *
      * @return string
      */
-    public function getEntityName()
+    public function getEntityField()
     {
-        return $this->entityName;
+        return $this->entityField;
     }
 
     /**
-     * Set field.
-     *
-     * @param string $field
+     * @param string $entityField
      *
      * @return Entities
      */
-    public function setField($field)
+    public function setEntityField($entityField)
     {
-        $this->field = $field;
-
+        $this->entityField = $entityField;
         return $this;
-    }
-
-    /**
-     * Get field.
-     *
-     * @return string
-     */
-    public function getField()
-    {
-        return $this->field;
     }
 }

@@ -7,18 +7,24 @@ namespace SearchBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use SearchBundle\Entity\SearchIndex;
+use SearchBundle\Entity\Indexes;
+use SearchBundle\Helper\IndexesBuilder;
+use UserBundle\Entity\User;
+use UserBundle\UserBundle;
 
 /**
- * Class SearchIndexRepository
+ * Class IndicesRepository
+ *
  * @package Repository
  */
-class SearchIndexRepository extends EntityRepository
+class IndicesRepository extends EntityRepository
 {
-
     /**
+     * The function create a searchable indices per entity.
+     *
      * @param $entity
      * @param $field
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -31,28 +37,38 @@ class SearchIndexRepository extends EntityRepository
             ->createQueryBuilder('sqb');
 
         $terms = $queryBuilder
-            ->select('sqb.'.$field.',sqb.id')
+            ->select('sqb.'.$field.', sqb.id')
             ->getQuery()
             ->getResult();
 
+
         foreach ($terms as $term) {
-            $searchIndex = new SearchIndex();
-            $searchIndex->setEntity($entity);
-            $searchIndex->setSearchTerm($term[$field]);
-            $searchIndex->setForeignId($term['id']);
+//            $this->setEntity($entity)
+//                ->setSearchTerm($term[$field])
+//                ->setForeignKey($term['id']);
+
+            $indexesBuilder = new IndexesBuilder();
+            $searchIndex= $indexesBuilder->withEntityName($entity)
+                ->withSearchTerm($term[$field])
+                ->withForeignKey($term['id'])
+                ->build();
+
+//            $searchIndex = new Indexes();
+//            $searchIndex->setEntity($entity);
+//            $searchIndex->setSearchTerm($term[$field]);
+//            $searchIndex->setForeignKey($term['id']);
 
             $em->persist($searchIndex);
             $em->flush();
         }
     }
 
-
     /**
      * @param string $searchTerm
      *
      * @return array|null
      */
-    public function getSearchResults($searchTerm)
+    public function getResults($searchTerm)
     {
         $queryBuilder = $this->createQueryBuilder('search_index');
         $queryBuilder

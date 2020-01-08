@@ -6,13 +6,14 @@ namespace SearchBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * SearchIndex.
+ * Class Indices.
  *
- * @ORM\Table(name="`search_index`")
+ * @ORM\Table(name="`indices`")
  *
- * @ORM\Entity(repositoryClass="SearchBundle\Repository\SearchIndexRepository")
+ * @ORM\Entity(repositoryClass="SearchBundle\Repository\IndicesRepository")
+ * @package SearchBundle\Entity
  */
-class SearchIndex
+class Indexes
 {
     /**
      * @var int
@@ -35,7 +36,7 @@ class SearchIndex
      *
      * @ORM\Column(name="foreign_id", type="integer", nullable=false)
      */
-    private $foreignId;
+    private $foreignKey;
 
     /**
      * @var string
@@ -60,7 +61,7 @@ class SearchIndex
      *
      * @param string $entity
      *
-     * @return SearchIndex
+     * @return Indexes
      */
     public function setEntity($entity)
     {
@@ -70,41 +71,33 @@ class SearchIndex
     }
 
     /**
-     * Get entityName.
-     *
      * @return string
      */
     public function getEntity()
     {
         return $this->entity;
     }
-
+    
     /**
-     * Get foreignId.
-     *
      * @return int
      */
-    public function getForeignId()
+    public function getForeignKey()
     {
-        return $this->foreignId;
+        return $this->foreignKey;
     }
 
     /**
-     * Set foreignId.
-     *
-     * @param int $foreignId
+     * @param $foreignKey
      */
-    public function setForeignId($foreignId)
+    public function setForeignKey($foreignKey)
     {
-        $this->foreignId = $foreignId;
+        $this->foreignKey = $foreignKey;
     }
 
     /**
-     * Set content.
-     *
      * @param string $searchTerm
      *
-     * @return SearchIndex
+     * @return Indexes
      */
     public function setSearchTerm($searchTerm)
     {
@@ -112,10 +105,8 @@ class SearchIndex
 
         return $this;
     }
-
+    
     /**
-     * Get content.
-     *
      * @return string
      */
     public function getSearchTerm()

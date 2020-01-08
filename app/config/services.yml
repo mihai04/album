@@ -44,9 +44,22 @@ services:
         class: UserBundle\EventListener\LoginFormAuthenticator
         autowire: true
 
-
     app.twig_extension:
         class: SearchBundle\Twig\Extension\InstanceOfExtension
         public: false
         tags:
             - { name: twig.extension }
+
+    SearchBundle\:
+        resource: '../../src/SearchBundle/*'
+        # you can exclude directories or files
+        # but if a service is unused, it's removed anyway
+        exclude: '../../src/SearchBundle/{Entity,Repository,Tests,Twig}'
+
+    app.data_helper_impl:
+        class: SearchBundle\Helper\DatabaseHelperImpl
+
+    app.data_helper:
+        class: SearchBundle\Command\SearchCommand
+        arguments:
+            - "@app.data_helper_impl"
