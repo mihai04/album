@@ -51,10 +51,17 @@ class Album
     private $isrc;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="trackList", type="array")
+     */
+    private $trackList;
+
+    /**
      * @var string
      *
-//     * @Assert\NotBlank()
-//     * @Assert\Image()
+     * @Assert\NotBlank()
+     * @Assert\Image()
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
      */
     private $image;
@@ -135,6 +142,22 @@ class Album
     public function setIsrc($isrc)
     {
         $this->isrc = $isrc;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTrackList()
+    {
+        return $this->trackList;
+    }
+
+    /**
+     * @param array $trackList
+     */
+    public function setTrackList($trackList)
+    {
+        $this->trackList = $trackList;
     }
 
     /**

@@ -4,8 +4,10 @@ namespace AlbumBundle\Form;
 
 use AlbumBundle\Entity\Album;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -30,6 +32,11 @@ class AddAlbumType extends AbstractType
                     'placeholder' => 'Enter the ISRC here.'
                 ]
             ])
+            ->add('trackList', TextareaType::class, [
+                'attr' => [
+                    'placeholder' => 'Enter the list of tracks here.'
+                ]
+            ])
             ->add('image', FileType::class, [
                 'label' => 'Image Upload',
                 'required' => false
@@ -39,6 +46,14 @@ class AddAlbumType extends AbstractType
                     'class' => 'btn btn-success'
                 ]
             ]);
+
+        $builder->get('trackList')->addModelTransformer(new CallbackTransformer(
+                function ($tagsAsArray) {
+                },
+                function ($tagsAsString) {
+                    return explode(', ', $tagsAsString);
+                }
+        ));
     }
 
     public function configureOptions(OptionsResolver $resolver)

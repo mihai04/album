@@ -9,7 +9,6 @@ use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Exception;
 use Knp\Component\Pager\Paginator;
-use KnpU\LoremIpsumBundle\KnpUIpsum;
 use ReviewBundle\Entity\Review;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormInterface;

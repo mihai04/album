@@ -5,13 +5,13 @@ namespace SearchBundle\Command;
 
 use Doctrine\DBAL\DBALException;
 use Helper\MySQLDatabaseHelper;
-use SearchBundle\Entity\SearchEntities;
+use SearchBundle\Entity\Entities;
 use SearchBundle\Entity\SearchIndex;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SearchPopulatorCommand extends ContainerAwareCommand
+class SearchCommand extends ContainerAwareCommand
 {
     //https://github.com/Elao/PhpEnums
 
@@ -51,10 +51,10 @@ class SearchPopulatorCommand extends ContainerAwareCommand
         MySQLDatabaseHelper::truncate($output, $em, self::SEARCH_INDEX, true);
 
         $terms = $em
-            ->getRepository(SearchEntities::class)
+            ->getRepository(Entities::class)
             ->getEntities();
 
-        /** @var SearchEntities $searchableTerm */
+        /** @var Entities $searchableTerm */
         foreach($terms as $term) {
             $em
                 ->getRepository(SearchIndex::class)

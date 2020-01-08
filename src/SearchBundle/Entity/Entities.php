@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="`search_entities`")
  * @ORM\Entity(repositoryClass="SearchBundle\Repository\SearchEntitiesRepository")
  */
-class SearchEntities
+class Entities
 {
     /**
      * @var int
@@ -51,7 +51,7 @@ class SearchEntities
      *
      * @param string $entityName
      *
-     * @return SearchEntities
+     * @return Entities
      */
     public function setEntityName($entityName)
     {
@@ -75,7 +75,7 @@ class SearchEntities
      *
      * @param string $field
      *
-     * @return SearchEntities
+     * @return Entities
      */
     public function setField($field)
     {

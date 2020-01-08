@@ -26,7 +26,7 @@ class ReviewRepository extends EntityRepository
 
         $qb = $this->createQueryBuilder('review');
         $qb->where('review.album = :albumID')
-//            ->orderBy('review.timestamp', 'DESC')
+            ->orderBy('review.timestamp', 'DESC')
             ->setParameter(':albumID', $albumID);
 
         return $qb->getQuery();
