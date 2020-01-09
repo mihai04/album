@@ -135,3 +135,11 @@ knp_paginator:
 #  - entityName: 'UserBundle\Entity\User'
 #    field: ['email', 'full_name']
 
+easy_admin:
+    design:
+        menu:
+          - { entity: 'User', icon: 'user' }
+          - { entity: 'Album' }
+    entities:
+        - UserBundle\Entity\User
+        - AlbumBundle\Entity\Album

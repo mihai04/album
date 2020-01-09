@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new blackknight467\StarRatingBundle\StarRatingBundle(),
+            new EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle(),
 
             new UserBundle\UserBundle(),
             new AlbumBundle\AlbumBundle(),
