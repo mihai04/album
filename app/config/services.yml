@@ -62,4 +62,4 @@ services:
     app.data_helper:
         class: SearchBundle\Command\SearchCommand
         arguments:
-            - "@app.data_helper_impl"
+            - "@app.data_helper_impl" # autowire:true could have been used, but it is better to specify it

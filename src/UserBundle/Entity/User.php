@@ -1,14 +1,10 @@
 <?php
-
-
 namespace UserBundle\Entity;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-
 /**
  * User
  *
@@ -25,7 +21,6 @@ class User extends BaseUser
      * @ORM\Column(type="integer")
      */
     protected $id;
-
     /**
      * @var string
      *
@@ -33,14 +28,12 @@ class User extends BaseUser
      * @ORM\Column(name="full_name", type="string", nullable=false)
      */
     private $fullName;
-
     /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="ReviewBundle\Entity\Review", mappedBy="reviewer")
      */
     private $reviews;
-
     /**
      * The property username is mandatory for FOSUserBundle, and hence,
      * username will be set to the e-mail address.
@@ -51,10 +44,8 @@ class User extends BaseUser
     public function setEmail($email)
     {
         $this->setUsername($email);
-
         return parent::setEmail($email);
     }
-
     /**
      * @return mixed
      */
@@ -62,7 +53,6 @@ class User extends BaseUser
     {
         return $this->id;
     }
-
     /**
      * @return string $fullName
      */
@@ -70,7 +60,6 @@ class User extends BaseUser
     {
         return $this->fullName;
     }
-
     /**
      * @param string $username
      */
@@ -78,7 +67,6 @@ class User extends BaseUser
     {
         $this->username = $username;
     }
-
     /**
      * @param mixed $fullName
      */
@@ -86,8 +74,6 @@ class User extends BaseUser
     {
         $this->fullName = $fullName;
     }
-
-
     /**
      * @param $role
      * @return $this|BaseUser|UserInterface
@@ -95,11 +81,9 @@ class User extends BaseUser
     public function addRole($role)
     {
         $role = strtoupper($role);
-
         if (!in_array($role, $this->roles, true)) {
             $this->roles[] = $role;
         }
-
         return $this;
     }
 }

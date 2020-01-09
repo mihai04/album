@@ -12,6 +12,7 @@ use Knp\Component\Pager\Paginator;
 use ReviewBundle\Entity\Review;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,14 +84,13 @@ class AlbumController extends Controller
     }
 
     /**
-     * Generates a unique name of uploaded images.
-     *
-     * @param FormInterface $file
+     * @param string $originalFileName
+     * @param File $uploadedFile
      * @return string
      */
-    private static function hashImageName(FormInterface $file)
+    private static function hashImageName($originalFileName, File $uploadedFile)
     {
-        return md5(uniqid()) . '.' . $file->getData()->guessExtension();
+        return $originalFileName . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
     }
 
     /**
@@ -103,6 +103,7 @@ class AlbumController extends Controller
     {
         $album = new Album();
         $form = $this->createForm(AddAlbumType::class, $album);
+        // only handles data on POST requests
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -110,7 +111,7 @@ class AlbumController extends Controller
             $uploadedFile = $form['image']->getData();
 
             $originalFileName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $newFileName = $originalFileName . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
+            $newFileName = $this->hashImageName($originalFileName, $uploadedFile);
 
             try {
                 $em = $this->getDoctrine()->getManager();
@@ -128,11 +129,15 @@ class AlbumController extends Controller
             if (isset($message)) {
                 throw new AlbumExistsException($message);
             }
+            else {
+                $this->addFlash('success', 'Album created');
+            }
 
             // https://symfony.com/doc/current/security/access_denied_handler.html
 
             $destination = $this->getParameter('uploads_directory');
             $uploadedFile->move($destination, $newFileName);
+
         }
         return $this->render('AlbumBundle:Default:add_album.html.twig', [
             'form' => $form->createView()

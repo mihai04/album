@@ -83,9 +83,17 @@ class Album
      */
     private $entries;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AlbumBundle\Entity\Track", mappedBy="album")
+     */
+    private $albumTracks;
+
     public function __construct()
     {
         $this->entries = new ArrayCollection();
+        $this->albumTracks = new ArrayCollection();
     }
 
     /**
@@ -209,5 +217,27 @@ class Album
     public function setEntries($entries)
     {
         $this->entries = $entries;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAlbumTracks()
+    {
+        return $this->albumTracks;
+    }
+
+    /**
+     *
+     * @param ArrayCollection $albumTracks
+     */
+    public function setAlbumTracks($albumTracks)
+    {
+        $this->albumTracks = $albumTracks;
+    }
+
+    public function __toString()
+    {
+        return $this->getTitle();
     }
 }

@@ -110,6 +110,11 @@
             {% endif %}
         </section>
         <section id="mainContent" class="col-md-9 col-sm-10 col-xs-10">
+            {% for msg in app.session.flashBag.get('success') %}
+                <div class="alert alert-success">
+                    {{ msg }}
+                </div>
+            {% endfor %}
             {% block body %}{% endblock %}
         </section>
     </div>

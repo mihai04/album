@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200108211904 extends AbstractMigration
+final class Version20200109224117 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -24,9 +24,9 @@ final class Version20200108211904 extends AbstractMigration
 
         $this->addSql('CREATE TABLE `user` (id INT AUTO_INCREMENT NOT NULL, username VARCHAR(180) NOT NULL, username_canonical VARCHAR(180) NOT NULL, email VARCHAR(180) NOT NULL, email_canonical VARCHAR(180) NOT NULL, enabled TINYINT(1) NOT NULL, salt VARCHAR(255) DEFAULT NULL, password VARCHAR(255) NOT NULL, last_login DATETIME DEFAULT NULL, confirmation_token VARCHAR(180) DEFAULT NULL, password_requested_at DATETIME DEFAULT NULL, roles LONGTEXT NOT NULL COMMENT \'(DC2Type:array)\', full_name VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_8D93D64992FC23A8 (username_canonical), UNIQUE INDEX UNIQ_8D93D649A0D96FBF (email_canonical), UNIQUE INDEX UNIQ_8D93D649C05FB297 (confirmation_token), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE `album` (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, artist VARCHAR(255) NOT NULL, isrc VARCHAR(12) NOT NULL, trackList LONGTEXT NOT NULL COMMENT \'(DC2Type:array)\', image VARCHAR(255) DEFAULT NULL, is_published TINYINT(1) NOT NULL, UNIQUE INDEX UNIQ_39986E43F86F9A0A (isrc), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE `track` (id INT AUTO_INCREMENT NOT NULL, album_id INT DEFAULT NULL, title VARCHAR(255) NOT NULL, INDEX IDX_D6E3F8A61137ABCF (album_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE `review` (id INT AUTO_INCREMENT NOT NULL, reviewer INT NOT NULL, album INT NOT NULL, title VARCHAR(255) NOT NULL, review LONGTEXT NOT NULL, rating VARCHAR(255) NOT NULL, timestamp DATETIME NOT NULL, INDEX IDX_794381C6E0472730 (reviewer), INDEX IDX_794381C639986E43 (album), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE `indices` (id INT AUTO_INCREMENT NOT NULL, entity VARCHAR(255) NOT NULL, foreign_id INT NOT NULL, content LONGTEXT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE `entities` (id INT AUTO_INCREMENT NOT NULL, entityName VARCHAR(255) NOT NULL, entityField VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE `track` ADD CONSTRAINT FK_D6E3F8A61137ABCF FOREIGN KEY (album_id) REFERENCES `album` (id)');
         $this->addSql('ALTER TABLE `review` ADD CONSTRAINT FK_794381C6E0472730 FOREIGN KEY (reviewer) REFERENCES `user` (id)');
         $this->addSql('ALTER TABLE `review` ADD CONSTRAINT FK_794381C639986E43 FOREIGN KEY (album) REFERENCES `album` (id)');
     }
@@ -37,11 +37,11 @@ final class Version20200108211904 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE `review` DROP FOREIGN KEY FK_794381C6E0472730');
+        $this->addSql('ALTER TABLE `track` DROP FOREIGN KEY FK_D6E3F8A61137ABCF');
         $this->addSql('ALTER TABLE `review` DROP FOREIGN KEY FK_794381C639986E43');
         $this->addSql('DROP TABLE `user`');
         $this->addSql('DROP TABLE `album`');
+        $this->addSql('DROP TABLE `track`');
         $this->addSql('DROP TABLE `review`');
-        $this->addSql('DROP TABLE `indices`');
-        $this->addSql('DROP TABLE `entities`');
     }
 }

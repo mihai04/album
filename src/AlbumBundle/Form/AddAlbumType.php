@@ -3,8 +3,10 @@
 namespace AlbumBundle\Form;
 
 use AlbumBundle\Entity\Album;
+use AlbumBundle\Entity\Track;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -32,11 +34,16 @@ class AddAlbumType extends AbstractType
                     'placeholder' => 'Enter the ISRC here.'
                 ]
             ])
-            ->add('trackList', TextareaType::class, [
-                'attr' => [
-                    'placeholder' => 'Enter the list of tracks here.'
-                ]
+            ->add('trackList', CollectionType::class, [
+                'entry_type' => TrackEmbeddedForm::class,
+                'allow_add' => true,
+                'allow_delete' => true,
             ])
+//            ->add('trackList', TextareaType::class, [
+//                'attr' => [
+//                    'placeholder' => 'Enter the list of tracks here.'
+//                ]
+//            ])
             ->add('image', FileType::class, [
                 'label' => 'Image Upload',
                 'required' => false

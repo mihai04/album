@@ -68,7 +68,6 @@ class Review
      */
     private $reviewer;
 
-
     /**
      * @var Album
      *
