@@ -4,11 +4,14 @@
 namespace SearchBundle\Command;
 
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use SearchBundle\Entity\Entities;
 use SearchBundle\Entity\Indexes;
 use SearchBundle\Helper\DatabaseHelper;
 use SearchBundle\Helper\DatabaseHelperImpl;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,6 +28,8 @@ class SearchCommand extends ContainerAwareCommand
     const COMMAND_DESCRIPTION = "Populate indices for the search function";
 
     const COMMAND_NAME = 'populate:search:entities';
+
+
 
     /**
      * @var DatabaseHelper
@@ -51,7 +56,7 @@ class SearchCommand extends ContainerAwareCommand
         $this
             ->setDescription(self::COMMAND_DESCRIPTION)
             ->setHelp(self::COMMAND_HELP)
-            ->addArgument('tableName', InputArgument::REQUIRED, 'The table for search indices.');
+            ->addArgument('tableName', InputArgument::REQUIRED, 'Table name input required.');
     }
 
     /**
@@ -64,6 +69,9 @@ class SearchCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $outputStyle = new OutputFormatterStyle('red', 'green',  ['bold', 'blink']);
+        $output->getFormatter()->setStyle('fire', $outputStyle);
+
         $output->writeln('Generating indexes...');
 
         $em = $this
@@ -75,7 +83,7 @@ class SearchCommand extends ContainerAwareCommand
         try {
             $this->databaseHelper->truncate($output, $em, $input->getArgument('tableName'), true);
         } catch (DBALException $e) {
-            $output->writeln("Error: Failed to truncate table " . $target, $e->getMessage());
+            $output->writeln("<fg=red;options=bold>Error: Failed to truncate table " . $target, $e->getMessage().'</>');
         }
 
         $terms = $em
@@ -84,9 +92,20 @@ class SearchCommand extends ContainerAwareCommand
 
         /** @var Entities $term */
         foreach($terms as $term) {
-            $em
-                ->getRepository(Indexes::class)
-                ->generateIndex($term->getEntityName(), $term->getEntityField());
+            try {
+                $em
+                    ->getRepository(Indexes::class)
+                    ->generateIndex($term->getEntityName(), $term->getEntityField());
+
+                $output->writeln('<fg=green;options=bold>Generated indexes for bundle with entity: ' . $term->getEntityName()
+                    . ' having field name ' . $term->getEntityField() . '.</>');
+            } catch (OptimisticLockException $e) {
+                $output->writeln('<fg=green;options=bold>Generated indexes for bundle with entity: ' . $term->getEntityName()
+                    . ' having field ' . $term->getEntityField() . '.</>');
+            } catch (ORMException $e) {
+                $output->writeln('<fg=red;options=bold>Failed to indexes for bundle with entity: ' . $term->getEntityName()
+                    . ' having field ' . $term->getEntityField() . '.</>');
+            }
         }
 
         $output->writeln('Success');

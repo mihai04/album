@@ -4,7 +4,7 @@
 
     <div class="row col-md-12 col-sm-12 col-xs-12">
         {% if results is empty %}
-        {% else %} }
+        {% else %}
         {% set iBook = 0 %}
         {% for result in results %}
 
@@ -40,7 +40,7 @@
                 <article>
                     <div class="row">
                         <div class="col-xs-6">
-                            <img src="{{ asset('uploads/images/' ~ result.image ) }}">
+                            <img src="{{ asset('public/uploads_directory/' ~ result.image ) }}">
                         </div>
                         <div class="col-xs-6">
                             {% if is_granted('ROLE_USER') %}

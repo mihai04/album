@@ -34,29 +34,19 @@ class IndicesRepository extends EntityRepository
 
         $queryBuilder = $em
             ->getRepository($entity)
-            ->createQueryBuilder('sqb');
+            ->createQueryBuilder('q');
 
         $terms = $queryBuilder
-            ->select('sqb.'.$field.', sqb.id')
+            ->select('q.id, q.'.$field)
             ->getQuery()
             ->getResult();
 
-
         foreach ($terms as $term) {
-//            $this->setEntity($entity)
-//                ->setSearchTerm($term[$field])
-//                ->setForeignKey($term['id']);
-
             $indexesBuilder = new IndexesBuilder();
             $searchIndex= $indexesBuilder->withEntityName($entity)
                 ->withSearchTerm($term[$field])
                 ->withForeignKey($term['id'])
                 ->build();
-
-//            $searchIndex = new Indexes();
-//            $searchIndex->setEntity($entity);
-//            $searchIndex->setSearchTerm($term[$field]);
-//            $searchIndex->setForeignKey($term['id']);
 
             $em->persist($searchIndex);
             $em->flush();
@@ -70,9 +60,9 @@ class IndicesRepository extends EntityRepository
      */
     public function getResults($searchTerm)
     {
-        $queryBuilder = $this->createQueryBuilder('search_index');
+        $queryBuilder = $this->createQueryBuilder('search_indices');
         $queryBuilder
-            ->where('search_index.searchTerm LIKE :searchTerm')
+            ->where('search_indices.searchTerm LIKE :searchTerm')
             ->setParameter(':searchTerm', '%'.$searchTerm.'%');
 
         return $queryBuilder->getQuery()->getResult();
