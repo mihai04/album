@@ -3,10 +3,11 @@
 
 {% block body %}
     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-    {% if app.user.id === review.album %}
-        <h3>Edit Review for Album: {{ review.title }}</h3>
-        {{ form(form) }}
-    {% else %}
-        <p>Your are not allowed to edit someone's review</p>
+        {% if app.user == review.reviewer %}
+            <h3>Edit Review for Album: {{ review.title }}</h3>
+            {{ form(form) }}
+        {% else %}
+            <p>Your are not allowed to edit someone's review</p>
+        {% endif %}
     {% endif %}
 {% endblock %}

@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
-{% block body %}
 
-{#    <div>#}
+{% block body %}
 {#        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}#}
 {#            {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |#}
 {#            <a href="{{ path('fos_user_security_logout') }}">#}
@@ -12,31 +11,31 @@
 {#        {% endif %}#}
 {#    </div>#}
 
-    {% if app.session.flashBag.has('success') %}
-        <div class="alert alert-success">
-            {% for msg in app.session.flashBag.get('success') %}
-                {{ msg }}
-            {% endfor %}
-        </div>
-    {% endif %}
+{#    {% if app.session.flashBag.has('success') %}#}
+{#        <div class="alert alert-success">#}
+{#            {% for msg in app.session.flashBag.get('success') %}#}
+{#                {{ msg }}#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    {% endif %}#}
 
-    {% if app.request.hasPreviousSession %}
-        {% for type, messages in app.session.flashbag.all() %}
-            {% for message in messages %}
-                <div class="flash-{{ type }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endfor %}
-    {% endif %}
+{#    {% if app.request.hasPreviousSession %}#}
+{#        {% for type, messages in app.session.flashbag.all() %}#}
+{#            {% for message in messages %}#}
+{#                <div class="flash-{{ type }}">#}
+{#                    {{ message }}#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#        {% endfor %}#}
+{#    {% endif %}#}
 
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ label }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endfor %}
+{#    {% for label, messages in app.flashes %}#}
+{#        {% for message in messages %}#}
+{#            <div class="alert alert-{{ label }}">#}
+{#                {{ message }}#}
+{#            </div>#}
+{#        {% endfor %}#}
+{#    {% endfor %}#}
 
 
     <div class="container">
@@ -46,6 +45,8 @@
             </div>
         </div>
     </div>
+
+
 {% endblock %}
 
 

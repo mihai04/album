@@ -7,37 +7,27 @@
     <title>{% block title %} My Albums {% endblock %} </title>
     {% block stylesheets %}
         {% stylesheets
-            'bundles/starrating/css/rating.css'
             'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'
-            '../app/Resources/public/css/screen.css'
             'https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css'
+            'bundles/starrating/css/rating.css'
+            '../app/Resources/public/css/screen.css'
             filter="cssrewrite"
         %}
-{#            './public/css/hack.css'#}
-{#            <link rel="stylesheet"#}
-{#                  href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"#}
-{#                  integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"#}
-{#                  crossorigin="anonymous">#}
-{#            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">#}
             <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-{#            <link rel="stylesheet" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">#}
             <link href="{{ asset_url }}" type="text/css" rel="stylesheet"/>
-{#            <link href="{{ asset('bundles/alexandermatveevfontawesome/css/all.min.css') }}" rel="stylesheet">#}
         {% endstylesheets %}
     {% endblock %}
-{#    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>#}
     {% block javascript %}
     {% javascripts
          'bundles/starrating/js/rating.js'
          '../app/Resources/public/js/add-collection-widget.js'
         'https://code.jquery.com/jquery-3.2.1.slim.min.js'
-        'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js'
+
         'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'
         'https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js'
-        'https://use.fontawesome.com/d4cb80cd54.js'
     %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-{#     <script src="https://kit.fontawesome.com/ccf5b09b4f.js" crossorigin="anonymous"></script>#}
+{#    'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/poper.min.js'#}
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}
@@ -47,101 +37,75 @@
 <div class="container">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navCollapse">
-                <div class="col-sm-offset-0">
-                    <a class="navbar-brand" href="{{ path('album_homepage') }}">
-                        {#                <img id="logo" src="{{ asset('public/uploads_directory/albumIcon.png') }}" alt="logo">#}
-                    </a>
-                </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-right" id="MainMenu">
-                        <li id="itemInMainList"><a href="{{ path('album_homepage') }}">Home</a></li>
-                        {% if is_granted('ROLE_USER') %}
-                            <li id="itemInMainList"><a href="{{ path('album_new') }}">Add Album</a></li>
-                            {#                        <li id="itemInMainList"><a href="{{ path('fos_user_profile_edit') }}">Edit Profile</a></li>#}
-                            {#                        <li id="itemInMainList"><a href="{{ path('fos_user_change_password') }}">Change Password</a></li>#}
-                            <li id="itemInMainList"><a href="{{ path('fos_user_security_logout') }}">Logout</a></li>
-                        {% else %}
-                            <li><a href="{{ path('fos_user_security_login') }}">Login</a></li>
-                            <li><a href="{{ path('fos_user_registration_register') }}">Register</a></li>
-                        {% endif %}
-                        <li><a href="">AskUS</a></li>
-                    </ul>
+            {% if is_granted('ROLE_USER') %}
 
-                    <form class="navbar-form navbar-right" role="search" action="{{ path('search_homepage') }}">
-                        <div class="input-group add-on">
-                            <input class="form-control" placeholder="Search" name="q" id="search" type="text">
-                            <div class="input-group-btn">
-                                <button class="btn btn-default" type="submit">
-                                    <i class="glyphicon glyphicon-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                <div id="MainMenu">
+                <a type="button" id="sidebarCollapse" class="navbar-brand">
+                    <span class="glyphicon glyphicon-user" id="MainMenu">Menu</span>
+                </a>
                 </div>
+            {% endif %}
+            <div class="navbar-header" id="MainMenu">
+                <a type="button" class="navbar-brand" href="{{ path('album_homepage') }}">
+                    <span class="glyphicon glyphicon-music">Albums</span>
+                </a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navCollapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navCollapse">
+                <ul class="nav navbar-nav navbar-right" id="MainMenu">
+                    {% if is_granted('ROLE_USER') == false %}
+                        <li>
+                            <a href="{{ path('fos_user_registration_register') }}">
+                                Register<span class="glyphicon glyphicon-user"></span></a>
+                        </li>
+                        <li><a href="{{ path('fos_user_security_login') }}">
+                                Login<span class="glyphicon glyphicon-log-in"></span></a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                <form class="navbar-form navbar-right" role="search" action="{{ path('search_homepage') }}">
+                <div class="input-group add-on">
+                    <input class="form-control" placeholder="Search..." name="search" id="search" type="text">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </div>
+                </div>
+                </form>
             </div>
         </div>
     </nav>
 
-{#nav    <nav class="navbar navbar-inverse navbar-fixed-top">#}
-{#        <div class="container-fluid">#}
-{#            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="#">Symblog</a>#}
-{#            <div class="collapse navbar-collapse">#}
-{#                <ul class="nav navbar-nav navbar-right">#}
-{#                    <li><a href="{{ path('album_homepage') }}">Home</a></li>#}
-{#                    {% if is_granted('ROLE_USER') %}#}
-{#                        <li><a href="{{ path('fos_user_profile_edit') }}">Edit Profile</a></li>#}
-{#                        <li><a href="{{ path('fos_user_change_password') }}">Change Password</a></li>#}
-{#                        <li><a href="{{ path('fos_user_security_logout') }}">Logout</a></li>#}
-{#                    {%  else  %}#}
-{#                        <li><a href="{{ path('fos_user_security_login') }}">Login</a></li>#}
-{#                        <li><a href="{{ path('fos_user_registration_register') }}">Register</a></li>#}
-{#                    {% endif %}#}
-{#                </ul>#}
-{#            </div>#}
-{#        </div>#}
-{#    </nav>#}
-
-
-    <div class="row">
-{#        <section class="col-md-3 col-sm-2 col-xs-1">#}
+    <div class="row" style="padding-bottom: 100px;">
+        <section class="col-md-3 col-sm-2 col-xs-1">
             {% if is_granted('ROLE_USER') %}
                 {% include 'sidebar.html.twig' %}
             {% endif %}
-{#        </section>#}
-{#        <section id="mainContent" class="col-md-9 col-sm-10 col-xs-10">#}
+        </section>
+        <section id="mainContent" class="col-md-11 col-sm-11 col-xs-11">
             {% for msg in app.session.flashBag.get('success') %}
                 <div class="alert alert-success">
                     {{ msg }}
                 </div>
             {% endfor %}
             {% block body %}{% endblock %}
-{#        </section>#}
+        </section>
     </div>
-
 
     <div class="footer">
         {% block footer %}
             <p>Album Review Blog</p>
         {% endblock %}
     </div>
+
 </div>
+
 </body>
-
 </html>
-
-
-
-{#<!DOCTYPE html>#}
-{#<html>#}
-{#    <head>#}
-{#        <meta charset="UTF-8" />#}
-{#        <title>{% block title %}Welcome!{% endblock %}</title>#}
-{#        {% block stylesheets %}{% endblock %}#}
-{#        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />#}
-{#    </head>#}
-{#    <body>#}
-{#        {% block body %}{% endblock %}#}
-{#        {% block javascripts %}{% endblock %}#}
-{#    </body>#}
-{#</html>#}

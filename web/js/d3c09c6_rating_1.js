@@ -13,7 +13,7 @@ $(function(){
         }
         var labels = $(this).find('div');
         labels.removeClass();
-        labels.addClass('star');
+        labels.addClass('far fa-star');
     }
 
     var turnStarBack = function turnStarBack(){
@@ -22,13 +22,13 @@ $(function(){
             var selectedStar = $(this).children().filter('#rating_star_'+rating)
             var prevLabels = $(selectedStar).nextAll();
             prevLabels.removeClass();
-            prevLabels.addClass('star-full');
+            prevLabels.addClass('fas fa-star');
             selectedStar.removeClass();
-            selectedStar.addClass('star-full');
+            selectedStar.addClass('fas fa-star');
         }
     }
 
-    $('.star, .rating-well').click(labelWasClicked);
+    $('.fas, .fa-star, .rating-well').click(labelWasClicked);
     $('.rating-well').each(turnStarBack);
     $('.rating-well').hover(turnToStar,turnStarBack);
 

@@ -45,7 +45,7 @@ function addTagForm($collectionHolder, $newLinkLi) {
 
     // Display the form in the page in an li, before the "Add a tag" link li
     let $newFormLi = $('<li></li>').append(newForm);
-    $newLinkLi.insertBefore('.footer');
+    $newLinkLi.before($newFormLi);
     addTagFormDeleteLink($newFormLi);
 }
 
