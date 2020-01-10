@@ -1,13 +1,20 @@
 {% extends 'base.html.twig' %}
 {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
 
+{% block title %} Add Album {% endblock %}
+
 {% block body %}
-    <h3>Add You Favourite Album</h3>
-{#    {{ form(form) }}#}
 
-
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button type="submit" class="btn btn-primary">Safe</button>
-    {{ form_end(form) }}
+{{ form_start(form) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.artist) }}
+    {{ form_row(form.isrc) }}
+    {{ form_row(form.image) }}
+    <ol class="track" data-prototype="{{ form_widget(form.trackList.vars.prototype)|e('html_attr') }}">
+        {% for track in form.trackList %}
+            <p>{{ form_row(track) }}</p>
+        {% endfor %}
+    </ol>
+    <button type="button" class="form control btn btn-primary add_tag_link">Add a track</button>
+{{ form_end(form) }}
 {% endblock %}

@@ -36,16 +36,17 @@ class AddAlbumType extends AbstractType
             ])
             ->add('trackList', CollectionType::class, [
                 'entry_type' => TrackEmbeddedForm::class,
+                'entry_options' => ['label' => false],
                 'allow_add' => true,
+                'by_reference' => false,
                 'allow_delete' => true,
+                'label' => false,
+                'attr' => [
+                    'label' => false
+                ]
             ])
-//            ->add('trackList', TextareaType::class, [
-//                'attr' => [
-//                    'placeholder' => 'Enter the list of tracks here.'
-//                ]
-//            ])
             ->add('image', FileType::class, [
-                'label' => 'Image Upload',
+                'label' => 'Image',
                 'required' => false
             ])
             ->add('submit', SubmitType::class, [
@@ -54,13 +55,47 @@ class AddAlbumType extends AbstractType
                 ]
             ]);
 
-        $builder->get('trackList')->addModelTransformer(new CallbackTransformer(
-                function ($tagsAsArray) {
-                },
-                function ($tagsAsString) {
-                    return explode(', ', $tagsAsString);
-                }
-        ));
+
+
+
+
+
+
+
+
+//            ->add('trackList', CollectionType::class, [
+//                'label' => false,
+//                'entry_type' => TextType::class,
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'prototype' => true,
+////                'prototype_data' => 'New Tag Placeholder',
+//                'entry_options' => [
+//                    'attr' => ['class' => 'email-box'],
+//                ],
+//            ])
+//            ->add('trackList', TextareaType::class, [
+//                'attr' => [
+//                    'placeholder' => 'Enter the list of tracks here.'
+//                ]
+//            ])
+//            ->add('image', FileType::class, [
+//                'label' => 'Image',
+//                'required' => false
+//            ])
+//            ->add('submit', SubmitType::class, [
+//                'attr' => [
+//                    'class' => 'btn btn-success'
+//                ]
+//            ]);
+
+//        $builder->get('trackList')->addModelTransformer(new CallbackTransformer(
+//                function ($tagsAsArray) {
+//                },
+//                function ($tagsAsString) {
+//                    return explode(', ', $tagsAsString);
+//                }
+//        ));
     }
 
     public function configureOptions(OptionsResolver $resolver)

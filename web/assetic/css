@@ -733,6 +733,23 @@ body {
     line-height: 0;
 }
 
+#album_bundle_add_album_type_trackList___name___trackName {
+    width: 200px;
+}
+
+.fa.pull-right {
+    padding-top: 15px;
+}
+
+.genus-name {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.genus-details-list, .notes-header {
+    padding-left: 20px;
+}
 
 /*#logo {*/
 /*     width: 32px;*/

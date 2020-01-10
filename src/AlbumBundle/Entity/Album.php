@@ -240,4 +240,22 @@ class Album
     {
         return $this->getTitle();
     }
+
+    /**
+     * @param Track $track
+     */
+    public function addTag(Track $track)
+    {
+        $track->setAlbum($this);
+
+        $this->albumTracks->add($track);
+    }
+
+    /**
+     * @param Track $track
+     */
+    public function removeTag(Track $track)
+    {
+        $this->albumTracks->remove($track);
+    }
 }

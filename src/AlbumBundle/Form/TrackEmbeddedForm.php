@@ -2,10 +2,10 @@
 
 namespace AlbumBundle\Form;
 
-use AlbumBundle\Entity\Album;
 use AlbumBundle\Entity\Track;
+use Doctrine\DBAL\Types\TextType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,12 +13,9 @@ class TrackEmbeddedForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('track_name', TextType::class, [
-                'attr' => [
-                    'placeholder' => 'Enter the track name here.'
-                ]
-            ]);
+        $builder->add('trackName', null, [
+            'label' => false,
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -3,6 +3,7 @@
 namespace AlbumBundle\Controller;
 
 use AlbumBundle\Entity\Album;
+use AlbumBundle\Entity\Track;
 use AlbumBundle\Exceptions\AlbumExistsException;
 use AlbumBundle\Form\AddAlbumType;
 use Doctrine\DBAL\Exception\TableNotFoundException;
@@ -116,6 +117,15 @@ class AlbumController extends Controller
             try {
                 $em = $this->getDoctrine()->getManager();
                 $album->setImage($newFileName);
+                $trackList = $form['trackList']->getData();
+                $album->setTrackList($trackList);
+
+                /** @var Track $track */
+//                foreach ($trackList as $track)
+//                {
+//                    $track->set
+//                }
+//                var_dump($trackList);die;
                 $em->persist($album);
                 $em->flush();
             } catch (UniqueConstraintViolationException $e) {
