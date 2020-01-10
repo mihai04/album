@@ -7,24 +7,18 @@ namespace SearchBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use SearchBundle\Entity\Indexes;
-use SearchBundle\Helper\IndexesBuilder;
-use UserBundle\Entity\User;
-use UserBundle\UserBundle;
+use SearchBundle\Entity\SearchIndex;
 
 /**
- * Class IndicesRepository
- *
+ * Class SearchIndexRepository
  * @package Repository
  */
-class IndicesRepository extends EntityRepository
+class SearchIndexRepository extends EntityRepository
 {
+
     /**
-     * The function create a searchable indices per entity.
-     *
      * @param $entity
      * @param $field
-     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -34,35 +28,35 @@ class IndicesRepository extends EntityRepository
 
         $queryBuilder = $em
             ->getRepository($entity)
-            ->createQueryBuilder('q');
+            ->createQueryBuilder('sqb');
 
         $terms = $queryBuilder
-            ->select('q.id, q.'.$field)
+            ->select('sqb.'.$field.',sqb.id')
             ->getQuery()
             ->getResult();
 
         foreach ($terms as $term) {
-            $indexesBuilder = new IndexesBuilder();
-            $searchIndex= $indexesBuilder->withEntityName($entity)
-                ->withSearchTerm($term[$field])
-                ->withForeignKey($term['id'])
-                ->build();
+            $searchIndex = new SearchIndex();
+            $searchIndex->setEntity($entity);
+            $searchIndex->setSearchTerm($term[$field]);
+            $searchIndex->setForeignId($term['id']);
 
             $em->persist($searchIndex);
             $em->flush();
         }
     }
 
+
     /**
      * @param string $searchTerm
      *
      * @return array|null
      */
-    public function getResults($searchTerm)
+    public function getSearchResults($searchTerm)
     {
-        $queryBuilder = $this->createQueryBuilder('search_indices');
+        $queryBuilder = $this->createQueryBuilder('search_index');
         $queryBuilder
-            ->where('search_indices.searchTerm LIKE :searchTerm')
+            ->where('search_index.searchTerm LIKE :searchTerm')
             ->setParameter(':searchTerm', '%'.$searchTerm.'%');
 
         return $queryBuilder->getQuery()->getResult();

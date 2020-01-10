@@ -1,8 +1,8 @@
 // setup an "add a tag" link
 
 
-// var $addTagButton = $('<button type="button" class="btn btn-primary add_tag_link">Add a track</button>');
-var $newLinkLi = $('<li></li>'); //.append($addTagButton);
+var $addTagButton = $('<button type="button" class="btn btn-primary add_tag_link">Add a track</button>');
+var $newLinkLi = $('<li></li>').append($addTagButton);
 jQuery(document).ready(function() {
 
     // Get the ul that holds the collection of tags
@@ -41,7 +41,7 @@ function addTagForm($collectionHolder, $newLinkLi) {
 
     // Replace '__name__' in the prototype's HTML to
     // instead be a number based on how many items we have
-    // newForm = newForm.replace(/__name__/g, index);
+    newForm = newForm.replace(/__name__/g, index);
 
     // increase the index with one for the next item
     $collectionHolder.data('index', index + 1);

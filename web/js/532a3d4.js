@@ -1,3 +1,39 @@
+// $(function(){
+//     var labelWasClicked = function labelWasClicked(){
+//         var input = $(this).siblings().filter('input');
+//         if (input.attr('disabled')) {
+//             return;
+//         }
+//         input.val($(this).attr('data-value'));
+//     }
+//
+//     var turnToStar = function turnToStar(){
+//         if ($(this).find('input').attr('disabled')) {
+//             return;
+//         }
+//         var labels = $(this).find('div');
+//         labels.removeClass();
+//         labels.addClass('star');
+//     }
+//
+//     var turnStarBack = function turnStarBack(){
+//         var rating = parseInt($(this).find('input').val());
+//         if (rating > 0) {
+//             var selectedStar = $(this).children().filter('#rating_star_'+rating)
+//             var prevLabels = $(selectedStar).nextAll();
+//             prevLabels.removeClass();
+//             prevLabels.addClass('star-full');
+//             selectedStar.removeClass();
+//             selectedStar.addClass('star-full');
+//         }
+//     }
+//
+//     $('.star, .rating-well').click(labelWasClicked);
+//     $('.rating-well').each(turnStarBack);
+//     $('.rating-well').hover(turnToStar,turnStarBack);
+//
+// });
+
 $(function(){
     var labelWasClicked = function labelWasClicked(){
         var input = $(this).siblings().filter('input');
@@ -13,7 +49,7 @@ $(function(){
         }
         var labels = $(this).find('div');
         labels.removeClass();
-        labels.addClass('star');
+        labels.addClass('far fa-star');
     }
 
     var turnStarBack = function turnStarBack(){
@@ -22,13 +58,13 @@ $(function(){
             var selectedStar = $(this).children().filter('#rating_star_'+rating)
             var prevLabels = $(selectedStar).nextAll();
             prevLabels.removeClass();
-            prevLabels.addClass('star-full');
+            prevLabels.addClass('fas fa-star');
             selectedStar.removeClass();
-            selectedStar.addClass('star-full');
+            selectedStar.addClass('fas fa-star');
         }
     }
 
-    $('.star, .rating-well').click(labelWasClicked);
+    $('.fas, .fa-star, .rating-well').click(labelWasClicked);
     $('.rating-well').each(turnStarBack);
     $('.rating-well').hover(turnToStar,turnStarBack);
 
@@ -36,8 +72,8 @@ $(function(){
 // setup an "add a tag" link
 
 
-// var $addTagButton = $('<button type="button" class="btn btn-primary add_tag_link">Add a track</button>');
-var $newLinkLi = $('<li></li>'); //.append($addTagButton);
+var $addTagButton = $('<button type="button" class="btn btn-primary add_tag_link">Add a track</button>');
+var $newLinkLi = $('<li></li>').append($addTagButton);
 jQuery(document).ready(function() {
 
     // Get the ul that holds the collection of tags
@@ -76,7 +112,7 @@ function addTagForm($collectionHolder, $newLinkLi) {
 
     // Replace '__name__' in the prototype's HTML to
     // instead be a number based on how many items we have
-    // newForm = newForm.replace(/__name__/g, index);
+    newForm = newForm.replace(/__name__/g, index);
 
     // increase the index with one for the next item
     $collectionHolder.data('index', index + 1);

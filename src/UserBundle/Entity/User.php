@@ -28,12 +28,14 @@ class User extends BaseUser
      * @ORM\Column(name="full_name", type="string", nullable=false)
      */
     private $fullName;
+
     /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="ReviewBundle\Entity\Review", mappedBy="reviewer")
      */
     private $reviews;
+
     /**
      * The property username is mandatory for FOSUserBundle, and hence,
      * username will be set to the e-mail address.

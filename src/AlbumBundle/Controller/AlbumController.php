@@ -22,17 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AlbumController extends Controller
 {
-//     private $knpUIpsum;
-//
-//    /**
-//     * AlbumController constructor.
-//     * @param $knpUIpsum
-//     */
-//    public function __construct(KnpUIpsum $knpUIpsum)
-//    {
-//        $this->knpUIpsum = $knpUIpsum;
-//    }
-
     /**
      * @param Request $request
      *
@@ -40,7 +29,7 @@ class AlbumController extends Controller
      */
     public function indexAction(Request $request)
     {
-//        dump($this->knpUIpsum);die;
+
         $em = $this->getDoctrine()->getManager();
         $query = $em->getRepository(Album::class)->getAlbums();
 
@@ -108,6 +97,7 @@ class AlbumController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $form['image']->getData();
 
@@ -115,17 +105,19 @@ class AlbumController extends Controller
             $newFileName = $this->hashImageName($originalFileName, $uploadedFile);
 
             try {
+
+
                 $em = $this->getDoctrine()->getManager();
                 $album->setImage($newFileName);
-                $trackList = $form['trackList']->getData();
-                $album->setTrackList($trackList);
+                $tracks = $form['albumTracks']->getData();
 
-                /** @var Track $track */
-//                foreach ($trackList as $track)
-//                {
-//                    $track->set
-//                }
-//                var_dump($trackList);die;
+                /**
+                 * @var Track $track
+                 */
+                foreach ($tracks as $track) {
+                    $track->setAlbum($album);
+                }
+
                 $em->persist($album);
                 $em->flush();
             } catch (UniqueConstraintViolationException $e) {

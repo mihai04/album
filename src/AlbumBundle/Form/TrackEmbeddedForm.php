@@ -13,9 +13,7 @@ class TrackEmbeddedForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('trackName', null, [
-            'label' => false,
-        ]);
+        $builder->add('trackName');
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -1,8 +1,8 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
-<div class="col-lg-8 col-xs-11">
-    <div class="col-md-offset-5">
-        <h3> Login </h3>
+<div class="col-lg-8">
+    <div class="col-md-offset-0" id="login_div">
+        <h3 style="padding-bottom: 15px;"> Login </h3>
         {% if error %}
             <div class="alert alert-danger" role="alert">
                 {{ error.messageKey|trans(error.messageData, 'security') }}

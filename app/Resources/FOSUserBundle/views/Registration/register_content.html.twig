@@ -1,10 +1,10 @@
 {% trans_default_domain 'FOSUserBundle' %}
 {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
 
-<div class="col-lg-8 col-xs-11">
-    <div class="col-md-offset-3" id="register_wrapper">
-        <div style="width: 70%">
-            <h3>Register music lover</h3>
+<div class="col-lg-12">
+    <div id="signup_div">
+        <h3>Register music lover</h3>
+        <div id="signup_fields_div">
             </br>
             {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'),
                 'attr': {'class': 'fos_user_registration_register'}}) }}
@@ -13,9 +13,9 @@
             {{ form_row(form.plainPassword) }}
         </div>
 
-        <div>
-            <input class="btn btn-primary" type="submit" value="{{ 'registration.submit'|trans }}"/>
+        <div id="submit_input_div">
+            <input  class="btn btn-primary" type="submit" value="{{ 'registration.submit'|trans }}"/>
         </div>
         {{ form_end(form) }}
-    </div>
+</div>
 </div>

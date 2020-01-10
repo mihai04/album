@@ -51,13 +51,6 @@ class Album
     private $isrc;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(name="trackList", type="array")
-     */
-    private $trackList;
-
-    /**
      * @var string
      *
      * @Assert\NotBlank()
@@ -84,9 +77,15 @@ class Album
     private $entries;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection $albumTracks
      *
-     * @ORM\OneToMany(targetEntity="AlbumBundle\Entity\Track", mappedBy="album")
+     * @ORM\OneToMany(targetEntity="AlbumBundle\Entity\Track",
+     *     mappedBy="album",
+     *     fetch="EXTRA_LAZY",
+     *     orphanRemoval=true,
+     *     cascade={"persist"})
+     *
+     * @ORM\JoinColumn(name="album", referencedColumnName="id", nullable=false)
      */
     private $albumTracks;
 
@@ -153,22 +152,6 @@ class Album
     }
 
     /**
-     * @return array
-     */
-    public function getTrackList()
-    {
-        return $this->trackList;
-    }
-
-    /**
-     * @param array $trackList
-     */
-    public function setTrackList($trackList)
-    {
-        $this->trackList = $trackList;
-    }
-
-    /**
      * @return string
      */
     public function getImage()
@@ -220,7 +203,7 @@ class Album
     }
 
     /**
-     * @return mixed
+     * @return ArrayCollection
      */
     public function getAlbumTracks()
     {
@@ -236,26 +219,33 @@ class Album
         $this->albumTracks = $albumTracks;
     }
 
-    public function __toString()
-    {
-        return $this->getTitle();
-    }
-
     /**
      * @param Track $track
+     * @return $this
      */
-    public function addTag(Track $track)
+    public function addAlbumTracks(Track $track)
     {
+        if ($this->albumTracks->contains($track)) {
+            return;
+        }
+
+        $this->albumTracks[] = $track;
         $track->setAlbum($this);
 
-        $this->albumTracks->add($track);
+        return $this;
     }
 
     /**
      * @param Track $track
      */
-    public function removeTag(Track $track)
+    public function removeAlbumTrack(Track $track)
     {
+        if ($this->albumTracks->contains($track)) {
+            return;
+        }
+
         $this->albumTracks->remove($track);
+        // no need to persist, keep in sync
+        $track->setAlbum(null);
     }
 }

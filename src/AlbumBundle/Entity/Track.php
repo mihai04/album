@@ -34,6 +34,8 @@ class Track
 
     /**
      * @ORM\ManyToOne(targetEntity="AlbumBundle\Entity\Album", inversedBy="albumTracks")
+     * @ORM\JoinColumn(name="album", referencedColumnName="id", nullable=false)
+     *
      */
     private $album;
 

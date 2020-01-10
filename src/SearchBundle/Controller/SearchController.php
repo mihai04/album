@@ -22,6 +22,10 @@ class SearchController extends Controller
     public function indexAction(Request $request)
     {
         $searchTerm = $request->get('q');
+
+//        if($searchTerm){} check it
+
+
         $queryResults = $this->getDoctrine()->getRepository(Indexes::class)
             ->getResults($searchTerm);
 

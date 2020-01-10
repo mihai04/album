@@ -34,17 +34,14 @@ class AddAlbumType extends AbstractType
                     'placeholder' => 'Enter the ISRC here.'
                 ]
             ])
-            ->add('trackList', CollectionType::class, [
-                'entry_type' => TrackEmbeddedForm::class,
-                'entry_options' => ['label' => false],
-                'allow_add' => true,
-                'by_reference' => false,
-                'allow_delete' => true,
-                'label' => false,
-                'attr' => [
-                    'label' => false
+            ->add('albumTracks', CollectionType::class, [
+                    'entry_type' => TrackEmbeddedForm::class,
+                    'allow_add' => true,
+                    'by_reference' => false,
+                    'allow_delete' => true,
+                    'entry_options' => ['label' => false],
                 ]
-            ])
+            )
             ->add('image', FileType::class, [
                 'label' => 'Image',
                 'required' => false
