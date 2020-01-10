@@ -41,12 +41,19 @@ class AlbumController extends Controller
             $request->query->getInt('page', 1)
         );
 
+
         $rating = [];
 
+        /** @var Album $album $album */
         foreach ($albums as $album) {
             $totalReviews = 0;
             $totalRating = 0;
             $albumRating = 0;
+
+            $tracks = $em->getRepository(Track::class)->getTracksByAlbumID($album)
+                ->getResult();
+
+            $album->setAlbumTracks($tracks);
 
             $query = $em->getRepository(Review::class)
                 ->getReviewsByAlbumID($album);
@@ -121,7 +128,7 @@ class AlbumController extends Controller
                 $em->persist($album);
                 $em->flush();
             } catch (UniqueConstraintViolationException $e) {
-                $message = sprintf('DBALException [%i]: %s'.$e->getMessage(), $e->getCode(), "");
+                $message = sprintf('DBALException [%i]: %s'.$e->getMessage(), $e->getCode());
             } catch (TableNotFoundException $e) {
                 $message = sprintf('ORMException [%i]: %s', $e->getCode(), $e->getMessage());
             } catch (Exception $e) {
@@ -129,7 +136,8 @@ class AlbumController extends Controller
             }
 
             if (isset($message)) {
-                throw new AlbumExistsException($message);
+                $this->addFlash('error', 'Failed to create album! Try again.');
+                return $this->redirect($this->generateUrl('album_new'));
             }
             else {
                 $this->addFlash('success', 'Album created');

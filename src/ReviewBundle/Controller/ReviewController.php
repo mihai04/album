@@ -103,7 +103,10 @@ class ReviewController extends Controller
 
         if ($review->getReviewer() !== $this->getUser()
             && !$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
+            $this->addFlash('error', 'You are not allowed to edit this album');
+            return $this->redirect($this->generateUrl('view_reviews_by_album', [
+                'id' => $review->getId()
+            ]));
         }
 
         $form = $this->createForm(AddReviewFormType::class,  $review, [

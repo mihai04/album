@@ -19,9 +19,9 @@
                 </div>
 
                 <ul>
-{#                    {% for track in album.trackList %}#}
-{#                        <li>{{ track }}</li>#}
-{#                    {% endfor %}#}
+                    {% for track in album.albumTracks %}
+                        <li>{{ track.trackName }}</li>
+                    {% endfor %}
                 </ul>
 
                 <div class="row">

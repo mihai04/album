@@ -8,8 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Class Track
  *
- * @ORM\Entity
  * @ORM\Table(name="`track`")
+ * @ORM\Entity(repositoryClass="AlbumBundle\Repository\TrackRepository")
  *
  * @package AlbumBundle\Entity
  */
