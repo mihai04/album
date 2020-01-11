@@ -44,15 +44,11 @@ class AddAlbumType extends AbstractType
                 ]
             )
             ->add('image', FileType::class, [
-//                'label' => 'Image',
                 'required' => false,
-                'attr' => [
-                    'label' => false
-                ]
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [
-                    'class' => 'btn btn-success'
+                    'class' => 'addAlbum'
                 ]
             ]);
 

@@ -144,6 +144,8 @@ class AlbumController extends Controller
             $destination = $this->getParameter('uploads_directory');
             $uploadedFile->move($destination, $newFileName);
         }
+
+
         return $this->render('AlbumBundle:Default:add_album.html.twig', [
             'form' => $form->createView()
         ]);

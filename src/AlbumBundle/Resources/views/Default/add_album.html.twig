@@ -7,10 +7,10 @@
 
     <div class="col-sm-12">
         <div class="col-md-offset-0" id="create_first_div">
-            <div id="title_and_image_div">
-            <h1>
-                Add You Favourite Album
-            </h1>
+            <div id="title_div">
+                <h2>
+                    Add You Favourite Album
+                </h2>
             </div>
             <div id="form_div">
                 {{ form_start(form) }}
@@ -29,27 +29,22 @@
                 <p>
                     <b>Album Image</b>
                 </p>
-                <p id="create_property">{{ form_widget(form.image, {
-                            attr: {
-                            placeholder: 'select',
-                            class: 'btn btn success'
-                        }
-                        })
-                    }}
+                <p id="create_property">{{ form_widget(form.image) }}
                 </p>
                 <p class="align_add_review_label">
                     <b>Tracks</b>
                 </p>
-                <div id="create_property">
-                    <ol class="track"
-                        data-prototype="{{ form_widget(form.albumTracks.vars.prototype)|e('html_attr') }}">
-                        {% for track in form.albumTracks %}
-                            <p class="align_add_review_label">{{ form_row(track) }}</p>
-                        {% endfor %}
-                    </ol>
-                </div>
-            {{ form_end(form) }}
+            <div id="create_property">
+                <ol class="track"
+                    data-prototype="{{ form_widget(form.albumTracks.vars.prototype)|e('html_attr') }}">
+                    {% for track in form.albumTracks %}
+                        <p>{{ form_row(track) }}</p>
+                    {% endfor %}
+                </ol>
             </div>
+            </div>
+            {{ form_widget(form.submit) }}
+            {{ form_end(form) }}
         </div>
     </div>
 

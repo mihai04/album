@@ -1,23 +1,23 @@
-var $addTagButton = $('<button type="button" class=" add_tag_link">Add a track</button>');
-var $newLinkLi = $('<li></li>').append($addTagButton);
+let $addTagButton = $('<button type="button" style="width: 300px" class="_reusable add_track">Add a track</button>');
+let $newLinkLi = $('<li></li>').append($addTagButton);
 jQuery(document).ready(function() {
 
     // Get the ul that holds the collection of tags
     let $collectionHolder = $('ol.track');
 
+    // // add a delete link to all of the existing tag form li elements
+    $collectionHolder.find('li').each(function() {
+        addTagFormDeleteLink($(this));
+    });
+
     // add the "add a track" anchor and li to the tags ul
     $collectionHolder.append($newLinkLi);
-
-    // add a delete link to all of the existing tag form li elements
-    // $collectionHolder.find('li').each(function() {
-    //     addTagFormDeleteLink($(this));
-    // });
 
     // count the current form inputs we have (e.g. 2), use that as the new
     // index when inserting a new item (e.g. 2)
     $collectionHolder.data('index', $collectionHolder.find(':input').length);
 
-    jQuery('.add_tag_link').on('click', function(e) {
+    jQuery('.add_track').on('click', function(e) {
         // add a new tag form
         addTagForm($collectionHolder, $newLinkLi);
     });
@@ -50,7 +50,7 @@ function addTagForm($collectionHolder, $newLinkLi) {
 }
 
 function addTagFormDeleteLink($tagFormLi) {
-    var $removeFormButton = $('<button  style="margin-bottom: 5px;" id="create_property">' +
+    var $removeFormButton = $('<button  style="margin-bottom: 5px; width: 300px;" class="btn btn-danger">' +
         'Remove track' +
         '</button>');
     $tagFormLi.append($removeFormButton);

@@ -6,7 +6,7 @@
         {% if app.user == review.reviewer %}
             <div class="col-xs-12">
                 <div class="col-md-offset-0" id="create_first_div">
-                    <div id="title_and_image_div">
+                    <div id="title_div">
                         <h2>Edit your review for album: {{ review.title }}</h2>
                         <hr>
                     </div>
@@ -27,7 +27,6 @@
                             <p id="create_property">{{ form_widget(form.rating) }}</p>
                         </div>
                         <div>
-
                         </div>
                     </div>
                     {{ form_end(form) }}

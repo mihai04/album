@@ -296,7 +296,7 @@ a[data-toggle="collapse"] {
     margin-bottom: 25px;
 }
 
-#title_and_image_div{
+#title_div{
     text-align: center;
 }
 
@@ -308,7 +308,7 @@ a[data-toggle="collapse"] {
 #form_div textarea {
     color: #7E7A80;
     width: 80%;
-    height: 45px;
+    height: 55px;
     box-sizing: border-box;
     border: 0 solid;
     font-size: 26px;
@@ -320,17 +320,22 @@ a[data-toggle="collapse"] {
     outline: none;
 }
 
-article img {
-    width: 120px;
-    height: 150px;
+label input[type="file"] {
+    text-align: left !important;
+    color: red !important;
+    /*position: fixed;*/
+    /*top: -1000px;*/
 }
 
-article button {
-    margin: 5px;
-    width: 110px;
-}
+/*article img {*/
+/*    width: 120px;*/
+/*    height: 150px;*/
+/*}*/
 
-
+/*article button {*/
+/*    margin: 5px;*/
+/*    width: 110px;*/
+/*}*/
 
 .row {
     margin-right: -15px;
@@ -579,6 +584,19 @@ End register page
     border: solid 2px #f3f3f3;
 }
 
+.addAlbum button {
+    /* background-color: #c6c6c6; */
+    width: 100%;
+    height: 50px;
+    font-size: 26px;
+    border-radius: 10px;
+    border: 0px solid;
+    -webkit-transition: font-size 0.2s;
+    transition: font-size 0.2s;
+    color: #2a2a2a;
+    outline: none;
+}
+
 /* */
 
 /**                                    Star rating bundle ui fix bug                                               **/
@@ -680,63 +698,18 @@ End register page
     font-size: 5em;
 }
 
-/*#album_bundle_add_album_type_image {*/
-/*    !*width: 0.1px;*!*/
-/*    !*height: 0.1px;*!*/
-/*    !*opacity: 0;*!*/
-/*    !*overflow: hidden;*!*/
-/*    !*position: absolute;*!*/
-/*    !*z-index: -1;*!*/
-/*    background-color: red;*/
-/*    color: red;*/
-/*}*/
 
-/*}*/
-
-#album_bundle_add_album_type_image {
-    background-color: whitesmoke !important;
+#album_bundle_add_album_type_imag.label::before label {
+    color: red !important;
 }
 
-#album_bundle_add_album_type_image::before {
-    display: none !important;
+input[type=file]{
 }
 
 #album_bundle_add_album_type_image::-webkit-file-upload-button {
     visibility: hidden;
+    padding-right: 65px;
 }
-#album_bundle_add_album_type_image::before {
-    content: 'Select some files';
-    display: inline-block;
-    background: linear-gradient(top, #f9f9f9, #e3e3e3);
-    border: 1px solid #999;
-    border-radius: 3px;
-    padding: 5px 8px;
-    outline: none;
-    white-space: nowrap;
-    -webkit-user-select: none;
-    cursor: pointer;
-    text-shadow: 1px 1px #fff;
-    font-weight: 700;
-    font-size: 10pt;
-}
-#album_bundle_add_album_type_image:hover::before {
-    border-color: black;
-}
-#album_bundle_add_album_type_image:active::before {
-    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
-}
-
-
-
-
-
-
-
-
-
-
-
-
 
 @media(max-width:768px){
     #albumSet {
@@ -756,5 +729,10 @@ End register page
 
     #register_button {
         width: 100%;
+    }
+
+    #album_bundle_add_album_type_image::-webkit-file-upload-button {
+        visibility: hidden;
+        padding-right: 0;
     }
 }
