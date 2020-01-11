@@ -22,9 +22,7 @@
             </ol>
         </div>
     </div>
-    <div>
 
-    </div>
     <div class="row">
         <div class="col-sm-12" style="background-color: #ffffff; margin-top: 20px; border-radius: 10px">
             <div class="row col-md-9 col-sm-10 col-xs-12">
@@ -41,7 +39,7 @@
                             <div class="col-sm-6" style="text-align: center">
                                 {% if (is_granted('ROLE_USER') and review.reviewer == app.user)
                                     or is_granted('ROLE_ADMIN') %}
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-3">
                                             <a href="{{ path('edit_review', {id: review.id}) }}">
                                                 <button type="button" id="register_button">
                                                     Edit review
@@ -49,7 +47,7 @@
                                             </a>
                                         </div>
                                 {% endif %}
-                                        <div class="col-sm-6" style="text-align: center">
+                                        <div class="col-sm-3" style="text-align: center">
                                             {% if is_granted('ROLE_ADMIN') or review.reviewer == app.user %}
                                             <a href="{{ path('delete_review', {id: review.id}) }}">
                                                 <button class="btn btn-danger" id="register_button">
@@ -64,6 +62,14 @@
                 {% endfor %}
             </div>
         </div>
+    </div>
+
+    <div class="col-sm-3">
+        <a href="{{ path('add_review', {id: album.id}) }}">
+            <button type="button" id="register_button">
+                Add Review
+            </button>
+        </a>
     </div>
 </div>
 
