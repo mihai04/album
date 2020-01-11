@@ -36,11 +36,13 @@
             {{ form_row(form.artist) }}
             {{ form_row(form.isrc) }}
             {{ form_row(form.image) }}
+            <div class="well col-sm-12">
             <ol class="track" data-prototype="{{ form_widget(form.albumTracks.vars.prototype)|e('html_attr') }}">
                 {% for track in form.albumTracks %}
                     <p>{{ form_row(track) }}</p>
                 {% endfor %}
             </ol>
+            </div>
             {{ form_end(form) }}
         </div>
     </div>

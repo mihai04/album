@@ -1,4 +1,4 @@
-var $addTagButton = $('<button type="button" id="_reusable" class="btn btn-primary add_tag_link">Add a track</button>');
+var $addTagButton = $('<button type="button" class="btn btn-primary add_tag_link">Add a track</button>');
 var $newLinkLi = $('<li></li>').append($addTagButton);
 jQuery(document).ready(function() {
 
@@ -50,7 +50,9 @@ function addTagForm($collectionHolder, $newLinkLi) {
 }
 
 function addTagFormDeleteLink($tagFormLi) {
-    var $removeFormButton = $('<button type="button" id="_reusable_danger">Delete this track</button>');
+    var $removeFormButton = $('<button  style="margin-bottom: 5px" class="btn btn-danger">' +
+        'Remove track' +
+        '</button>');
     $tagFormLi.append($removeFormButton);
 
     $removeFormButton.on('click', function(e) {

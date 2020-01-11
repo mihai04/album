@@ -140,6 +140,7 @@ span {
     text-align: center;
     margin-left: 10%;
     margin-right: 10%;
+    background-color: white;
 }
 
 .footer p {
@@ -162,7 +163,7 @@ span {
     /*width: 60%;*/
     /*margin-left: 20%;*/
     /*margin-right: 20%;*/
-    background-color: #ffffff;
+    background-color: #e7e7e7;
     right: 0;
     bottom: 0;
     left: 0;

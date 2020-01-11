@@ -63,3 +63,8 @@ services:
         class: SearchBundle\Command\SearchCommand
         arguments:
             - "@app.data_helper_impl" # autowire:true could have been used, but it is better to specify it
+
+    # Handle no route errors
+    AlbumBundle\EventListener\ExceptionListener:
+            tags:
+                - { name: kernel.event_listener, event: kernel.exception }

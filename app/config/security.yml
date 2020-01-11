@@ -39,7 +39,11 @@ security:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/profile/, role: ROLE_USER }
-        - { path: ^/addAlbum, role: ROLE_USER }
-        - { path: ^/addReview, role: ROLE_USER }
+        - { path: ^/view_reviews_by_album/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/search/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/profile/, role: [ ROLE_USER, ROLE_ADMIN ] }
+        - { path: ^/addAlbum, role: [ ROLE_USER, ROLE_ADMIN ]}
+        - { path: ^/addReview/, role: [ ROLE_USER, ROLE_ADMIN ]}
+        - { path: ^/editReview/, role: [ ROLE_USER, ROLE_ADMIN ]}
+        - { path: ^/delete_review/, role: [ ROLE_USER, ROLE_ADMIN ]}
         - { path: ^/admin/, role: ROLE_ADMIN }

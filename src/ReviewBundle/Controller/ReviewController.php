@@ -77,6 +77,11 @@ class ReviewController extends Controller
         $album =  $em->getRepository(Album::class)
             ->find($id);
 
+        if (!$album) {
+            $this->addFlash('warning', 'There is not album that matches your request.');
+            return $this->redirect($this->generateUrl('album_homepage'));
+        }
+
         $tracks = $em->getRepository(Track::class)
             ->getTracksByAlbumID($album)
             ->getResult();
@@ -125,7 +130,11 @@ class ReviewController extends Controller
         $review = $em->getRepository(Review::class)
             ->find($id);
 
-        if ($review->getReviewer() !== $this->getUser() && !$this->container->get('security.authorization_checker')
+        if (!$review) {
+            $this->addFlash('warning', 'Review not found!.');
+            return $this->redirect($this->generateUrl('album_homepage'));
+        }
+        if ($this->getUser() !== $review->getReviewer() && !$this->container->get('security.authorization_checker')
                 ->isGranted('ROLE_ADMIN'))
         {
             $this->addFlash('error', 'You are not allowed to edit this review as you do not own it!');
@@ -143,7 +152,8 @@ class ReviewController extends Controller
         if ($form->isValid()) {
             $em->flush();
 
-            $this->viewByAlbumAction($request, $id);
+            $this->addFlash("success", "Your review was updated.");
+//            $this->viewByAlbumAction($request, $id);
 //            return $this->redirect($this->generateUrl('view_reviews_by_album', [
 //                'id' => $id
 //            ]));
@@ -171,7 +181,7 @@ class ReviewController extends Controller
             $em->remove($review);
             $em->flush();
 
-            $this->addFlash('success', 'Review Deleted!');
+            $this->addFlash('success', 'Your review was deleted!');
             return $this->redirect($this->generateUrl('album_homepage'));
         }
         catch (\Exception $e) {
