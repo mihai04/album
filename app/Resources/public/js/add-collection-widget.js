@@ -1,4 +1,4 @@
-var $addTagButton = $('<button type="button" class="btn btn-primary add_tag_link">Add a track</button>');
+var $addTagButton = $('<button type="button" class=" add_tag_link">Add a track</button>');
 var $newLinkLi = $('<li></li>').append($addTagButton);
 jQuery(document).ready(function() {
 
@@ -31,7 +31,7 @@ function addTagForm($collectionHolder, $newLinkLi) {
     let index = $collectionHolder.data('index');
 
     let newForm = prototype;
-    // You need this only if you didn't set 'label' => false in your tags field in TaskType
+    // You need this only if yo67u didn't set 'label' => false in your tags field in TaskType
     // Replace '__name__label__' in the prototype's HTML to
     // instead be a number based on how many items we have
     // newForm = newForm.replace(/__name__label__/g, index);
@@ -50,7 +50,7 @@ function addTagForm($collectionHolder, $newLinkLi) {
 }
 
 function addTagFormDeleteLink($tagFormLi) {
-    var $removeFormButton = $('<button  style="margin-bottom: 5px" class="btn btn-danger">' +
+    var $removeFormButton = $('<button  style="margin-bottom: 5px;" id="create_property">' +
         'Remove track' +
         '</button>');
     $tagFormLi.append($removeFormButton);

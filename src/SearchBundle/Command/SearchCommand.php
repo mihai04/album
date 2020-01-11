@@ -8,8 +8,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use SearchBundle\Entity\Entities;
 use SearchBundle\Entity\Indexes;
-use SearchBundle\Helper\DatabaseHelper;
-use SearchBundle\Helper\DatabaseHelperImpl;
+use SearchBundle\Helper\DatabaseHelperInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputArgument;
@@ -29,19 +28,17 @@ class SearchCommand extends ContainerAwareCommand
 
     const COMMAND_NAME = 'populate:search:entities';
 
-
-
     /**
-     * @var DatabaseHelper
+     * @var DatabaseHelperInterface
      */
     private $databaseHelper;
 
     /**
      * SearchCommand constructor.
      *
-     * @param DatabaseHelper $databaseHelper
+     * @param DatabaseHelperInterface $databaseHelper
      */
-    public function __construct(DatabaseHelper $databaseHelper)
+    public function __construct(DatabaseHelperInterface $databaseHelper)
     {
         $this->databaseHelper = $databaseHelper;
 
@@ -90,24 +87,31 @@ class SearchCommand extends ContainerAwareCommand
             ->getRepository(Entities::class)
             ->getEntities();
 
-        /** @var Entities $term */
-        foreach($terms as $term) {
-            try {
-                $em
-                    ->getRepository(Indexes::class)
-                    ->generateIndex($term->getEntityName(), $term->getEntityField());
 
-                $output->writeln('<fg=green;options=bold>Generated indexes for bundle with entity: ' . $term->getEntityName()
-                    . ' having field name ' . $term->getEntityField() . '.</>');
-            } catch (OptimisticLockException $e) {
-                $output->writeln('<fg=green;options=bold>Generated indexes for bundle with entity: ' . $term->getEntityName()
-                    . ' having field ' . $term->getEntityField() . '.</>');
-            } catch (ORMException $e) {
-                $output->writeln('<fg=red;options=bold>Failed to indexes for bundle with entity: ' . $term->getEntityName()
-                    . ' having field ' . $term->getEntityField() . '.</>');
-            }
+        if (empty($terms)) {
+            $output->writeln('<fg=yellow;options=bold>Error: There are not entities in your entities table.');
         }
+        else {
 
-        $output->writeln('Success');
+            /** @var Entities $term */
+            foreach ($terms as $term) {
+                try {
+                    $em
+                        ->getRepository(Indexes::class)
+                        ->generateIndex($term->getEntityName(), $term->getEntityField());
+
+                    $output->writeln('<fg=green;options=bold>Generated indexes for bundle with entity: ' . $term->getEntityName()
+                        . ' having field name ' . $term->getEntityField() . '.</>');
+                } catch (OptimisticLockException $e) {
+                    $output->writeln('<fg=green;options=bold>Generated indexes for bundle with entity: ' . $term->getEntityName()
+                        . ' having field ' . $term->getEntityField() . '.</>');
+                } catch (ORMException $e) {
+                    $output->writeln('<fg=red;options=bold>Failed to indexes for bundle with entity: ' . $term->getEntityName()
+                        . ' having field ' . $term->getEntityField() . '.</>');
+                }
+            }
+
+            $output->writeln('Success');
+        }
     }
 }

@@ -39,12 +39,16 @@ class AddAlbumType extends AbstractType
                     'allow_add' => true,
                     'by_reference' => false,
                     'allow_delete' => true,
+                    'label' => false,
                     'entry_options' => ['label' => false],
                 ]
             )
             ->add('image', FileType::class, [
-                'label' => 'Image',
-                'required' => false
+//                'label' => 'Image',
+                'required' => false,
+                'attr' => [
+                    'label' => false
+                ]
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [

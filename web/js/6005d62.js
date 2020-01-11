@@ -1,39 +1,3 @@
-// $(function(){
-//     var labelWasClicked = function labelWasClicked(){
-//         var input = $(this).siblings().filter('input');
-//         if (input.attr('disabled')) {
-//             return;
-//         }
-//         input.val($(this).attr('data-value'));
-//     }
-//
-//     var turnToStar = function turnToStar(){
-//         if ($(this).find('input').attr('disabled')) {
-//             return;
-//         }
-//         var labels = $(this).find('div');
-//         labels.removeClass();
-//         labels.addClass('star');
-//     }
-//
-//     var turnStarBack = function turnStarBack(){
-//         var rating = parseInt($(this).find('input').val());
-//         if (rating > 0) {
-//             var selectedStar = $(this).children().filter('#rating_star_'+rating)
-//             var prevLabels = $(selectedStar).nextAll();
-//             prevLabels.removeClass();
-//             prevLabels.addClass('star-full');
-//             selectedStar.removeClass();
-//             selectedStar.addClass('star-full');
-//         }
-//     }
-//
-//     $('.star, .rating-well').click(labelWasClicked);
-//     $('.rating-well').each(turnStarBack);
-//     $('.rating-well').hover(turnToStar,turnStarBack);
-//
-// });
-
 $(function(){
     var labelWasClicked = function labelWasClicked(){
         var input = $(this).siblings().filter('input');
@@ -69,7 +33,43 @@ $(function(){
     $('.rating-well').hover(turnToStar,turnStarBack);
 
 });
-var $addTagButton = $('<button type="button" class="btn btn-primary add_tag_link">Add a track</button>');
+
+// $(function(){
+//     var labelWasClicked = function labelWasClicked(){
+//         var input = $(this).siblings().filter('input');
+//         if (input.attr('disabled')) {
+//             return;
+//         }
+//         input.val($(this).attr('data-value'));
+//     }
+//
+//     var turnToStar = function turnToStar(){
+//         if ($(this).find('input').attr('disabled')) {
+//             return;
+//         }
+//         var labels = $(this).find('div');
+//         labels.removeClass();
+//         labels.addClass('star');
+//     }
+//
+//     var turnStarBack = function turnStarBack(){
+//         var rating = parseInt($(this).find('input').val());
+//         if (rating > 0) {
+//             var selectedStar = $(this).children().filter('#rating_star_'+rating)
+//             var prevLabels = $(selectedStar).nextAll();
+//             prevLabels.removeClass();
+//             prevLabels.addClass('star-full');
+//             selectedStar.removeClass();
+//             selectedStar.addClass('star-full');
+//         }
+//     }
+//
+//     $('.star, .rating-well').click(labelWasClicked);
+//     $('.rating-well').each(turnStarBack);
+//     $('.rating-well').hover(turnToStar,turnStarBack);
+//
+// });
+var $addTagButton = $('<button type="button" class=" add_tag_link">Add a track</button>');
 var $newLinkLi = $('<li></li>').append($addTagButton);
 jQuery(document).ready(function() {
 
@@ -102,7 +102,7 @@ function addTagForm($collectionHolder, $newLinkLi) {
     let index = $collectionHolder.data('index');
 
     let newForm = prototype;
-    // You need this only if you didn't set 'label' => false in your tags field in TaskType
+    // You need this only if yo67u didn't set 'label' => false in your tags field in TaskType
     // Replace '__name__label__' in the prototype's HTML to
     // instead be a number based on how many items we have
     // newForm = newForm.replace(/__name__label__/g, index);
@@ -121,7 +121,7 @@ function addTagForm($collectionHolder, $newLinkLi) {
 }
 
 function addTagFormDeleteLink($tagFormLi) {
-    var $removeFormButton = $('<button  style="margin-bottom: 5px" class="btn btn-danger">' +
+    var $removeFormButton = $('<button  style="margin-bottom: 5px;" id="create_property">' +
         'Remove track' +
         '</button>');
     $tagFormLi.append($removeFormButton);

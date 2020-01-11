@@ -8,7 +8,7 @@
         <h1 style="text-align: center">Album title: {{ album.title }}</h1>
         <div class="col-sm-6">
             <div style="text-align: center">
-                <img src="{{ asset('public/uploads_directory/' ~ album.image ) }}">
+                <img style="border-radius: 30px" src="{{ asset('public/uploads_directory/' ~ album.image ) }}">
                 <h3><b>Summary:</b></h3>
                 <p><b>Artist:</b> {{ album.artist }} </p>
                 <p><b>ISRC:</b> {{ album.isrc }} </p>
@@ -64,7 +64,7 @@
         </div>
     </div>
 
-    <div class="col-sm-3">
+    <div class="col-sm-12" style="width: 100%">
         <a href="{{ path('add_review', {id: album.id}) }}">
             <button type="button" id="register_button">
                 Add Review

@@ -5,7 +5,7 @@
     <div class="row col-md-12 col-sm-12 col-xs-12">
         {% if results is empty %}
         {% else %}
-        {% set iBook = 0 %}
+        {% set albumID = 0 %}
         {% for result in results %}
 
             {% if result is instanceof('UserBundle\\Entity\\User') %}
@@ -57,9 +57,9 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-6">
-                                    {% if ratings[iBook] is defined %}
-                                        {{ ratings[iBook]|rating(5, 'fa-norm') }}
-                                        {% set iBook = iBook + 1 %}
+                                    {% if ratings[albumID] is defined %}
+                                        {{ ratings[albumID]|rating(5, 'fa-norm') }}
+                                        {% set albumID = albumID + 1 %}
                                     {% else %}
                                         {{ 0|rating(5, 'fa-star') }}
                                     {% endif %}

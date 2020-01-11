@@ -6,7 +6,7 @@ use AlbumBundle\Entity\Album;
 use Knp\Component\Pager\Paginator;
 use ReviewBundle\Entity\Review;
 use SearchBundle\Entity\Indexes;
-use SearchBundle\Helper\DatabaseHelper;
+use SearchBundle\Helper\DatabaseHelperInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;

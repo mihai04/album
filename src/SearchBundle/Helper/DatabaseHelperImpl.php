@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @package SearchBundle\Helper
  */
-class DatabaseHelperImpl implements DatabaseHelper
+class DatabaseHelperImpl implements DatabaseHelperInterface
 {
     const QUERY_DISABLE_FK = 'SET FOREIGN_KEY_CHECKS = 0;';
     const QUERY_ENABLE_FK = 'SET FOREIGN_KEY_CHECKS = 1;';
@@ -22,8 +22,8 @@ class DatabaseHelperImpl implements DatabaseHelper
      *
      * @param OutputInterface $output
      * @param EntityManagerInterface $em
-     * @param $table
-     * @param $isCascade
+     * @param string $table
+     * @param bool $isCascade
      * @throws DBALException
      */
     public function truncate(OutputInterface $output, EntityManagerInterface $em, $table, $isCascade)

@@ -38,7 +38,7 @@ class AlbumController extends Controller
         $paginator = $this->get('knp_paginator');
         $albums = $paginator->paginate(
             $query,
-            $request->query->getInt('page', 1), 3
+            $request->query->getInt('page', 1), $this->getParameter('page_limit')
         );
 
         $rating = [];

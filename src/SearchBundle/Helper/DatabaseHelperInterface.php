@@ -7,7 +7,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-interface DatabaseHelper
+interface DatabaseHelperInterface
 {
     /**
      * The Interface can be further implemented by other databases.

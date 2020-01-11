@@ -13,6 +13,7 @@ parameters:
     locale: en
     uploads_directory: '%kernel.project_dir%/web/public/uploads_directory'
     commandName: 'populate:search:entities'
+    page_limit: 6
 
 
 framework:

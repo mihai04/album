@@ -92,7 +92,7 @@ class ReviewController extends Controller
         $paginator = $this->get('knp_paginator');
         $reviews = $paginator->paginate(
             $query,
-            $request->query->getInt('page', 1),1
+            $request->query->getInt('page', 1),$this->getParameter('page_limit')
         );
 
         $totalReviews = 0;
@@ -138,9 +138,7 @@ class ReviewController extends Controller
                 ->isGranted('ROLE_ADMIN'))
         {
             $this->addFlash('error', 'You are not allowed to edit this review as you do not own it!');
-            return $this->redirect($this->generateUrl('view_reviews_by_album', [
-                'id' => $review->getId()
-            ]));
+            return $this->redirect($this->generateUrl('album_homepage'));
         }
 
         $form = $this->createForm(AddReviewFormType::class,  $review, [
@@ -153,10 +151,6 @@ class ReviewController extends Controller
             $em->flush();
 
             $this->addFlash("success", "Your review was updated.");
-//            $this->viewByAlbumAction($request, $id);
-//            return $this->redirect($this->generateUrl('view_reviews_by_album', [
-//                'id' => $id
-//            ]));
         }
 
         return $this->render('ReviewBundle:Default:edit.html.twig', [
