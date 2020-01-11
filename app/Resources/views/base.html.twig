@@ -22,11 +22,9 @@
          'bundles/starrating/js/rating.js'
          '../app/Resources/public/js/add-collection-widget.js'
         'https://code.jquery.com/jquery-3.2.1.slim.min.js'
-
         'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'
         'https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js'
     %}
-{#    'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/poper.min.js'#}
    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -38,16 +36,15 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             {% if is_granted('ROLE_USER') %}
-
-                <div id="MainMenu">
+                <div id="navMenu">
                 <a type="button" id="sidebarCollapse" class="navbar-brand">
-                    <span class="glyphicon glyphicon-user" id="MainMenu">Menu</span>
+                    <span class="glyphicon glyphicon-user" id="navMenu">Menu</span>
                 </a>
                 </div>
             {% endif %}
-            <div class="navbar-header" id="MainMenu">
+            <div class="navbar-header">
                 <a type="button" class="navbar-brand" href="{{ path('album_homepage') }}">
-                    <span class="glyphicon glyphicon-music">Albums</span>
+                    <span id="navMenu" class="glyphicon glyphicon-music">Albums</span>
                 </a>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navCollapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -58,14 +55,14 @@
             </div>
 
             <div class="collapse navbar-collapse" id="navCollapse">
-                <ul class="nav navbar-nav navbar-right" id="MainMenu">
+                <ul class="nav navbar-nav navbar-right">
                     {% if is_granted('ROLE_USER') == false %}
                         <li>
                             <a href="{{ path('fos_user_registration_register') }}">
-                                Register<span class="glyphicon glyphicon-user"></span></a>
+                                Register<span id="navMenu" class="glyphicon glyphicon-user"></span></a>
                         </li>
                         <li><a href="{{ path('fos_user_security_login') }}">
-                                Login<span class="glyphicon glyphicon-log-in"></span></a>
+                                Login<span id="navMenu" class="glyphicon glyphicon-log-in"></span></a>
                         </li>
                     {% endif %}
                 </ul>
@@ -84,23 +81,27 @@
     </nav>
 
     <div class="row" style="padding-bottom: 100px;">
+        {% for msg in app.session.flashBag.get('success') %}
+            <div class="alert alert-success">
+                {{ msg }}
+            </div>
+        {% endfor %}
+        {% for msg in app.session.flashBag.get('error') %}
+            <div class="alert alert-danger">
+                {{ msg }}
+            </div>
+        {% endfor %}
+        {% for msg in app.session.flashBag.get('warning') %}
+            <div class="alert alert-warning">
+                {{ msg }}
+            </div>
+        {% endfor %}
         <section class="col-md-3 col-sm-2 col-xs-1">
             {% if is_granted('ROLE_USER') %}
                 {% include 'sidebar.html.twig' %}
             {% endif %}
         </section>
-        <section id="mainContent" class="col-md-11 col-sm-11 col-xs-11">
-            {% for msg in app.session.flashBag.get('success') %}
-                <div class="alert alert-success">
-                    {{ msg }}
-                </div>
-            {% endfor %}
-            {% for msg in app.session.flashBag.get('error') %}
-                <div class="alert alert-danger">
-                    {{ msg }}
-                </div>
-            {% endfor %}
-
+        <section id="mainContent" class="col-md-12 col-sm-12 col-xs-12">
             {% block body %}{% endblock %}
         </section>
     </div>

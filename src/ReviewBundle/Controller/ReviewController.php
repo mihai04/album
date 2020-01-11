@@ -3,6 +3,7 @@
 namespace ReviewBundle\Controller;
 
 use AlbumBundle\Entity\Album;
+use AlbumBundle\Entity\Track;
 use Knp\Component\Pager\Paginator;
 use ReviewBundle\Entity\Review;
 use ReviewBundle\Form\AddReviewFormType;
@@ -16,6 +17,8 @@ use UserBundle\Entity\User;
 class ReviewController extends Controller
 {
     /**
+     * Add a review to a given album.
+     *
      * @param Request $request
      * @param int
      * @return Response
@@ -27,7 +30,6 @@ class ReviewController extends Controller
         $form = $this->createForm(AddReviewFormType::class, $review);
         $form->handleRequest($request);
 
-
         $em = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
             $album = $em->getRepository(Album::class)->find($id);
@@ -36,24 +38,34 @@ class ReviewController extends Controller
                 $this->addFlash("error", "Failed to find Album!");
             }
             else {
-                /** @var User $user */
-                $user = $this->get('security.token_storage')->getToken()->getUser();
-                $review->setReviewer($user);
-                /** @var Album $album */
-                $review->setAlbum($album);
-                $review->setTitle($album->getTitle());
-                $review->setTimestamp(new \DateTime());
-                $em->persist($review);
-                $em->flush();
+
+                try {
+                    /** @var User $user */
+                    $user = $this->get('security.token_storage')->getToken()->getUser();
+                    $review->setReviewer($user);
+                    /** @var Album $album */
+                    $review->setAlbum($album);
+                    $review->setTitle($album->getTitle());
+                    $review->setTimestamp(new \DateTime());
+                    $em->persist($review);
+                    $em->flush();
+
+                    $this->addFlash("success", "Thank you for your review.");
+                }
+                catch (\Exception $e) {
+                    $this->addFlash("error", "Failed to persist your review.");
+                }
             }
         }
 
-        return $this->render('ReviewBundle:Default:index.html.twig', [
+        return $this->render('ReviewBundle:Default:addReview.html.twig', [
             "form" => $form->createView()
         ]);
     }
 
     /**
+     * View reviews by based on album.
+     *
      * @param Request $request
      * @param $id
      * @return Response
@@ -65,11 +77,17 @@ class ReviewController extends Controller
         $album =  $em->getRepository(Album::class)
             ->find($id);
 
+        $tracks = $em->getRepository(Track::class)
+            ->getTracksByAlbumID($album)
+            ->getResult();
+
+        $album->setAlbumTracks($tracks);
+
         /** @var Paginator $paginator */
         $paginator = $this->get('knp_paginator');
         $reviews = $paginator->paginate(
             $query,
-            $request->query->getInt('page', 1),5
+            $request->query->getInt('page', 1),1
         );
 
         $totalReviews = 0;
@@ -94,16 +112,23 @@ class ReviewController extends Controller
         );
     }
 
-    public function editReviewAction(Request $request, $id) {
-        // CHECK TRANSACTION
-        // https://www.doctrine-project.org/projects/doctrine-orm/en/2.7/reference/transactions-and-concurrency.html
+    /**
+     * Edit an existing review for a given album.
+     *
+     * @param Request $request
+     * @param $id
+     * @return RedirectResponseAlias|Response
+     */
+    public function editReviewAction(Request $request, $id){
+
         $em = $this->getDoctrine()->getManager();
         $review = $em->getRepository(Review::class)
             ->find($id);
 
-        if ($review->getReviewer() !== $this->getUser()
-            && !$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-            $this->addFlash('error', 'You are not allowed to edit this album');
+        if ($review->getReviewer() !== $this->getUser() && !$this->container->get('security.authorization_checker')
+                ->isGranted('ROLE_ADMIN'))
+        {
+            $this->addFlash('error', 'You are not allowed to edit this review as you do not own it!');
             return $this->redirect($this->generateUrl('view_reviews_by_album', [
                 'id' => $review->getId()
             ]));
@@ -115,11 +140,13 @@ class ReviewController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isValid() &&  $form->isSubmitted()) {
+        if ($form->isValid()) {
             $em->flush();
-            return $this->redirect($this->generateUrl('view_reviews_by_album', [
-                'id' => $review->getId()
-            ]));
+
+            $this->viewByAlbumAction($request, $id);
+//            return $this->redirect($this->generateUrl('view_reviews_by_album', [
+//                'id' => $id
+//            ]));
         }
 
         return $this->render('ReviewBundle:Default:edit.html.twig', [
@@ -129,19 +156,29 @@ class ReviewController extends Controller
     }
 
     /**
+     * Delete a review for a given album.
+     *
      * @param $id
      *
      * @return RedirectResponseAlias
      */
     public function deleteReviewAction($id) {
         $em = $this->getDoctrine()->getManager();
-        $review = $em->getRepository(Review::class)
-            ->find($id);
+        try {
+            $review = $em->getRepository(Review::class)
+                ->find($id);
 
-        $em->remove($review);
-        $em->flush();
+            $em->remove($review);
+            $em->flush();
 
-        // TO DO: add message + also check errors
-        return $this->redirect($this->generateUrl('homepage'));
+            $this->addFlash('success', 'Review Deleted!');
+            return $this->redirect($this->generateUrl('album_homepage'));
+        }
+        catch (\Exception $e) {
+            $this->addFlash('error', 'Failed to delete review!');
+            return $this->redirect($this->generateUrl('view_reviews_by_album', [
+                'id' => $id
+            ]));
+        }
     }
 }

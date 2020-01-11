@@ -1,65 +1,31 @@
 {% extends '::base.html.twig' %}
 
-{% block sidebar %}
-    Sidebar content
-{% endblock %}
+{% block sidebar %}{% endblock %}
 
 {% block body %}
 
-    <div class="row navigation text-center col-xs-12 col-sm-12 col-md-9 ">
-        {{ knp_pagination_render(albums) }}
-    </div>
-
-    <div class="row col-md-12 col-sm-12 col-xs-12">
-        {% for album in albums %}
-
-            <article>
-                <div class="col-xs-6">
-                    <img src="{{ asset('public/uploads_directory/' ~ album.image ) }}">
-                </div>
-
-                <ul>
-                    {% for track in album.albumTracks %}
-                        <li>{{ track.trackName }}</li>
-                    {% endfor %}
-                </ul>
-
-                <div class="row">
-                <div class="col-xs-6">
-                    {% if  is_granted('ROLE_USER') %}
-                        <a class="btn btn-success btn-labeled" href="{{ path('add_review', {id: album.id}) }}"
-                           role="button"><span class="btn-label"><i class="glyphicon glyphicon-pencil"></i></span>
-                            Add Review</a>
-                        </a>
-                    {% endif %}
-                </div>
-                    <div class="col-xs-6">
-                        <a class="btn btn-info btn-labeled" href="{{ path('view_reviews_by_album', {id: album.id}) }}"
-                           role="button"><span class="btn-label"><i class="glyphicon glyphicon-info-sign"></i></span>
-                            View Review</a>
-                        </a>
+    <div class="wrapper">
+        <div class="col-xs-12 col-md-12">
+                {% for album in albums %}
+                    <tbody id="album_object_tbody">
+                    <div id="albumSet">
+                        <div class="row" style="height: 75%">
+                            <img src="{{ asset('public/uploads_directory/' ~ album.image ) }}"/>
+                            <p><b>Title:</b> {{ album.title }}</p>
+                            <p><b>Author:</b> {{ album.artist }}</p>
+                        </div>
+                        <div>
+                            <p><b>Rating:</b> {{ rating[album.id]|rating(5, "fa-star") }}</p>
+                            <p style="vertical-align: bottom;"><a class="btn" id="_submit"
+                                                                  href="{{ path('view_reviews_by_album', {id: album.id}) }}"
+                                                                  role="button">See Reviews</a>
+                                </a>
+                            </p>
+                        </div>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-xs-6">
-                        {{ rating[album.id]|rating(5, "fa-star") }}
-                    </div>
-                </div>
-
-            </article>
-
-            <div class="row col-xs-12">
-                <h4>
-                    {{ album.artist }}
-                </h4>
-
-                <small class="row col-xs-12">
-                    <b>by {{ album.title }}</b>
-                </small>
-            </div>
-
-        {% endfor %}
+                    </tbody>
+                {% endfor %}
+        </div>
     </div>
 
     <div class="row navigation text-center col-md-9 col-sm-10 col-xs-12">

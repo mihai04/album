@@ -5,7 +5,7 @@ add_review:
         id: '\d+'
 
 edit_review:
-    path:     /editReview/{id}
+    path:     /editReview/{id}/
     defaults: { _controller: ReviewBundle:Review:editReview }
     requirements:
         id: '\d+'

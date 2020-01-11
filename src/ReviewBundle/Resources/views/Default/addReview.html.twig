@@ -1,0 +1,33 @@
+{% extends '::base.html.twig' %}
+{% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block body %}
+
+    <div class="col-xs-12">
+        <div class="col-md-offset-0" id="create_first_div">
+            <div id="title_and_image_div">
+                <h2>Add Review</h2>
+                <hr>
+            </div>
+            <div id="form_div">
+                {{ form_start(form) }}
+                <p class="align_add_review_label">
+                    <b style="text-align: center">Title</b>
+                </p>
+                <p id="create_property">{{ form_widget(form.title) }}</p>
+                <p class="align_add_review_label">
+                    <b>Review</b>
+                </p>
+                <p id="create_property">{{ form_widget(form.review) }}</p>
+                <p class="align_add_review_label">
+                    <b>Rating</b>
+                </p>
+                <div>
+                    <p id="create_property">{{ form_widget(form.rating) }}</p>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+{% endblock %}

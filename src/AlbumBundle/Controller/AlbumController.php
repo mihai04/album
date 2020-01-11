@@ -38,9 +38,8 @@ class AlbumController extends Controller
         $paginator = $this->get('knp_paginator');
         $albums = $paginator->paginate(
             $query,
-            $request->query->getInt('page', 1)
+            $request->query->getInt('page', 1), 3
         );
-
 
         $rating = [];
 
@@ -50,7 +49,8 @@ class AlbumController extends Controller
             $totalRating = 0;
             $albumRating = 0;
 
-            $tracks = $em->getRepository(Track::class)->getTracksByAlbumID($album)
+            $tracks = $em->getRepository(Track::class)
+                ->getTracksByAlbumID($album)
                 ->getResult();
 
             $album->setAlbumTracks($tracks);
@@ -94,7 +94,6 @@ class AlbumController extends Controller
      * @param Request $request
      *
      * @return RedirectResponse|Response
-     * @throws AlbumExistsException
      */
     public function addAlbumAction(Request $request)
     {
@@ -112,8 +111,6 @@ class AlbumController extends Controller
             $newFileName = $this->hashImageName($originalFileName, $uploadedFile);
 
             try {
-
-
                 $em = $this->getDoctrine()->getManager();
                 $album->setImage($newFileName);
                 $tracks = $form['albumTracks']->getData();
@@ -143,11 +140,9 @@ class AlbumController extends Controller
                 $this->addFlash('success', 'Album created');
             }
 
-            // https://symfony.com/doc/current/security/access_denied_handler.html
-
+            // save image
             $destination = $this->getParameter('uploads_directory');
             $uploadedFile->move($destination, $newFileName);
-
         }
         return $this->render('AlbumBundle:Default:add_album.html.twig', [
             'form' => $form->createView()

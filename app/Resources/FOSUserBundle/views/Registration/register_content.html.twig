@@ -2,9 +2,9 @@
 {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
 
 <div class="col-lg-8">
-    <div class="col-md-offset-5" id="signup_div">
-        <div id="signup_fields_div">
-        <h3>Register music lover</h3>
+    <div class="col-md-offset-5" id="register_div">
+        <div id="register_fields_div">
+        <h2>Register music lover</h2>
             </br>
             {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'),
                 'attr': {'class': 'fos_user_registration_register'}}) }}
@@ -13,7 +13,7 @@
             {{ form_row(form.plainPassword) }}
         </div>
 
-            <input id="_submit" type="submit"  class="btn btn-primary" value="{{ 'registration.submit'|trans }}"/>
+            <input id="register_button" type="submit"  class="btn btn-primary" value="{{ 'registration.submit'|trans }}"/>
         {{ form_end(form) }}
     </div>
 </div>

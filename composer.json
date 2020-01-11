@@ -35,7 +35,7 @@
         "fortawesome/font-awesome": "^5.12",
         "friendsofsymfony/user-bundle": "^2.1",
         "incenteev/composer-parameter-handler": "^2.0",
-        "knplabs/knp-paginator-bundle": "^2.8",
+        "knplabs/knp-paginator-bundle": "4.1.0",
         "paragonie/random_compat": "^2.0",
         "sensio/distribution-bundle": "^5.0.19",
         "sensio/framework-extra-bundle": "^5.0.0",

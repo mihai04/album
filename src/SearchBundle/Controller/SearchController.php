@@ -21,13 +21,20 @@ class SearchController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $searchTerm = $request->get('q');
+        $searchTerm = $request->get('search');
 
-//        if($searchTerm){} check it
-
+        if (!$searchTerm) {
+            $this->addFlash('error', "Please provide an input.");
+            return $this->redirect($this->generateUrl('album_homepage'));
+        }
 
         $queryResults = $this->getDoctrine()->getRepository(Indexes::class)
             ->getResults($searchTerm);
+
+        if (!$queryResults) {
+            $this->addFlash('warning', "There are no results matching your request. Try again.");
+            return $this->redirect($this->generateUrl('album_homepage'));
+        }
 
         $users = [];
         $albums = [];
@@ -40,11 +47,11 @@ class SearchController extends Controller
                 ->find($result->getForeignKey());
 
             $entityId = $entity->getId();
-            if($entity instanceof User && !array_key_exists($entityId, $users)) {
+            if ($entity instanceof User && !array_key_exists($entityId, $users)) {
                 $users[$entityId] = $entity;
             }
 
-            if($entity instanceof Album && !array_key_exists($entityId, $albums)) {
+            if ($entity instanceof Album && !array_key_exists($entityId, $albums)) {
                 $albums[$entityId] = $entity;
                 $reviews = $this->getDoctrine()
                     ->getRepository(Review::class)
@@ -55,7 +62,7 @@ class SearchController extends Controller
                 $totalRating = 0;
 
                 /** @var Review $review */
-                foreach($reviews as $review) {
+                foreach ($reviews as $review) {
                     $totalReviews++;
                     $totalRating += $review->getRating();
                 }
@@ -78,5 +85,7 @@ class SearchController extends Controller
                 'results' => $results
             ]
         );
+
+
     }
 }

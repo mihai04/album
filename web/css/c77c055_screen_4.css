@@ -11,6 +11,8 @@ html {
 
 .navbar-default {
     background-color: whitesmoke;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
 }
 
 body {
@@ -21,7 +23,7 @@ body {
 }
 
 span {
-    font-size: 26px;
+    font-size: 30px;
 }
 
 .col-sm-2 {
@@ -31,7 +33,6 @@ span {
 .col-sm-10 {
     margin-left: 80px;
 }
-
 
 .footer {
     position: fixed;
@@ -46,24 +47,13 @@ span {
     font-size: 26px;
 }
 
-#MainMenu a:hover,
+#navMenu a:hover,
 .navbar-brand a:hover{
     color: #E1D276;
 }
 
 .navbar-default{
     background-color: #ffffff;
-}
-
-
-.container-fluid{
-    /*height:150px;*/
-    /*background-color: #EAEAEA;*/
-    /*border-bottom-left-radius: 5px;*/
-    /*border-bottom-right-radius: 5px;*/
-    /*margin-left: 10%;*/
-    /*margin-right: 10%;*/
-    /*margin-top: -5px;*/
 }
 
 .container>.footer {
@@ -206,6 +196,105 @@ a[data-toggle="collapse"] {
     transform: translateY(-50%);
 }
 
+
+/*
+    Create page start
+ */
+#create_first_div{
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 20px;
+    /*text-align: center;*/
+}
+#create_first_div img{
+    width: 230px;
+    height: 250px;
+    margin-bottom: 25px;
+}
+
+#title_and_image_div{
+    text-align: center;
+}
+
+#form_div{
+    margin: 20px 20px 20px 200px;
+}
+
+#form_div input,
+#form_div textarea {
+    color: #7E7A80;
+    width: 80%;
+    height: 45px;
+    box-sizing: border-box;
+    border: 0 solid;
+    font-size: 26px;
+    border-radius: 6px;
+    -webkit-transition: width 0.6s;
+    transition: width 0.5s;
+    background-color: #d1eff5;
+    padding: 10px;
+    outline: none;
+}
+
+article img {
+    width: 120px;
+    height: 150px;
+}
+
+article button {
+    margin: 5px;
+    width: 110px;
+}
+
+
+
+.row {
+    margin-right: -15px;
+    margin-left: -16px;
+}
+
+#form_div textarea{
+    color: #7e7a80;
+    outline: 0px;
+    width: 80%;
+    height: 200px;
+    box-sizing: border-box;
+    border: 0px solid;
+    border-radius: 4px;
+    font-size: 30px;
+    -webkit-transition: width 0.4s;
+    transition: width 0.4s;
+    background-color: #d1eff5;
+    padding: 10px;
+    outline: none;
+}
+
+#create_property{
+    text-align: center;
+}
+
+
+#create_first_div button{
+    background-color: #c6c6c6;
+    width: 100%;
+    height: 50px;
+    font-size: 26px;
+    border-radius: 10px;
+    border: 0px solid;
+    -webkit-transition: font-size 0.2s;
+    transition: font-size 0.2s;
+    color: #2a2a2a;
+    outline: none;
+}
+
+#create_first_div button:hover{
+    font-size: 32px;
+}
+/*
+    Create page end
+ */
+
+
 /**
 Start register page
 */
@@ -225,23 +314,18 @@ Start register page
     margin: 10px;
 }
 
-#signup_div{
+#register_div{
     background-color: #FFFFFF;
     padding: 15px;
     text-align: center;
 }
 
-#signup_fields_div img{
-    width: 260px;
-    height: 280px;
-}
-
-#signup_fields_div input{
+#register_fields_div input{
     color: #8B8B8B;
     margin: 10px;
     font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
     outline: 0px;
-    width: 225px;
+    width: 250px;
     height: 40px;
     box-sizing: border-box;
     border: 0px solid;
@@ -253,26 +337,11 @@ Start register page
     padding: 5px;
 }
 
-#signup_fields_div input:focus{
+#register_fields_div input:focus{
     color: #2b669a;
     width: 50%;
 }
 
-
-
-/*#submit_input_div input{*/
-/*    background-color: #2a2a2a;*/
-/*    outline: 0px;*/
-/*    margin-top: 20px;*/
-/*    width: 145px;*/
-/*    height: 50px;*/
-/*    font-size: 18px;*/
-/*    border-radius: 10px;*/
-/*    border: 3px solid #ffffff;*/
-/*    -webkit-transition: font-size 0.2s;*/
-/*    transition: font-size 0.2s;*/
-/*    color: whitesmoke;*/
-/*}*/
 
 #submit_input_div input:hover{
     font-size: 21px;
@@ -287,7 +356,7 @@ End register page
 /*
     login page start
  */
-#login_div{
+#logIn_div{
     background-color: #FFFFFF;
     text-align: center;
     padding: 15px;
@@ -337,11 +406,29 @@ End register page
     width: 50%;
 }
 
-#_submit {
-    background-color: #c6c6c6;
+#_reusable_danger {
+    background-color: #ea1422;
     outline: 0;
     margin-top: 20px;
-    width: 145px;
+    width: 165px;
+    height: 50px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: 3px solid #ffffff;
+    -webkit-transition: font-size 0.2s;
+    transition: font-size 0.2s;
+}
+
+#_reusable:hover {
+    font-size: 21px;
+}
+
+#_submit {
+    background-color: #2a2a2a;
+    color: whitesmoke;
+    outline: 0;
+    margin-top: 20px;
+    width: 180px;
     height: 50px;
     font-size: 18px;
     border-radius: 10px;
@@ -351,11 +438,11 @@ End register page
 }
 
 #_submit:hover {
-    font-size: 21px;
-    color: #2a2a2a;
+    font-size: 24px;
+    width: 200px;
 }
 
-#SignupBtn {
+#register_button {
     background-color: #2a2a2a;
     outline: 0px;
     margin-top: 20px;
@@ -369,12 +456,46 @@ End register page
     color: whitesmoke;
 }
 
-#SignupBtn:hover {
+#register_button:hover {
     font-size: 21px;
     color: whitesmoke;
 }
 
-/** */
+
+
+/* album */
+
+#albumSet {
+    padding: 1%;
+    text-align: center;
+    font-size: 25px;
+    width: 30%;
+    height: 650px;
+    margin-left: 30px;
+    float: left;
+    border-radius: 10px;
+}
+
+.col-xs-12 {
+    width: 100%;
+}
+
+#albumSet:hover {
+    background-color: #BFE0F1;
+    -webkit-transition: all 1s ease;
+    -ms-transition: all 1s ease;
+    transition: all 1s ease;
+}
+
+#albumSet img {
+    margin-bottom: 5%;
+    width: 180px;
+    height: 250px;
+    border-radius: 30px;
+    border: solid 2px #f3f3f3;
+}
+
+/* */
 
 /**                                    Star rating bundle ui fix bug                                               **/
 
@@ -473,4 +594,13 @@ End register page
 .rating div.fas.fa-star.fa-5x,
 .rating div.far.fa-star.fa-5x {
     font-size: 5em;
+}
+
+@media(max-width:768px){
+    #albumSet {
+        width: 100%;
+        float: left;
+        margin-left: 0;
+        margin-bottom: 20px;
+    }
 }

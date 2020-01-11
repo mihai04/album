@@ -1,20 +1,48 @@
 {% extends 'base.html.twig' %}
 {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
 
+
 {% block title %} Add Album {% endblock %}
 
 {% block body %}
 
-{{ form_start(form) }}
-    {{ form_row(form.title) }}
-    {{ form_row(form.artist) }}
-    {{ form_row(form.isrc) }}
-    {{ form_row(form.image) }}
-    <ol class="track" data-prototype="{{ form_widget(form.albumTracks.vars.prototype)|e('html_attr') }}">
-        {% for track in form.albumTracks %}
-            <p>{{ form_row(track) }}</p>
-        {% endfor %}
-    </ol>
-{#    o<button type="button" class="form control btn btn-primary add_tag_link">Add a track</button>#}
-{{ form_end(form) }}
+{#    <div class="col-lg-9">#}
+{#        <div class="col-md-offset-4" id="create_first_div">#}
+{#            <div id="title_and_image_div">#}
+{#                <h2>Create Book</h2>#}
+{#                <hr>#}
+{#                <img src='{{ asset("images/createImage.jpg") }}'>#}
+{#            </div>#}
+{#            <div id="form_div">#}
+{#                {{ form_start(form) }}#}
+{#                <p><b>Title</b></p><p id="create_property">{{ form_widget(form.title) }}</p>#}
+{#                <p><b>Author</b></p><p id="create_property">{{ form_widget(form.author) }}</p>#}
+{#                <p><b>Summary</b></p><p id="create_property">{{ form_widget(form.summary) }}</p>#}
+{#                <p><b>Official Review</b></p><p id="create_property">{{ form_widget(form.officalReview) }}</p>#}
+{#                <p><b>Category</b></p><p id="create_property">{{ form_widget(form.category) }}</p>#}
+{#                <p><b>Image</b></p><p id="create_property">{{ form_widget(form.image) }}</p>#}
+{#            </div>#}
+{#            {{ form_end(form) }}#}
+{#        </div>#}
+{#    </div>#}
+
+    <div class="col-lg-8" style="width: 100%">
+        <div id="create_first_div">
+            <h2>
+                Add Album
+            </h2>
+            {{ form_start(form) }}
+            {{ form_row(form.title) }}
+            {{ form_row(form.artist) }}
+            {{ form_row(form.isrc) }}
+            {{ form_row(form.image) }}
+            <ol class="track" data-prototype="{{ form_widget(form.albumTracks.vars.prototype)|e('html_attr') }}">
+                {% for track in form.albumTracks %}
+                    <p>{{ form_row(track) }}</p>
+                {% endfor %}
+            </ol>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
 {% endblock %}
