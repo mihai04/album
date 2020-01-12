@@ -3,7 +3,7 @@
 
 namespace SearchBundle\Helper;
 
-use SearchBundle\Entity\Indexes;
+use SearchBundle\Entity\Indices;
 
 class IndexesBuilder implements Builder {
 
@@ -11,7 +11,7 @@ class IndexesBuilder implements Builder {
 
     public function __construct()
     {
-        $this->indexes = new Indexes();
+        $this->indexes = new Indices();
     }
 
     public function withEntityName($entityName)

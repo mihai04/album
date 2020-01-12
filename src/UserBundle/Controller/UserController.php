@@ -32,6 +32,11 @@ class UserController extends Controller
         $user = $this->getDoctrine()->getRepository(User::class)
             ->find($id);
 
+        if (!$user) {
+            $this->addFlash('warning', 'No user matches your request!');
+            return $this->redirect($this->generateUrl('album_homepage'));
+        }
+
         return $this->render(
             'ReviewBundle:Default:viewReviewsByUser.html.twig',
             [

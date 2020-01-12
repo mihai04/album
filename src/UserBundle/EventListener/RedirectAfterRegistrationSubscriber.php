@@ -66,12 +66,12 @@ class RedirectAfterRegistrationSubscriber implements EventSubscriberInterface
         $user = $event->getForm()->getData();
         $user->addRole(self::ROLE_USER);
 
-
         $url = $this->getTargetPath($event->getRequest()->getSession(), 'main');
 
         if (!$url) {
             $url = $this->router->generate('album_homepage');
         }
+
         $response = new RedirectResponse($url);
         $event->setResponse($response);
     }

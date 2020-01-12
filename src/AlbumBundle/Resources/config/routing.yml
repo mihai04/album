@@ -6,8 +6,14 @@ add_album:
     path:     /add_album
     defaults: { _controller: AlbumBundle:Album:addAlbum }
 
+edit_album:
+    path:     /edit_album/{id}
+    defaults: { _controller: AlbumBundle:Album:editAlbum }
+    requirements:
+        id: '\d+'
+
 delete_album:
-    path:     /delete_album/{$id}
+    path:     /delete_album/{id}
     defaults: { _controller: AlbumBundle:Album:deleteAlbum }
     requirements:
         id: '\d+'

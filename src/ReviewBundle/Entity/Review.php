@@ -75,7 +75,7 @@ class Review
      *
      * This is the owning side of the relationship.
      *
-     * @ORM\ManyToOne(targetEntity="AlbumBundle\Entity\Album", inversedBy="entries")
+     * @ORM\ManyToOne(targetEntity="AlbumBundle\Entity\Album", inversedBy="reviews")
      * @ORM\JoinColumn(name="album", referencedColumnName="id", nullable=false)
      */
     private $album;

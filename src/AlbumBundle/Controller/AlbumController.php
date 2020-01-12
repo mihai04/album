@@ -9,7 +9,12 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Exception;
 use Knp\Component\Pager\Paginator;
 use ReviewBundle\Entity\Review;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -23,6 +28,9 @@ use TrackBundle\Entity\Track;
  */
 class AlbumController extends Controller
 {
+    const INDICES = 'indices';
+    const POPULATE_SEARCH_ENTITIES = 'populate:search:entities';
+
     /**
      * @param Request $request
      *
@@ -137,6 +145,9 @@ class AlbumController extends Controller
 
                 $em->persist($album);
                 $em->flush();
+
+                $this->updateEntitiesCommand();
+
             } catch (UniqueConstraintViolationException $e) {
                 $message = 'DBALException [%i]: %s'.$e->getMessage();
             } catch (TableNotFoundException $e) {
@@ -158,10 +169,58 @@ class AlbumController extends Controller
             $uploadedFile->move($destination, $newFileName);
         }
 
-
         return $this->render('AlbumBundle:Default:add_album.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     *
+     * @return RedirectResponse|Response
+     */
+    public function editAlbumAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $album = $em->getRepository(Album::class)
+            ->find($id);
+
+        if (!$album) {
+            $this->addFlash('warning', 'Album not found!.');
+            return $this->redirect($this->generateUrl('album_homepage'));
+        }
+
+        if (!$this->container->get('security.authorization_checker')
+                ->isGranted('ROLE_ADMIN'))
+        {
+            $this->addFlash('error', 'You are not allowed to edit this album as you are not an admin!');
+            return $this->redirect($this->generateUrl('album_homepage'));
+        }
+        else {
+            $form = $this->createForm(AddAlbumType::class, $album, [
+                'action' => $request->getUri()
+            ]);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+
+                $em->persist($album);
+                $em->flush();
+
+                $this->addFlash("success", "The album was updated.");
+                return $this->redirect($this->generateUrl(
+                    'add_album',
+                    [
+                        'id' => $album->getId()
+                    ]
+                ));
+            }
+
+            return $this->render('AlbumBundle:Default:add_album.html.twig', [
+                'form' => $form->createView()
+            ]);
+        }
     }
 
     /**
@@ -175,10 +234,14 @@ class AlbumController extends Controller
     {
         try {
             $entityManager = $this->getDoctrine()->getManager();
-            $entry = $entityManager->getRepository(Album::class)
+            $album = $entityManager->getRepository(Album::class)
                 ->find($id);
 
-            $entityManager->remove($entry);
+            if (!$album) {
+                $this->addFlash('warning', 'Album does not exist!');
+            }
+
+            $entityManager->remove($album);
             $entityManager->flush();
 
             $this->addFlash('success', 'Album deleted');
@@ -189,5 +252,28 @@ class AlbumController extends Controller
         }
 
         return $this->redirect($this->generateUrl('album_homepage'));
+    }
+
+    /**
+     * Generated indicies for searching the newly added album.
+     */
+    public function updateEntitiesCommand() {
+
+        $kernel = $this->get('kernel');
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => '' . self::POPULATE_SEARCH_ENTITIES . '',
+            'tableName' => self::INDICES,
+        ));
+
+        $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL);
+        try {
+            $output->writeln('<fg=green;options=bold>Generating indexes...');
+            $application->run($input, $output);
+        } catch (Exception $e) {
+            $output->writeln('<fg=red;options=bold>Command for updating search indices failed!');
+        }
     }
 }

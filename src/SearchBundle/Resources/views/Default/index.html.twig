@@ -62,9 +62,16 @@
                                     <a href="{{ path('view_reviews_by_album', {id: result.id}) }}">
                                         <button id="_submit" class="btn btn-primary">View reviews</button>
                                     </a>
+                                    <div>
+                                    <a href="{{ path('edit_album', {id: result.id}) }}">
+                                        <button id="_submit" class="btn btn-primary">Edit Album</button>
+                                    </a>
+                                    </div>
+                                    <div>
                                     <a href="{{ path('delete_album', {id: result.id}) }}">
                                         <button id="_reusable_danger" class="btn btn-primary">Delete Album</button>
                                     </a>
+                                    </div>
                                 </div>
                             </div>
                             {% else %}

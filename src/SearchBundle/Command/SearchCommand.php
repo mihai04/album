@@ -7,7 +7,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use SearchBundle\Entity\Entities;
-use SearchBundle\Entity\Indexes;
+use SearchBundle\Entity\Indices;
 use SearchBundle\Helper\DatabaseHelperInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -97,7 +97,7 @@ class SearchCommand extends ContainerAwareCommand
             foreach ($terms as $term) {
                 try {
                     $em
-                        ->getRepository(Indexes::class)
+                        ->getRepository(Indices::class)
                         ->generateIndex($term->getEntityName(), $term->getEntityField());
 
                     $output->writeln('<fg=green;options=bold>Generated indexes for bundle with entity: ' . $term->getEntityName()

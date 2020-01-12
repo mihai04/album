@@ -13,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse as RedirectResponseAlias;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use TrackBundle\Entity\Track;
 use UserBundle\Entity\User;
 
@@ -161,59 +160,6 @@ class ReviewController extends Controller
      */
     public function editReviewAction(Request $request, $id)
     {
-//        $entityManager = $this->getDoctrine()->getManager();
-//        $entry = $entityManager->getRepository(Review::class)->find($id);
-//
-//        // blocks all user from editing the review except any admin and the user
-//        // that the review belongs to
-//        if ($entry->getReviewer() !== $this->getUser() &&
-//            !$this->container->get('security.authorization_checker')
-//                ->isGranted('ROLE_ADMIN')
-//        ) {
-//            throw new AccessDeniedException();
-//        }
-//
-//
-////        $form = $this->createForm(
-////            Review::class,
-////            $entry,
-////            [
-////                'action' => $request->getUri()
-////            ]
-////
-////
-////        );
-//
-//
-////        $form = $this->createForm(AddReviewFormType::class, $entry);
-//
-//        $review = new Review();
-//        $form = $this->createForm(AddReviewFormType::class, $review);
-//
-//        $form->handleRequest($request);
-//
-//
-//        var_dump('here');
-//        if ($form->isValid()) {
-//            $entityManager->flush();
-//            return $this->redirect($this->generateUrl(
-//                'view_review',
-//                [
-//                    'id' => $entry->getId()
-//                ]
-//            ));
-//        }
-//
-//        return $this->render(
-//            'ReviewBundle:Default:edit.html.twig',
-//            [
-//                'form' => $form->createView(),
-//                'review' => $entry
-//            ]
-//        );
-//    }
-
-
         $em = $this->getDoctrine()->getManager();
         $review = $em->getRepository(Review::class)
             ->find($id);
@@ -222,10 +168,6 @@ class ReviewController extends Controller
             $this->addFlash('warning', 'Review not found!.');
             return $this->redirect($this->generateUrl('album_homepage'));
         }
-
-//        /** @var User $user */
-//        $user = $this->getUser();
-
 
         if ($review->getReviewer() !== $this->getUser() &&
             !$this->container->get('security.authorization_checker')

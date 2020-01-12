@@ -43,9 +43,10 @@ security:
         - { path: ^/search, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/profile/edit, role: ROLE_USER }
         - { path: ^/add_album, role: ROLE_USER }
-        - { path: ^/delete_album/, role: ROLE_ADMIN }
-        - { path: ^/add_review/, role: ROLE_USER }
+        - { path: ^/delete_album, role: ROLE_ADMIN }
+        - { path: ^/add_review, role: ROLE_USER }
         - { path: ^/edit_review, role: ROLE_USER }
-        - { path: ^/delete_review/, role: ROLE_USER }
+        - { path: ^/delete_review, role: ROLE_USER }
         - { path: ^/view_reviews_by_user, role: ROLE_USER }
         - { path: ^/admin, role: ROLE_ADMIN }
+        - { path: ^/edit_album, role: ROLE_ADMIN }

@@ -84,7 +84,7 @@ class Album
      * @ORM\OneToMany(targetEntity="ReviewBundle\Entity\Review", mappedBy="album")
      * @ORM\OrderBy({"timestamp"="DESC"})
      */
-    private $entries;
+    private $reviews;
 
     /**
      * @var ArrayCollection $albumTracks
@@ -101,7 +101,7 @@ class Album
 
     public function __construct()
     {
-        $this->entries = new ArrayCollection();
+        $this->reviews = new ArrayCollection();
         $this->albumTracks = new ArrayCollection();
     }
 
@@ -212,20 +212,20 @@ class Album
     /**
      * @return ArrayCollection|Review[] added for methods autocompletion.
      */
-    public function getEntries()
+    public function getReviews()
     {
-        return $this->entries;
+        return $this->reviews;
     }
 
     /**
      * Given the relationship, one cannot set data on the inverse side (it is only for reading).
      * It can only be set on the owning side. Put in different terms, Doctrine will ignore it.
      *
-     * @param ArrayCollection $entries
+     * @param ArrayCollection $reviews
      */
-    public function setEntries($entries)
+    public function setReviews($reviews)
     {
-        $this->entries = $entries;
+        $this->reviews = $reviews;
     }
 
     /**

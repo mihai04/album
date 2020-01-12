@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="SearchBundle\Repository\IndicesRepository")
  * @package SearchBundle\Entity
  */
-class Indexes
+class Indices
 {
     /**
      * @var int
@@ -61,7 +61,7 @@ class Indexes
      *
      * @param string $entity
      *
-     * @return Indexes
+     * @return Indices
      */
     public function setEntity($entity)
     {
@@ -97,7 +97,7 @@ class Indexes
     /**
      * @param string $searchTerm
      *
-     * @return Indexes
+     * @return Indices
      */
     public function setSearchTerm($searchTerm)
     {

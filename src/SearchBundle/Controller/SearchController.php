@@ -5,7 +5,7 @@ namespace SearchBundle\Controller;
 use AlbumBundle\Entity\Album;
 use Knp\Component\Pager\Paginator;
 use ReviewBundle\Entity\Review;
-use SearchBundle\Entity\Indexes;
+use SearchBundle\Entity\Indices;
 use SearchBundle\Helper\DatabaseHelperInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +28,7 @@ class SearchController extends Controller
             return $this->redirect($this->generateUrl('album_homepage'));
         }
 
-        $queryResults = $this->getDoctrine()->getRepository(Indexes::class)
+        $queryResults = $this->getDoctrine()->getRepository(Indices::class)
             ->getResults($searchTerm);
 
         if (!$queryResults) {
@@ -40,7 +40,7 @@ class SearchController extends Controller
         $albums = [];
         $ratings = [];
 
-        /** @var Indexes $result */
+        /** @var Indices $result */
         foreach ($queryResults as $result) {
             $entity = $this->getDoctrine()
                 ->getRepository($result->getEntity())

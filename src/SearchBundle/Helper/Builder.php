@@ -4,7 +4,7 @@
 namespace SearchBundle\Helper;
 
 
-use SearchBundle\Entity\Indexes;
+use SearchBundle\Entity\Indices;
 
 interface Builder
 {
