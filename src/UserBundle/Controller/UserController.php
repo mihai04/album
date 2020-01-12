@@ -33,7 +33,7 @@ class UserController extends Controller
             ->find($id);
 
         return $this->render(
-            '@User/viewReviewsByUser.html.twig',
+            'ReviewBundle:Default:viewReviewsByUser.html.twig',
             [
                 'fullName' => $user->getFullName(),
                 'reviews' => $reviews
