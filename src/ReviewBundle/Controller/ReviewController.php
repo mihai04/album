@@ -118,6 +118,32 @@ class ReviewController extends Controller
     }
 
     /**
+     * View one review.
+     *
+     * @param Request $request
+     * @param $id
+     * @return Response
+     */
+    public function viewReviewAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $review = $em->getRepository(Review::class)
+            ->find($id);
+
+        if (!$review) {
+            $this->addFlash('warning', 'Review not found!.');
+        }
+
+        return $this->render(
+            'ReviewBundle:Default:viewReview.html.twig',
+            [
+                'review' => $review
+            ]
+        );
+    }
+
+
+    /**
      * Edit an existing review for a given album.
      *
      * @param Request $request

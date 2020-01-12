@@ -38,7 +38,11 @@ class Review
      * @var string
      * @Assert\NotBlank()
      *
-     * @ORM\Column(name="review", type="review", type="text", nullable=false)
+     * @Assert\Length(min = 10,
+     *      max = 255,
+     *      minMessage = "You must insert at least 10 words",
+     *      maxMessage = "You cannot add a text longs than 255 words")
+     * @ORM\Column(name="review", type="string", type="text", nullable=false)
      */
     private $review;
 

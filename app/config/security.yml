@@ -42,7 +42,7 @@ security:
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/view_reviews_by_album, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/search, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/profile/, role: [ ROLE_USER, ROLE_ADMIN ] }
+        - { path: ^/profile/edit, role: [ ROLE_USER, ROLE_ADMIN ] }
         - { path: ^/addAlbum, role: [ ROLE_USER, ROLE_ADMIN ] }
         - { path: ^/addReview/, role: [ ROLE_USER, ROLE_ADMIN ] }
         - { path: ^/editReview/, role: [ ROLE_USER, ROLE_ADMIN ] }

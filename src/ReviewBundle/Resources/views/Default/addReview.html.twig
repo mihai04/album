@@ -11,19 +11,10 @@
             </div>
             <div id="form_div">
                 {{ form_start(form) }}
-                <p class="align_add_review_label">
-                    <b style="text-align: center">Title</b>
-                </p>
-                <p id="create_property">{{ form_widget(form.title) }}</p>
-                <p class="align_add_review_label">
-                    <b>Review</b>
-                </p>
-                <p id="create_property">{{ form_widget(form.review) }}</p>
-                <p class="align_add_review_label">
-                    <b>Rating</b>
-                </p>
+                <p id="create_property">{{ form_row(form.title) }}</p>
+                <p id="create_property">{{ form_row(form.review) }}</p>
                 <div>
-                    <p id="create_property">{{ form_widget(form.rating) }}</p>
+                    <p id="create_property">{{ form_row(form.rating) }}</p>
                 </div>
             </div>
             {{ form_end(form) }}

@@ -1,0 +1,45 @@
+{% extends '::base.html.twig' %}
+
+
+{% block body %}
+
+    <div class="wrapper" style="text-align: center">
+        <div id="reviewsBackground">
+
+            <h2>
+                {{ review.title }}
+            </h2>
+            </br>
+            <div class="row" style="margin: 20px; text-align: justify;">
+                <p style="text-indent: 2em;"> {{ review.review }} </p>
+            </div>
+            </br>
+            <div class="row">
+                <div
+                {{ review.rating|rating(5, 'fa-star') }}
+                </div>
+                <div>
+                <small>
+                    Created at {{ review.timestamp|date('H:i d/m/y') }}
+                </small>
+                </div>
+            </div>
+            </br>
+
+            <div class="row">
+                {% if (is_granted('ROLE_USER') and review.reviewer == app.user) or is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('edit_review', {id: review.id}) }}">
+                        <button id="register_button" class="btn btn-info">Edit review</button>
+                    </a>
+                {% endif %}
+                </br>
+                {% if (is_granted('ROLE_USER') and review.reviewer == app.user ) or is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('delete_review', {id: review.id}) }}">
+                        <button id="_reusable_danger" class="btn btn-danger">Delete review</button>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -11,7 +11,7 @@
                     <p><b>Artist:</b> {{ album.artist }} </p>
                     <p><b>ISRC:</b> {{ album.isrc }} </p>
                     <h3><b>Summary:</b></h3>
-                    <p>TEsetrdgrtghfjnfuygkj</p>
+                    <p></p>
                 </div>
             </div>
             <div class="col-sm-6" style="text-align: center">
@@ -46,9 +46,11 @@
                             </div>
                         </div>
                         <div class="col-sm-12 col-lg-12">
+
+
                             {% if (is_granted('ROLE_USER') and review.reviewer == app.user)
                                 or is_granted('ROLE_ADMIN') %}
-                                <div class="col-sm-6 col-lg-2 col-lg-offset-8">
+                                <div class="col-sm-3 col-lg-2 col-lg-offset-6">
                                     <a href="{{ path('edit_review', {id: review.id}) }}">
                                         <button type="button" id="register_button">
                                             Edit review
@@ -56,14 +58,21 @@
                                     </a>
                                 </div>
                             {% endif %}
-                            <div class="col-sm-6 col-lg-2">
                                 {% if is_granted('ROLE_ADMIN') or review.reviewer == app.user %}
-                                    <a href="{{ path('delete_review', {id: review.id}) }}">
-                                        <button class="btn btn-danger" id="_reusable_danger">
-                                            Delete review
-                                        </button>
-                                    </a>
+                                    <div class="col-sm-3 col-lg-2">
+                                        <a href="{{ path('delete_review', {id: review.id}) }}">
+                                            <button class="btn btn-danger" id="_reusable_danger">
+                                                Delete review
+                                            </button>
+                                        </a>
+                                    </div>
                                 {% endif %}
+                            <div class="col-sm-3 col-lg-2">
+                                <a href="{{ path('view_review', {id: review.id}) }}">
+                                    <button class="btn btn-danger" id="register_button">
+                                        View review
+                                    </button>
+                                </a>
                             </div>
                         </div>
                     </article>
@@ -71,14 +80,14 @@
             {% endfor %}
         </div>
 
-        <div class="col-sm-12 col-lg-12">
+        <div class="col-sm-12 col-lg-12" style="text-align: center">
             <a href="{{ path('add_review', {id: album.id}) }}">
                 <button type="button" id="register_button">
                     Add Review
                 </button>
             </a>
         </div>
-</div>
+    </div>
 
 {% endblock %}
 

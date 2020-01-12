@@ -18,7 +18,7 @@ class AddReviewFormType extends AbstractType
         $builder
             ->add('review', TextareaType::class)
             ->add('title', TextType::class, [
-                'required' => false
+                'required' => true
             ])
             ->add('rating', RatingType::class, [
             'label' => 'Rating'

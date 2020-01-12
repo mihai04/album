@@ -14,26 +14,28 @@
             </div>
             <div id="form_div">
                 {{ form_start(form) }}
-                <p class="align_add_review_label">
-                    <b>Album Title</b>
+{#                <p class="align_add_review_label">#}
+{#                    <b>Album Title</b>#}
+{#                </p>#}
+                <p id="create_property">{{ form_row(form.title) }}</p>
+{#                <p class="align_add_review_label">#}
+{#                    <b>Artist</b>#}
+{#                </p>#}
+                <p id="create_property">{{ form_row(form.artist) }}</p>
+
+                <p id="create_property">{{ form_row(form.summary) }}</p>
+{#                <p class="align_add_review_label">#}
+{#                    <b>ISRC</b>#}
+{#                </p>#}
+                <p id="create_property">{{ form_row(form.isrc) }}</p>
+{#                <p>#}
+{#                    <b>Album Image</b>#}
+{#                </p>#}
+                <p id="create_property">{{ form_row(form.image) }}
                 </p>
-                <p id="create_property">{{ form_widget(form.title) }}</p>
-                <p class="align_add_review_label">
-                    <b>Artist</b>
-                </p>
-                <p id="create_property">{{ form_widget(form.artist) }}</p>
-                <p class="align_add_review_label">
-                    <b>ISRC</b>
-                </p>
-                <p id="create_property">{{ form_widget(form.isrc) }}</p>
-                <p>
-                    <b>Album Image</b>
-                </p>
-                <p id="create_property">{{ form_widget(form.image) }}
-                </p>
-                <p class="align_add_review_label">
-                    <b>Tracks</b>
-                </p>
+{#                <p class="align_add_review_label">#}
+{#                    <b>Tracks</b>#}
+{#                </p>#}
             <div id="create_property">
                 <ol class="track"
                     data-prototype="{{ form_widget(form.albumTracks.vars.prototype)|e('html_attr') }}">

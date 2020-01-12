@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,6 +21,11 @@ class AddAlbumType extends AbstractType
             ->add('title', TextType::class, [
                 'attr' => [
                     'placeholder' => 'Enter the title here.'
+                ],
+            ])
+            ->add('summary', TextareaType::class, [
+                'attr' => [
+                    'placeholder' => 'Tell us about your album.'
                 ]
             ])
             ->add('artist', TextType::class, [
@@ -33,6 +39,7 @@ class AddAlbumType extends AbstractType
                 ]
             ])
             ->add('albumTracks', CollectionType::class, [
+                    'required' => true,
                     'entry_type' => TrackEmbeddedForm::class,
                     'allow_add' => true,
                     'by_reference' => false,
@@ -42,7 +49,7 @@ class AddAlbumType extends AbstractType
                 ]
             )
             ->add('image', FileType::class, [
-                'required' => false,
+                'required' => true,
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [

@@ -108,6 +108,12 @@ class AlbumController extends Controller
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $form['image']->getData();
 
+            if(!$uploadedFile) {
+                $this->addFlash('warning', 'You forgot to add an album image.');
+                return $this->redirect($this->generateUrl('add_album'));
+            }
+
+
             $originalFileName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
             $newFileName = $this->hashImageName($originalFileName, $uploadedFile);
 
@@ -115,6 +121,12 @@ class AlbumController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $album->setImage($newFileName);
                 $tracks = $form['albumTracks']->getData();
+
+
+                if (count($tracks) === 0) {
+                    $this->addFlash('warning', 'You forgot to add tracks.');
+                    return $this->redirect($this->generateUrl('add_album'));
+                }
 
                 /**
                  * @var Track $track
@@ -126,15 +138,15 @@ class AlbumController extends Controller
                 $em->persist($album);
                 $em->flush();
             } catch (UniqueConstraintViolationException $e) {
-                $message = sprintf('DBALException [%i]: %s'.$e->getMessage(), $e->getCode());
+                $message = 'DBALException [%i]: %s'.$e->getMessage();
             } catch (TableNotFoundException $e) {
-                $message = sprintf('ORMException [%i]: %s', $e->getCode(), $e->getMessage());
+                $message = 'ORMException [%i]: %s'. $e->getMessage();
             } catch (Exception $e) {
-                $message = sprintf('Exception [%i]: %s', $e->getCode(), $e->getMessage());
+                $message = 'Exception [%i]: %s'. $e->getMessage();
             }
 
             if (isset($message)) {
-                $this->addFlash('error', 'Failed to create album! Try again.');
+                $this->addFlash('error', 'Failed to create album! Try again.' . $message);
                 return $this->redirect($this->generateUrl('add_album'));
             }
             else {

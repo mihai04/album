@@ -47,7 +47,7 @@ class Album
      * @var string
      *
      * @Assert\NotBlank()
-     * @ORM\Column(name="isrc", type="string", length=12, unique=true, nullable=false)
+     * @ORM\Column(name="isrc", type="string", length=16, unique=true, nullable=false)
      */
     private $isrc;
 
@@ -55,10 +55,18 @@ class Album
      * @var string
      *
      * @Assert\NotBlank()
-     * @Assert\Image()
+     * @Assert\Image(maxSize="2M")
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
      */
     private $image;
+
+    /**
+     * @var string
+     *
+     * @Assert\NotBlank()
+     * @ORM\Column(name="summary", type="text", nullable=true)
+     */
+    private $summary;
 
     /**
      * @var bool
@@ -166,6 +174,22 @@ class Album
     public function setImage($image)
     {
         $this->image = $image;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSummary()
+    {
+        return $this->summary;
+    }
+
+    /**
+     * @param string $summary
+     */
+    public function setSummary($summary)
+    {
+        $this->summary = $summary;
     }
 
     /**

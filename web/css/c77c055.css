@@ -216,8 +216,6 @@ span {
 }
 
 #hideSideBar i {
-    /*padding: 10px;*/
-    /*margin-top: 10px;*/
     padding: 5px;
 }
 
@@ -228,7 +226,7 @@ span {
 }
 
 #sidebar {
-    width: 250px;
+    width: 300px;
     position: fixed;
     z-index: 999;
     background: #7386D5;
@@ -327,15 +325,11 @@ label input[type="file"] {
     /*top: -1000px;*/
 }
 
-/*article img {*/
-/*    width: 120px;*/
-/*    height: 150px;*/
-/*}*/
-
-/*article button {*/
-/*    margin: 5px;*/
-/*    width: 110px;*/
-/*}*/
+ img {
+    width: 270px;
+    height: 300px;
+     border-radius: 16px;
+}
 
 .row {
     margin-right: -15px;
@@ -707,9 +701,6 @@ End register page
     color: red !important;
 }
 
-input[type=file]{
-}
-
 #album_bundle_add_album_type_image::-webkit-file-upload-button {
     visibility: hidden;
     padding-right: 65px;
@@ -766,6 +757,10 @@ h1, h2, #reviewSeparator {
     width: 100%;
     margin: 50px 0 50px 0;
     padding-bottom: 20px;
+}
+
+h4 {
+    font-size: 22px;
 }
 
 #reviewsBackground {

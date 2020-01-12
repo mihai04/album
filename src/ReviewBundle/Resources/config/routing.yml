@@ -17,6 +17,12 @@ delete_review:
     requirements:
         id: '\d+'
 
+view_review:
+    path:     /view_review/{id}
+    defaults: { _controller: ReviewBundle:Review:viewReview }
+    requirements:
+        id: '\d+'
+
 view_reviews_by_album:
     path:     /view_reviews_by_album/{id}
     defaults: { _controller: ReviewBundle:Review:viewByAlbum }
