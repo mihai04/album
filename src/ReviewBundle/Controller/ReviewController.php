@@ -3,7 +3,7 @@
 namespace ReviewBundle\Controller;
 
 use AlbumBundle\Entity\Album;
-use AlbumBundle\Entity\Track;
+use TrackBundle\Entity\Track;
 use Knp\Component\Pager\Paginator;
 use ReviewBundle\Entity\Review;
 use ReviewBundle\Form\AddReviewFormType;
@@ -150,7 +150,7 @@ class ReviewController extends Controller
         if ($form->isValid()) {
             $em->flush();
 
-            $this->addFlash("success", "Your review was updated.");
+            $this->addFlash("success", "The review was updated.");
         }
 
         return $this->render('ReviewBundle:Default:edit.html.twig', [
@@ -175,7 +175,7 @@ class ReviewController extends Controller
             $em->remove($review);
             $em->flush();
 
-            $this->addFlash('success', 'Your review was deleted!');
+            $this->addFlash('success', 'The review was deleted!');
             return $this->redirect($this->generateUrl('album_homepage'));
         }
         catch (\Exception $e) {

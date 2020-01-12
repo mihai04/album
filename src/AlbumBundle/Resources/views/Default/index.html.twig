@@ -6,6 +6,11 @@
 
     <div class="wrapper">
         <div class="col-xs-12 col-md-12">
+                {% if albums is empty%}
+                    <div class="center-div">
+                        No Albums found
+                    </div>
+                {% else %}
                 {% for album in albums %}
                     <tbody id="album_object_tbody">
                     <div id="albumSet">
@@ -25,11 +30,11 @@
                     </div>
                     </tbody>
                 {% endfor %}
+                    <div class="row navigation text-center col-md-9 col-sm-10 col-xs-12">
+                        {{ knp_pagination_render(albums) }}
+                    </div>
+            {% endif %}
         </div>
-    </div>
-
-    <div class="row navigation text-center col-md-9 col-sm-10 col-xs-12">
-        {{ knp_pagination_render(albums) }}
     </div>
 
 {% endblock %}

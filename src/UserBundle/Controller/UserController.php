@@ -2,12 +2,42 @@
 
 namespace UserBundle\Controller;
 
+use ReviewBundle\Entity\Review;
+use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use UserBundle\Entity\User;
 
 class UserController extends Controller
 {
-    public function indexAction()
+    /**
+     * @param Request $request
+     * @param $id
+     * @return Response
+     */
+    public function viewAction(Request $request, $id)
     {
-        return $this->render('@User/Default/index.html.twig');
+        $entityManager = $this->getDoctrine()->getManager();
+        $query = $entityManager->getRepository(Review::class)
+            ->getReviewsByUser($id);
+
+        /** @var Paginator $paginator */
+        $paginator = $this->get('knp_paginator');
+        $reviews = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1)
+        );
+
+        $user = $this->getDoctrine()->getRepository(User::class)
+            ->find($id);
+
+        return $this->render(
+            '@User/viewReviewsByUser.html.twig',
+            [
+                'fullName' => $user->getFullName(),
+                'reviews' => $reviews
+            ]
+        );
     }
 }

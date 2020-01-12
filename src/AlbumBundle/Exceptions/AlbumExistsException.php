@@ -6,6 +6,10 @@ namespace AlbumBundle\Exceptions;
 use Exception;
 use Throwable;
 
+/**
+ * Class AlbumExistsException
+ * @package AlbumBundle\Exceptions
+ */
 class AlbumExistsException extends Exception implements CustomExceptionInterface
 {
     /** @const string */

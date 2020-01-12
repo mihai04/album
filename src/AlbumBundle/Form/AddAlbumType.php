@@ -3,16 +3,14 @@
 namespace AlbumBundle\Form;
 
 use AlbumBundle\Entity\Album;
-use AlbumBundle\Entity\Track;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use TrackBundle\Form\TrackEmbeddedForm;
 
 class AddAlbumType extends AbstractType
 {
@@ -51,48 +49,6 @@ class AddAlbumType extends AbstractType
                     'class' => 'addAlbum'
                 ]
             ]);
-
-
-
-
-
-
-
-
-
-//            ->add('trackList', CollectionType::class, [
-//                'label' => false,
-//                'entry_type' => TextType::class,
-//                'allow_add' => true,
-//                'allow_delete' => true,
-//                'prototype' => true,
-////                'prototype_data' => 'New Tag Placeholder',
-//                'entry_options' => [
-//                    'attr' => ['class' => 'email-box'],
-//                ],
-//            ])
-//            ->add('trackList', TextareaType::class, [
-//                'attr' => [
-//                    'placeholder' => 'Enter the list of tracks here.'
-//                ]
-//            ])
-//            ->add('image', FileType::class, [
-//                'label' => 'Image',
-//                'required' => false
-//            ])
-//            ->add('submit', SubmitType::class, [
-//                'attr' => [
-//                    'class' => 'btn btn-success'
-//                ]
-//            ]);
-
-//        $builder->get('trackList')->addModelTransformer(new CallbackTransformer(
-//                function ($tagsAsArray) {
-//                },
-//                function ($tagsAsString) {
-//                    return explode(', ', $tagsAsString);
-//                }
-//        ));
     }
 
     public function configureOptions(OptionsResolver $resolver)

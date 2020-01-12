@@ -4,6 +4,7 @@
 namespace ReviewBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query as QueryAlias;
 
 /**
@@ -30,5 +31,23 @@ class ReviewRepository extends EntityRepository
             ->setParameter(':albumID', $albumID);
 
         return $qb->getQuery();
+    }
+
+    /**
+     * Gets all reviews for the given User ID.
+     *
+     * @param $userID
+     *
+     * @return Query
+     */
+    public function getReviewsByUser($userID)
+    {
+        $queryBuilder = $this->createQueryBuilder('review');
+        $queryBuilder
+            ->where('review.reviewer = :userID')
+            ->orderBy('review.timestamp', 'DESC')
+            ->setParameter(':userID', $userID);
+
+        return $queryBuilder->getQuery();
     }
 }

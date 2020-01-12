@@ -1,0 +1,75 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+
+    {% if reviews is empty %}
+        <div class="center-div">
+            No reviews found for this user
+        </div>
+    {% else %}
+        <div class="wrapper">
+            <h2> Albums Reviewed by user: {{ fullName }} </h2>
+            <div class="row col-sm-12 col-lg-12">
+                {% for review in reviews %}
+                    <article>
+                        <h3 class="row col-sm-12 col-lg-12">
+                            {{ review.title }}
+                        </h3>
+                        <div class="row col-sm-12">
+                            <div class="col-sm-6">
+                                <a href="{{ path('view_reviews_by_album', {id: review.album.id}) }}">
+                                    <img src="{{ asset('public/uploads_directory/' ~ review.album.image ) }}">
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <small>Created at {{ review.timestamp | date('H:i d/m/y') }} </small>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <a href="{{ path('view_reviews_by_album', {id: review.album.id}) }}">
+                                            <button id="_submit" class="btn btn-primary">View review</button>
+                                        </a>
+                                    </div>
+                                </div>
+                                {% if (is_granted('ROLE_USER') and review.reviewer == app.user)
+                                    or is_granted('ROLE_ADMIN') %}
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <a href="{{ path('edit_review', {id: review.id}) }}">
+                                                <button id="_submit" class="btn btn-info">Edit review</button>
+                                            </a>
+                                            <a href="{{ path('delete_review', {id: review.id}) }}">
+                                                <button id="_reusable_danger" class="btn btn-danger">Delete review
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                {{ review.rating|rating(5, 'fa-star') }}
+                            </div>
+                        </div>
+
+                        <h4 class="row col-sm-12">
+                            {{ review.album.title }}
+                        </h4>
+
+                        <small class="row col-sm-12">
+                            <b>by {{ review.album.artist }}</b>
+                        </small>
+
+                        <div class="row col-sm-12">
+                            <hr>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+            <div class="row navigation text-center col-md-12 col-sm-12 col-xs-12">
+                {{ knp_pagination_render(reviews) }}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

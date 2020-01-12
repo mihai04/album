@@ -46,6 +46,11 @@ class SearchController extends Controller
                 ->getRepository($result->getEntity())
                 ->find($result->getForeignKey());
 
+            if (!$entity) {
+                $this->addFlash('error', "There are no entities defined to be searched.");
+                return $this->redirect($this->generateUrl('album_homepage'));
+            }
+
             $entityId = $entity->getId();
             if ($entity instanceof User && !array_key_exists($entityId, $users)) {
                 $users[$entityId] = $entity;
@@ -85,7 +90,5 @@ class SearchController extends Controller
                 'results' => $results
             ]
         );
-
-
     }
 }

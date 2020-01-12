@@ -9,5 +9,5 @@ namespace AlbumBundle\Exceptions;
  */
 interface CustomExceptionInterface
 {
-
+    // marker interface
 }

@@ -2,95 +2,110 @@
 
 {% block body %}
 
-    <div class="row col-md-12 col-sm-12 col-xs-12">
-        {% if results is empty %}
-        {% else %}
-        {% set albumID = 0 %}
-        {% for result in results %}
+    <div class="wrapper col-md-offset-3">
+        <div class="row col-md-12 col-sm-12 col-xs-12">
+            {% if results is empty %}
+                <div class="center-div">
+                    No results found
+                </div>
+            {% else %}
+            {% set albumID = 0 %}
+            {% for result in results %}
 
             {% if result is instanceof('UserBundle\\Entity\\User') %}
-                <article>
-                    <div class="row">
-{#                        <div class="col-xs-6">#}
-{#                            <img src="{{ asset('uploads/images/avatar.jpeg') }}">#}
-{#                        </div>#}
-                        <div class="col-xs-6">
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <a href="{{ path('view_reviews_by_album', {id: result.id}) }}">
-                                        <button class="btn btn-primary">View reviews</button>
-                                    </a>
-                                </div>
+            <article>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <img style="width: 200px; height: 200px; border-radius:20px"
+                             src="{{ asset('public/uploads_directory/avatar.png') }}">
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <a href="{{ path('view_reviews_by_user', {id: result.id}) }}">
+                                    <button id="_submit" class="btn btn-primary">Albums reviewed</button>
+                                </a>
                             </div>
                         </div>
                     </div>
+                </div>
+                <h4 class="row col-sm-12">
+                    {{ result.fullName }}
+                </h4>
 
-                    <h4 class="row col-xs-12">
-                        {{ result.fullName }}
-                    </h4>
+                <small class="row col-sm-12">
+                    {{ result.email }}
+                </small>
 
-                    <small class="row col-xs-12">
-                        {{ result.email }}
-                    </small>
-
-                    <div class="row col-xs-12"><hr></div>
-                </article>
+                <div class="row col-sm-12">
+                    <hr>
+                </div>
+            </article>
 
             {% elseif result is instanceof('AlbumBundle\\Entity\\Album') %}
                 <article>
                     <div class="row">
-                        <div class="col-xs-6">
-                            <img src="{{ asset('public/uploads_directory/' ~ result.image ) }}">
+                        <div class="col-sm-6">
+                            <img style="width: 200px; height: 200px; border-radius:20px"
+                                 src="{{ asset('public/uploads_directory/' ~ result.image ) }}">
                         </div>
-                        <div class="col-xs-6">
+
+                        <div class="col-sm-6">
                             {% if is_granted('ROLE_USER') %}
-                                <a href="{{ path('album_new', {id: result.id}) }}">
-                                    <button class="btn btn-success">Add review</button>
+                                <a href="{{ path('add_review', {id: result.id}) }}">
+                                    <button id="_submit" class="btn btn-success">Add review</button>
                                 </a>
                             {% endif %}
+                            {% if is_granted('ROLE_ADMIN') %}
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-sm-3">
                                     <a href="{{ path('view_reviews_by_album', {id: result.id}) }}">
-                                        <button class="btn btn-primary">View reviews</button>
+                                        <button id="_submit" class="btn btn-primary">View reviews</button>
+                                    </a>
+                                    <a href="{{ path('delete_album', {id: result.id}) }}">
+                                        <button id="_reusable_danger" class="btn btn-primary">Delete Album</button>
                                     </a>
                                 </div>
                             </div>
+                            {% else %}
                             <div class="row">
-                                <div class="col-xs-6">
-                                    {% if ratings[albumID] is defined %}
-                                        {{ ratings[albumID]|rating(5, 'fa-norm') }}
-                                        {% set albumID = albumID + 1 %}
-                                    {% else %}
-                                        {{ 0|rating(5, 'fa-star') }}
-                                    {% endif %}
+                                <div class="col-sm-3">
+                                    <a href="{{ path('view_reviews_by_album', {id: result.id}) }}">
+                                        <button id="_submit" class="btn btn-primary">View reviews</button>
+                                    </a>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
-                    </div>
+                        <div class="row col-sm-12">
+                            <div class="col-sm-6">
+                                {% if ratings[albumID] is defined %}
+                                    {{ ratings[albumID]|rating(5, 'fa-star') }}
+                                    {% set albumID = albumID + 1 %}
+                                {% else %}
+                                    {{ 0|rating(5, 'fa-star') }}
+                                {% endif %}
+                                <h4 class="row col-sm-12">
+                                    {{ result.title }}
+                                </h4>
 
-                    <h4 class="row col-xs-12">
-                        {{ result.title }}
-                    </h4>
-
-                    <small class="row col-xs-12">
-                        <b>by {{ result.artist }}</b>
-                    </small>
-
-                    <div class="row">
-                        <div class="col-xs-12">
-{#                            {{ result.tracklist }}#}
+                                <small class="row col-sm-12 col-lg-offset-4">
+                                    <b>by {{ result.artist }}</b>
+                                </small>
+                            </div>
+                            <hr>
                         </div>
                     </div>
-                    <div class="row col-xs-12"><hr></div>
                 </article>
-            {% endif %}
+        {% endif %}
 
         {% endfor %}
-        {% endif %}
     </div>
 
     <div class="row navigation text-center col-md-9 col-sm-12 col-xs-12">
         {{ knp_pagination_render(results) }}
     </div>
+    </div>
+    {% endif %}
 
 {% endblock %}

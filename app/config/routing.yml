@@ -17,7 +17,11 @@ search:
     resource: "@SearchBundle/Resources/config/routing.yml"
     prefix:   /
 
-#easy_admin_bundle:
-#    resource: "@AlbumBundle/Controller/TextController.php"
-#    type:     annotation
-#    prefix:   /admin
+track:
+    resource: "@TrackBundle/Resources/config/routing.yml"
+    prefix:   /
+
+easy_admin_bundle:
+    resource: "@EasyAdminBundle/Controller/AdminController.php"
+    type:     annotation
+    prefix:   /admin

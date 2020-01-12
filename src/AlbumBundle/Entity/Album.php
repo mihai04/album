@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use ReviewBundle\Entity\Review;
 use Symfony\Component\Validator\Constraints as Assert;
+use TrackBundle\Entity\Track;
 
 /**
  * Album
@@ -79,7 +80,7 @@ class Album
     /**
      * @var ArrayCollection $albumTracks
      *
-     * @ORM\OneToMany(targetEntity="AlbumBundle\Entity\Track",
+     * @ORM\OneToMany(targetEntity="TrackBundle\Entity\Track",
      *     mappedBy="album",
      *     fetch="EXTRA_LAZY",
      *     orphanRemoval=true,

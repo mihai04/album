@@ -69,8 +69,12 @@ $(function(){
 //     $('.rating-well').hover(turnToStar,turnStarBack);
 //
 // });
+// add track button
 let $addTagButton = $('<button type="button" style="width: 300px" class="_reusable add_track">Add a track</button>');
+
+// default li
 let $newLinkLi = $('<li></li>').append($addTagButton);
+
 jQuery(document).ready(function() {
 
     // Get the ul that holds the collection of tags

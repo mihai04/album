@@ -1,0 +1,5 @@
+view_reviews_by_user:
+    path:     /viewReviewsByUser/{id}
+    defaults: { _controller: UserBundle\Controller\UserController::viewAction }
+    requirements:
+        id: '\d+'

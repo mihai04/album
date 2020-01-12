@@ -1,17 +1,18 @@
 <?php
 
 
-namespace AlbumBundle\Entity;
+namespace TrackBundle\Entity;
 
+use AlbumBundle\Entity\Album;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Class Track
  *
  * @ORM\Table(name="`track`")
- * @ORM\Entity(repositoryClass="AlbumBundle\Repository\TrackRepository")
+ * @ORM\Entity(repositoryClass="TrackBundle\Repository\TrackRepository")
  *
- * @package AlbumBundle\Entity
+ * @package TrackBundle\Entity
  */
 class Track
 {

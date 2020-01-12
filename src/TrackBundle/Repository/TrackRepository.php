@@ -1,12 +1,16 @@
 <?php
 
 
-namespace AlbumBundle\Repository;
+namespace TrackBundle\Repository;
 
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query as QueryAlias;
 
+/**
+ * Class TrackRepository
+ * @package TrackBundle\Repository
+ */
 class TrackRepository extends EntityRepository
 {
     /**

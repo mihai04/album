@@ -2,6 +2,10 @@ album_homepage:
     path:     /
     defaults: { _controller: AlbumBundle:Album:index }
 
-album_new:
+add_album:
     path:     /addAlbum
     defaults: { _controller: AlbumBundle:Album:addAlbum }
+
+delete_album:
+    path:     /deleteAlbum
+    defaults: { _controller: AlbumBundle:Album:deleteAlbum }

@@ -400,13 +400,17 @@ End register page
     background-color: #ea1422;
     outline: 0;
     margin-top: 20px;
-    width: 165px;
+    width: 180px;
     height: 50px;
     font-size: 18px;
     border-radius: 10px;
     border: 3px solid #ffffff;
     -webkit-transition: font-size 0.2s;
     transition: font-size 0.2s;
+}
+
+#_reusable_danger:hover {
+    font-size: 21px;
 }
 
 #_reusable:hover {
@@ -624,6 +628,11 @@ input[type=file]{
         margin: 30px -70px 20px 20px;
     }
 
+    #_reusable {
+        margin-right: 130px;
+        padding-right: 130px;
+    }
+
     .form-group.row {
         width: 90%;
     }
@@ -636,4 +645,32 @@ input[type=file]{
         visibility: hidden;
         padding-right: 0;
     }
+
+    .wrapper {
+        text-align: center;
+        background-color: #ffffff;
+    }
+}
+
+.center-div
+{
+    text-align: center;
+    margin: auto;
+    background-color: white;
+    border-radius: 16px;
+}
+
+h1, h2, #reviewSeparator {
+    text-align: center;
+    flex-grow: 1;
+    border-bottom: 1px solid black;
+    width: 100%;
+    margin: 50px 0 50px 0;
+    padding-bottom: 20px;
+}
+
+#reviewsBackground {
+    background-color: #ffffff;
+    margin-top: 50px;
+    border-radius: 10px;
 }

@@ -637,3 +637,11 @@ input[type=file]{
         padding-right: 0;
     }
 }
+
+.center-div
+{
+    text-align: center;
+    margin: auto;
+    background-color: white;
+    border-radius: 16px;
+}

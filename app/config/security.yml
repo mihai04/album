@@ -5,8 +5,9 @@ security:
         UserBundle\Entity\User: bcrypt # algorithm to use before saving the user
 
     role_hierarchy:
-        ROLE_ADMIN:       ROLE_USER
-        ROLE_SUPER_ADMIN: ROLE_ADMIN
+        ROLE_USER:       ROLE_USER
+        ROLE_ADMIN:      ROLE_ADMIN
+#        ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     providers:
         fos_userbundle:
@@ -39,11 +40,12 @@ security:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/view_reviews_by_album/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/view_reviews_by_album, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/search, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/profile/, role: [ ROLE_USER, ROLE_ADMIN ] }
-        - { path: ^/addAlbum, role: [ ROLE_USER, ROLE_ADMIN ]}
-        - { path: ^/addReview/, role: [ ROLE_USER, ROLE_ADMIN ]}
-        - { path: ^/editReview/, role: [ ROLE_USER, ROLE_ADMIN ]}
-        - { path: ^/delete_review/, role: [ ROLE_USER, ROLE_ADMIN ]}
-#        - { path: ^/admin, role: ROLE_ADMIN }
+        - { path: ^/addAlbum, role: [ ROLE_USER, ROLE_ADMIN ] }
+        - { path: ^/addReview/, role: [ ROLE_USER, ROLE_ADMIN ] }
+        - { path: ^/editReview/, role: [ ROLE_USER, ROLE_ADMIN ] }
+        - { path: ^/delete_review/, role: [ ROLE_USER, ROLE_ADMIN ] }
+        - { path: ^/viewReviewsByUser/, role: [ ROLE_USER, ROLE_ADMIN ] }
+        - { path: ^/admin, role: ROLE_ADMIN }
