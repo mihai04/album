@@ -47,7 +47,8 @@ class Album
      * @var string
      *
      * @Assert\NotBlank()
-     * @ORM\Column(name="isrc", type="string", length=16, unique=true, nullable=false)
+     * @Assert\Length(max="15", maxMessage="Invalid ISRC - it requieres maximum 15 characters.")
+     * @ORM\Column(name="isrc", type="string", length=15, unique=true, nullable=false)
      */
     private $isrc;
 

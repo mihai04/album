@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200112042351 extends AbstractMigration
+final class Version20200112051508 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -28,6 +28,7 @@ final class Version20200112042351 extends AbstractMigration
         $this->addSql('CREATE TABLE `search_entities` (id INT AUTO_INCREMENT NOT NULL, entityName VARCHAR(255) NOT NULL, field VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE `search_index` (id INT AUTO_INCREMENT NOT NULL, entity VARCHAR(255) NOT NULL, foreign_id INT NOT NULL, content LONGTEXT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE `indices` (id INT AUTO_INCREMENT NOT NULL, entity VARCHAR(255) NOT NULL, foreign_id INT NOT NULL, content LONGTEXT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE `entities` (id INT AUTO_INCREMENT NOT NULL, entityName VARCHAR(255) NOT NULL, entityField VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE `track` (id INT AUTO_INCREMENT NOT NULL, album INT NOT NULL, track_name VARCHAR(255) NOT NULL, INDEX IDX_D6E3F8A639986E43 (album), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE `review` ADD CONSTRAINT FK_794381C6E0472730 FOREIGN KEY (reviewer) REFERENCES `user` (id)');
         $this->addSql('ALTER TABLE `review` ADD CONSTRAINT FK_794381C639986E43 FOREIGN KEY (album) REFERENCES `album` (id)');
@@ -48,6 +49,7 @@ final class Version20200112042351 extends AbstractMigration
         $this->addSql('DROP TABLE `search_entities`');
         $this->addSql('DROP TABLE `search_index`');
         $this->addSql('DROP TABLE `indices`');
+        $this->addSql('DROP TABLE `entities`');
         $this->addSql('DROP TABLE `track`');
     }
 }

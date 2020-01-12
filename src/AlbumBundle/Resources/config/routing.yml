@@ -3,9 +3,11 @@ album_homepage:
     defaults: { _controller: AlbumBundle:Album:index }
 
 add_album:
-    path:     /addAlbum
+    path:     /add_album
     defaults: { _controller: AlbumBundle:Album:addAlbum }
 
 delete_album:
-    path:     /deleteAlbum
+    path:     /delete_album/{$id}
     defaults: { _controller: AlbumBundle:Album:deleteAlbum }
+    requirements:
+        id: '\d+'

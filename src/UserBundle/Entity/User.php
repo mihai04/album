@@ -76,6 +76,7 @@ class User extends BaseUser
     {
         $this->fullName = $fullName;
     }
+
     /**
      * @param $role
      * @return $this|BaseUser|UserInterface

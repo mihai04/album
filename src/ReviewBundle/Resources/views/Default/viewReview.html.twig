@@ -9,24 +9,22 @@
             <h2>
                 {{ review.title }}
             </h2>
+            <div>
+                {{ review.rating|rating(5, 'fa-star') }}
+            </div>
             </br>
-            <div class="row" style="margin: 20px; text-align: justify;">
-                <p style="text-indent: 2em;"> {{ review.review }} </p>
+            <div class="row col-sm-12 col-lg-12" style="margin: 20px; text-align: justify;">
+                <p class="col-sm-12 col-lg-12" style="word-break: break-all; text-indent: 2em;"> {{ review.review }} </p>
             </div>
             </br>
             <div class="row">
-                <div
-                {{ review.rating|rating(5, 'fa-star') }}
-                </div>
                 <div>
-                <small>
-                    Created at {{ review.timestamp|date('H:i d/m/y') }}
-                </small>
+                    <h4> Added by <i>{{ review.reviewer.fullName }}</i> on <i>{{ review.timestamp | date('H:i d/m/y') }} </i> </h4>
                 </div>
             </div>
             </br>
 
-            <div class="row">
+            <div class="row col-sm-12">
                 {% if (is_granted('ROLE_USER') and review.reviewer == app.user) or is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('edit_review', {id: review.id}) }}">
                         <button id="register_button" class="btn btn-info">Edit review</button>

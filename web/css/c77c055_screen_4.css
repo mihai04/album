@@ -57,6 +57,7 @@ span {
 #navMenu:hover {
     color:#e3b700;
     font-size: 32px;
+    cursor: pointer;
 }
 
 #search {
@@ -83,7 +84,7 @@ span {
     width: 350px;
 }
 
-/*!**                                        STYLE FOR SIDEBAR                                                      **!*/
+/**                                        STYLE FOR SIDEBAR                                                    **/
 
 .overlay {
     display: none;
@@ -222,8 +223,6 @@ a[data-toggle="collapse"] {
 label input[type="file"] {
     text-align: left !important;
     color: red !important;
-    /*position: fixed;*/
-    /*top: -1000px;*/
 }
 
  img {
@@ -275,12 +274,12 @@ label input[type="file"] {
     font-size: 32px;
 }
 /*
-    Create page end
+     Page create end
  */
 
 
 /**
-Start register page
+     Register start page
 */
 #register_body{
     margin-top: 10px;
@@ -332,13 +331,12 @@ Start register page
     color: whitesmoke;
 }
 
-
 /**
 End register page
 */
 
 /*
-    login page start
+   login start page
  */
 #logIn_div{
     background-color: #FFFFFF;
@@ -449,9 +447,7 @@ End register page
     color: whitesmoke;
 }
 
-
-
-/* album */
+/* Album */
 
 #albumSet {
     padding: 1%;
@@ -496,7 +492,43 @@ End register page
     outline: none;
 }
 
-/* */
+#album_bundle_add_album_type_imag.label::before label {
+    color: red !important;
+}
+
+#album_bundle_add_album_type_image::-webkit-file-upload-button {
+    visibility: hidden;
+    padding-right: 65px;
+}
+
+.center-div
+{
+    text-align: center;
+    margin: auto;
+    background-color: white;
+    border-radius: 16px;
+}
+
+h1, h2, #reviewSeparator {
+    text-align: center;
+    flex-grow: 1;
+    border-bottom: 1px solid black;
+    width: 100%;
+    margin: 50px 0 50px 0;
+    padding-bottom: 20px;
+}
+
+h4 {
+    font-size: 22px;
+}
+
+#reviewsBackground {
+    background-color: #ffffff;
+    margin-top: 50px;
+    border-radius: 10px;
+}
+
+/* Album end */
 
 /**                                    Star rating bundle ui fix bug                                               **/
 
@@ -597,15 +629,7 @@ End register page
     font-size: 5em;
 }
 
-
-#album_bundle_add_album_type_imag.label::before label {
-    color: red !important;
-}
-
-#album_bundle_add_album_type_image::-webkit-file-upload-button {
-    visibility: hidden;
-    padding-right: 65px;
-}
+/* mobile */
 
 @media(max-width:768px){
     #albumSet {
@@ -628,7 +652,7 @@ End register page
         width: 90%;
     }
 
-    #register_button {
+    #register_button, #_reusable_danger {
         width: 100%;
     }
 
@@ -641,31 +665,4 @@ End register page
         text-align: center;
         background-color: #ffffff;
     }
-}
-
-.center-div
-{
-    text-align: center;
-    margin: auto;
-    background-color: white;
-    border-radius: 16px;
-}
-
-h1, h2, #reviewSeparator {
-    text-align: center;
-    flex-grow: 1;
-    border-bottom: 1px solid black;
-    width: 100%;
-    margin: 50px 0 50px 0;
-    padding-bottom: 20px;
-}
-
-h4 {
-    font-size: 22px;
-}
-
-#reviewsBackground {
-    background-color: #ffffff;
-    margin-top: 50px;
-    border-radius: 10px;
 }

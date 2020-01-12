@@ -7,7 +7,6 @@ security:
     role_hierarchy:
         ROLE_USER:       ROLE_USER
         ROLE_ADMIN:      ROLE_ADMIN
-#        ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     providers:
         fos_userbundle:
@@ -20,7 +19,7 @@ security:
 
         main:
             pattern: ^/
-            user_checker: security.user_checker
+#            user_checker: security.user_checker
             guard: # can be used in time for API authentication on top of form_login
                 authenticators:
                     - app.security.login_form_authenticator
@@ -42,10 +41,11 @@ security:
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/view_reviews_by_album, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/search, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/profile/edit, role: [ ROLE_USER, ROLE_ADMIN ] }
-        - { path: ^/addAlbum, role: [ ROLE_USER, ROLE_ADMIN ] }
-        - { path: ^/addReview/, role: [ ROLE_USER, ROLE_ADMIN ] }
-        - { path: ^/editReview/, role: [ ROLE_USER, ROLE_ADMIN ] }
-        - { path: ^/delete_review/, role: [ ROLE_USER, ROLE_ADMIN ] }
-        - { path: ^/viewReviewsByUser/, role: [ ROLE_USER, ROLE_ADMIN ] }
+        - { path: ^/profile/edit, role: ROLE_USER }
+        - { path: ^/add_album, role: ROLE_USER }
+        - { path: ^/delete_album/, role: ROLE_ADMIN }
+        - { path: ^/add_review/, role: ROLE_USER }
+        - { path: ^/edit_review, role: ROLE_USER }
+        - { path: ^/delete_review/, role: ROLE_USER }
+        - { path: ^/view_reviews_by_user, role: ROLE_USER }
         - { path: ^/admin, role: ROLE_ADMIN }

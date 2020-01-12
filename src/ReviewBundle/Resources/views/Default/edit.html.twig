@@ -2,8 +2,8 @@
 {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
 
 {% block body %}
-    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-        {% if app.user == review.reviewer %}
+{#    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}#}
+        {% if app.user == review.reviewer or is_granted('ROLE_ADMIN') %}
             <div class="col-xs-12">
                 <div class="col-md-offset-0" id="create_first_div">
                     <div id="title_div">
@@ -25,6 +25,6 @@
             </div>
         {% else %}
             <p>Your are not allowed to edit someone's review</p>
-        {% endif %}
+{#        {% endif %}#}
     {% endif %}
 {% endblock %}

@@ -173,18 +173,19 @@ class AlbumController extends Controller
      */
     public function deleteAlbumAction(Request $request, $id)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
         try {
+            $entityManager = $this->getDoctrine()->getManager();
             $entry = $entityManager->getRepository(Album::class)
                 ->find($id);
 
             $entityManager->remove($entry);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Album created');
+            $this->addFlash('success', 'Album deleted');
         } catch (\Exception $e) {
-            $this->addFlash('error', 'Failed to delete album!');
+            if ($this->getUser() !== null) {
+                $this->addFlash('error', 'Failed to delete album!');
+            }
         }
 
         return $this->redirect($this->generateUrl('album_homepage'));
