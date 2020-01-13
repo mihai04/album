@@ -3,7 +3,6 @@
 
 namespace SearchBundle\Repository;
 
-
 use Doctrine\ORM\EntityRepository;
 
 /**

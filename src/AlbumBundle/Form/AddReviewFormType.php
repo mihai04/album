@@ -1,9 +1,9 @@
 <?php
 
-namespace ReviewBundle\Form;
+namespace AlbumBundle\Form;
 
 use blackknight467\StarRatingBundle\Form\RatingType;
-use ReviewBundle\Entity\Review;
+use AlbumBundle\Entity\Review;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;

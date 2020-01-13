@@ -1,13 +1,13 @@
 <?php
 
-namespace UserBundle\Controller;
+namespace AlbumBundle\Controller;
 
-use ReviewBundle\Entity\Review;
+use AlbumBundle\Entity\Review;
 use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use UserBundle\Entity\User;
+use AlbumBundle\Entity\User;
 
 class UserController extends Controller
 {
@@ -38,7 +38,7 @@ class UserController extends Controller
         }
 
         return $this->render(
-            'ReviewBundle:Default:viewReviewsByUser.html.twig',
+            'AlbumBundle:Default:viewReviewsByUser.html.twig',
             [
                 'fullName' => $user->getFullName(),
                 'reviews' => $reviews

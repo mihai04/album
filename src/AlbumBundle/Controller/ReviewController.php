@@ -1,18 +1,18 @@
 <?php
 
-namespace ReviewBundle\Controller;
+namespace AlbumBundle\Controller;
 
 use AlbumBundle\Entity\Album;
 use Exception;
 use Knp\Component\Pager\Paginator;
-use ReviewBundle\Entity\Review;
-use ReviewBundle\Form\AddReviewFormType;
+use AlbumBundle\Entity\Review;
+use AlbumBundle\Form\AddReviewFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse as RedirectResponseAlias;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use TrackBundle\Entity\Track;
-use UserBundle\Entity\User;
+use AlbumBundle\Entity\Track;
+use AlbumBundle\Entity\User;
 
 /**
  * Class ReviewController
@@ -63,7 +63,7 @@ class ReviewController extends Controller
             }
         }
 
-        return $this->render('ReviewBundle:Default:addReview.html.twig', [
+        return $this->render('AlbumBundle:Default:addReview.html.twig', [
             "form" => $form->createView()
         ]);
     }
@@ -115,7 +115,7 @@ class ReviewController extends Controller
             $albumRating = $totalRating / $totalReviews;
         }
 
-        return $this->render('@Review/Default/viewByAlbum.html.twig', [
+        return $this->render('AlbumBundle:Default:viewByAlbum.html.twig', [
                 'album' => $album,
                 'reviews' => $reviews,
                 'rating' => $albumRating
@@ -141,7 +141,7 @@ class ReviewController extends Controller
             return $this->redirect($this->generateUrl('album_homepage'));
         }
 
-        return $this->render('ReviewBundle:Default:viewReview.html.twig', [
+        return $this->render('AlbumBundle:Default:viewReview.html.twig', [
                 'review' => $review
             ]
         );
@@ -191,7 +191,7 @@ class ReviewController extends Controller
                 ));
             }
 
-            return $this->render('ReviewBundle:Default:edit.html.twig', [
+            return $this->render('AlbumBundle:Default:edit.html.twig', [
                 'form' => $form->createView(),
                 'review' => $review
             ]);

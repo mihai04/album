@@ -17,3 +17,39 @@ delete_album:
     defaults: { _controller: AlbumBundle:Album:deleteAlbum }
     requirements:
         id: '\d+'
+
+add_review:
+    path:     /add_review/{id}
+    defaults: { _controller: AlbumBundle:Review:addReview }
+    requirements:
+        id: '\d+'
+
+edit_review:
+    path:     /edit_review/{id}
+    defaults: { _controller: AlbumBundle:Review:editReview }
+    requirements:
+        id: '\d+'
+
+delete_review:
+    path:     /delete_review/{id}
+    defaults: { _controller: AlbumBundle:Review:deleteReview }
+    requirements:
+        id: '\d+'
+
+view_review:
+    path:     /view_review/{id}
+    defaults: { _controller: AlbumBundle:Review:viewReview }
+    requirements:
+        id: '\d+'
+
+view_reviews_by_album:
+    path:     /view_reviews_by_album/{id}
+    defaults: { _controller: AlbumBundle:Review:viewByAlbum }
+    requirements:
+        id: '\d+'
+
+view_reviews_by_user:
+    path:     /view_reviews_by_user/{id}
+    defaults: { _controller: AlbumBundle\Controller\UserController::viewAction }
+    requirements:
+        id: '\d+'

@@ -2,13 +2,11 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
-    - { resource: blaga_date_format.yml }
-    - { resource: "@UserBundle/Resources/config/services.yml" }
+#    - { resource: "@UserBundle/Resources/config/services.yml" }
     - { resource: "@AlbumBundle/Resources/config/services.yml" }
-    - { resource: "@ReviewBundle/Resources/config/services.yml" }
+#    - { resource: "@ReviewBundle/Resources/config/services.yml" }
     - { resource: "@SearchBundle/Resources/config/services.yml" }
-    - { resource: "@TrackBundle/Resources/config/services.yml" }
-    - { resource: "@TestBundle/Resources/config/services.yml" }
+#    - { resource: "@TrackBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -88,13 +86,13 @@ sensio_framework_extra:
 fos_user:
     db_driver: orm
     firewall_name: main
-    user_class: UserBundle\Entity\User
+    user_class: AlbumBundle\Entity\User
     registration:
         form:
-            type: UserBundle\Form\RegistrationFormType
+            type: AlbumBundle\Form\RegistrationFormType
     profile:
         form:
-          type: UserBundle\Form\ProfileFormType
+          type: AlbumBundle\Form\ProfileFormType
     resetting:
         email:
             from_email:
@@ -140,5 +138,5 @@ easy_admin:
           - { entity: 'User', icon: 'user' }
           - { entity: 'Album' }
     entities:
-        - UserBundle\Entity\User
+        - AlbumBundle\Entity\User
         - AlbumBundle\Entity\Album

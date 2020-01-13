@@ -1,7 +1,7 @@
 <?php
 
 
-namespace ReviewBundle\Repository;
+namespace AlbumBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -9,10 +9,10 @@ use Doctrine\ORM\Query;
 
 /**
  * In order to isolate, reuse and test Review queries, it is a good practice to create a custom repository class for
- * the ReviewBundle entity.
+ * the Review entity.
  *
  * Class ReviewRepository
- * @package ReviewBundle\Repository
+ * @package AlbumBundle\Repository
  */
 class ReviewRepository extends EntityRepository
 {

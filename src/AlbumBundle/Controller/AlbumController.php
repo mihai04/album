@@ -8,7 +8,7 @@ use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Exception;
 use Knp\Component\Pager\Paginator;
-use ReviewBundle\Entity\Review;
+use AlbumBundle\Entity\Review;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use TrackBundle\Entity\Track;
+use AlbumBundle\Entity\Track;
 
 /**
  * Class AlbumController

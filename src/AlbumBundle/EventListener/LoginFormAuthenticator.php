@@ -1,7 +1,7 @@
 <?php
 
 
-namespace UserBundle\EventListener;
+namespace AlbumBundle\EventListener;
 
 
 use Doctrine\ORM\EntityManager;

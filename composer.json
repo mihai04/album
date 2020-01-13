@@ -4,13 +4,8 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "AppBundle\\": "src/AppBundle",
-            "UserBundle\\": "src/UserBundle",
             "AlbumBundle\\": "src/AlbumBundle",
-            "ReviewBundle\\": "src/ReviewBundle",
-            "SearchBundle\\": "src/SearchBundle",
-            "TrackBundle\\": "src/TrackBundle",
-            "TestBundle\\": "src/TestBundle"
+            "SearchBundle\\": "src/SearchBundle"
         },
         "classmap": [
             "app/AppKernel.php",
@@ -83,11 +78,5 @@
             "file": "app/config/parameters.yml"
         },
         "branch-alias": null
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../DateFormatBundle"
-        }
-    ]
+    }
 }

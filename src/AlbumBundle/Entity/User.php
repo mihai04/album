@@ -1,5 +1,6 @@
 <?php
-namespace UserBundle\Entity;
+namespace AlbumBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
@@ -32,7 +33,7 @@ class User extends BaseUser
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ReviewBundle\Entity\Review", mappedBy="reviewer")
+     * @ORM\OneToMany(targetEntity="AlbumBundle\Entity\Review", mappedBy="reviewer")
      */
     private $reviews;
 

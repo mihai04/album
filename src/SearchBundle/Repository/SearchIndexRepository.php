@@ -7,7 +7,7 @@ namespace SearchBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use SearchBundle\Entity\SearchIndex;
+use SearchBundle\Entity\Indices;
 
 /**
  * Class SearchIndexRepository
@@ -15,7 +15,6 @@ use SearchBundle\Entity\SearchIndex;
  */
 class SearchIndexRepository extends EntityRepository
 {
-
     /**
      * @param $entity
      * @param $field
@@ -36,7 +35,7 @@ class SearchIndexRepository extends EntityRepository
             ->getResult();
 
         foreach ($terms as $term) {
-            $searchIndex = new SearchIndex();
+            $searchIndex = new Indices();
             $searchIndex->setEntity($entity);
             $searchIndex->setSearchTerm($term[$field]);
             $searchIndex->setForeignId($term['id']);

@@ -7,10 +7,7 @@ namespace SearchBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use SearchBundle\Entity\Indices;
 use SearchBundle\Helper\IndexesBuilder;
-use UserBundle\Entity\User;
-use UserBundle\UserBundle;
 
 /**
  * Class IndicesRepository

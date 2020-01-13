@@ -1,20 +1,19 @@
 <?php
 
 
-namespace ReviewBundle\Entity;
+namespace AlbumBundle\Entity;
 
 
-use AlbumBundle\Entity\Album;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use UserBundle\Entity\User;
+use AlbumBundle\Entity\User;
 
 /**
  * Review
  *
  * @ORM\Table(name="`review`")
- * @ORM\Entity(repositoryClass="ReviewBundle\Repository\ReviewRepository")
+ * @ORM\Entity(repositoryClass="AlbumBundle\Repository\ReviewRepository")
  */
 class Review
 {
@@ -64,7 +63,7 @@ class Review
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="reviews")
+     * @ORM\ManyToOne(targetEntity="AlbumBundle\Entity\User", inversedBy="reviews")
      * @ORM\JoinColumn(name="reviewer", referencedColumnName="id", nullable=false)
      */
     private $reviewer;

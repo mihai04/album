@@ -24,15 +24,8 @@ class AppKernel extends Kernel
             new blackknight467\StarRatingBundle\StarRatingBundle(),
             new EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle(),
 
-            new UserBundle\UserBundle(),
             new AlbumBundle\AlbumBundle(),
-            new AppBundle\AppBundle(),
-            new ReviewBundle\ReviewBundle(),
             new SearchBundle\SearchBundle(),
-            new TrackBundle\TrackBundle(),
-
-            new Blaga\DateFormatBundle\BlagaDateFormatBundle(),
-            new TestBundle\TestBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

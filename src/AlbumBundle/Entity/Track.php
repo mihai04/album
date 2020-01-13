@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TrackBundle\Entity;
+namespace AlbumBundle\Entity;
 
 use AlbumBundle\Entity\Album;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Class Track
  *
  * @ORM\Table(name="`track`")
- * @ORM\Entity(repositoryClass="TrackBundle\Repository\TrackRepository")
+ * @ORM\Entity(repositoryClass="AlbumBundle\Repository\TrackRepository")
  *
  * @package TrackBundle\Entity
  */

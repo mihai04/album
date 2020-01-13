@@ -1,8 +1,8 @@
 <?php
 
-namespace TrackBundle\Form;
+namespace AlbumBundle\Form;
 
-use TrackBundle\Entity\Track;
+use AlbumBundle\Entity\Track;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

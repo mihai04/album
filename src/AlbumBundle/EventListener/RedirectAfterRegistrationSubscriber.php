@@ -1,7 +1,7 @@
 <?php
 
 
-namespace UserBundle\EventListener;
+namespace AlbumBundle\EventListener;
 
 
 use FOS\UserBundle\Event\FormEvent;

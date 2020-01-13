@@ -1,28 +1,12 @@
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 
-user:
-    resource: "@UserBundle/Resources/config/routing.yml"
-    prefix:   /
-
 album:
     resource: "@AlbumBundle/Resources/config/routing.yml"
     prefix:   /
 
-review:
-    resource: "@ReviewBundle/Resources/config/routing.yml"
-    prefix:   /
-
 search:
     resource: "@SearchBundle/Resources/config/routing.yml"
-    prefix:   /
-
-track:
-    resource: "@TrackBundle/Resources/config/routing.yml"
-    prefix:   /
-
-test_bundle:
-    resource: "@TestBundle/Resources/config/routing.yml"
     prefix:   /
 
 easy_admin_bundle:

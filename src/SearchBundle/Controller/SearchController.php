@@ -4,13 +4,12 @@ namespace SearchBundle\Controller;
 
 use AlbumBundle\Entity\Album;
 use Knp\Component\Pager\Paginator;
-use ReviewBundle\Entity\Review;
+use AlbumBundle\Entity\Review;
 use SearchBundle\Entity\Indices;
-use SearchBundle\Helper\DatabaseHelperInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
-use UserBundle\Entity\User;
+use AlbumBundle\Entity\User;
 
 class SearchController extends Controller
 {

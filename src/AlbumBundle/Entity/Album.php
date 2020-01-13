@@ -6,9 +6,9 @@ namespace AlbumBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use ReviewBundle\Entity\Review;
+use AlbumBundle\Entity\Review;
 use Symfony\Component\Validator\Constraints as Assert;
-use TrackBundle\Entity\Track;
+use AlbumBundle\Entity\Track;
 
 /**
  * Album
@@ -81,7 +81,7 @@ class Album
      *
      * This is the inverse side of the relationship.
      *
-     * @ORM\OneToMany(targetEntity="ReviewBundle\Entity\Review", mappedBy="album", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="AlbumBundle\Entity\Review", mappedBy="album", cascade={"remove"})
      * @ORM\OrderBy({"timestamp"="DESC"})
      */
     private $reviews;
@@ -89,7 +89,7 @@ class Album
     /**
      * @var ArrayCollection $albumTracks
      *
-     * @ORM\OneToMany(targetEntity="TrackBundle\Entity\Track",
+     * @ORM\OneToMany(targetEntity="AlbumBundle\Entity\Track",
      *     mappedBy="album",
      *     fetch="EXTRA_LAZY",
      *     orphanRemoval=true,

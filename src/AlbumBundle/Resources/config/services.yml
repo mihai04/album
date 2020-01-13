@@ -1,4 +1,9 @@
 services:
-#    album.example:
-#        class: AlbumBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+  user.form.registration:
+    class: AlbumBundle\Form\RegistrationFormType
+    tags:
+      - { name: form.type }
+  user.form.profile_edit:
+    class: AlbumBundle\Form\ProfileFormType
+    tags:
+      - { name: form.type }
