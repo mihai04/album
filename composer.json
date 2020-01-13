@@ -10,7 +10,7 @@
             "ReviewBundle\\": "src/ReviewBundle",
             "SearchBundle\\": "src/SearchBundle",
             "TrackBundle\\": "src/TrackBundle",
-            "Blaga\\DateFormatBundle\\": "lib/DateFormatBundle/src/"
+            "TestBundle\\": "src/TestBundle"
         },
         "classmap": [
             "app/AppKernel.php",
@@ -28,6 +28,7 @@
     "require": {
         "php": ">=5.5.9",
         "blackknight467/star-rating-bundle": "2.*",
+        "blaga/date-format-bundle": "*@dev",
         "doctrine/annotations": "^1.8",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-migrations-bundle": "^2.1",
@@ -82,5 +83,11 @@
             "file": "app/config/parameters.yml"
         },
         "branch-alias": null
-    }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../DateFormatBundle"
+        }
+    ]
 }

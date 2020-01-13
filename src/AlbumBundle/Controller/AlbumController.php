@@ -4,7 +4,6 @@ namespace AlbumBundle\Controller;
 
 use AlbumBundle\Entity\Album;
 use AlbumBundle\Form\AddAlbumType;
-use Blaga\DateFormatBundle\DateFormat;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Exception;
@@ -30,17 +29,6 @@ class AlbumController extends Controller
 {
     const INDICES = 'indices';
     const POPULATE_SEARCH_ENTITIES = 'populate:search:entities';
-
-    /**
-     * @var DateFormat
-     */
-    private $dateFormat;
-
-
-    public function __construct(DateFormat $dateFormat)
-    {
-        $this->dateFormat = $dateFormat;
-    }
 
     /**
      * @param Request $request

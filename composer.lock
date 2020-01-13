@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9cfef345cc81f13c3aa2c320f918a01c",
+    "content-hash": "c1ce541395a8caa53551b5f983ba706d",
     "packages": [
         {
             "name": "blackknight467/star-rating-bundle",
@@ -56,6 +56,34 @@
                 "symfony"
             ],
             "time": "2016-04-12T01:57:35+00:00"
+        },
+        {
+            "name": "blaga/date-format-bundle",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "../DateFormatBundle",
+                "reference": "46c077cc83f6569e58d647f9e32e527cb054176e"
+            },
+            "require": {
+                "php": "^7.1.3"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Blaga\\DateFormatBundle\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Blaga",
+                    "email": "m.r.blaga@edu.salford.ac.uk"
+                }
+            ],
+            "description": "Date format bundle"
         },
         {
             "name": "doctrine/annotations",
@@ -4392,7 +4420,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "blaga/date-format-bundle": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

@@ -1,8 +1,7 @@
 <?php
 
 
-namespace AlbumBundle\Service;
-
+namespace TestBundle\Service;
 
 use Blaga\DateFormatBundle\DateFormatProvider;
 

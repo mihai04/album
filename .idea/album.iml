@@ -5,13 +5,14 @@
       <sourceFolder url="file://$MODULE_DIR$/src/SearchBundle" isTestSource="false" packagePrefix="SearchBundle\" />
       <sourceFolder url="file://$MODULE_DIR$/src/ReviewBundle" isTestSource="false" packagePrefix="ReviewBundle\" />
       <sourceFolder url="file://$MODULE_DIR$/src/AlbumBundle" isTestSource="false" packagePrefix="AlbumBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/TestBundle" isTestSource="false" packagePrefix="TestBundle\" />
       <sourceFolder url="file://$MODULE_DIR$/src/UserBundle" isTestSource="false" packagePrefix="UserBundle\" />
       <sourceFolder url="file://$MODULE_DIR$/src/AppBundle" isTestSource="false" packagePrefix="AppBundle\" />
-      <sourceFolder url="file://$MODULE_DIR$/lib/DateFormatBundle/src" isTestSource="false" packagePrefix="Blaga\DateFormatBundle\" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" packagePrefix="Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/src/TrackBundle" isTestSource="false" packagePrefix="TrackBundle\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/alexandermatveev/fontawesome-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/blackknight467/star-rating-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/blaga/date-format-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/annotations" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/cache" />
