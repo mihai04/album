@@ -9,8 +9,7 @@
             "AlbumBundle\\": "src/AlbumBundle",
             "ReviewBundle\\": "src/ReviewBundle",
             "SearchBundle\\": "src/SearchBundle",
-            "TrackBundle\\": "src/TrackBundle",
-            "TestBundle\\": "src/TestBundle"
+            "TrackBundle\\": "src/TrackBundle"
         },
         "classmap": [
             "app/AppKernel.php",
@@ -83,11 +82,5 @@
             "file": "app/config/parameters.yml"
         },
         "branch-alias": null
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../DateFormatBundle"
-        }
-    ]
+    }
 }

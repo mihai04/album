@@ -30,9 +30,6 @@ class AppKernel extends Kernel
             new ReviewBundle\ReviewBundle(),
             new SearchBundle\SearchBundle(),
             new TrackBundle\TrackBundle(),
-
-            new Blaga\DateFormatBundle\BlagaDateFormatBundle(),
-            new TestBundle\TestBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

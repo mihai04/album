@@ -1,2 +1,0 @@
-blaga_date_format:
-  date_format_provider: TestBundle\Service\CustomDateFormatProvider

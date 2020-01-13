@@ -21,10 +21,6 @@ track:
     resource: "@TrackBundle/Resources/config/routing.yml"
     prefix:   /
 
-test_bundle:
-    resource: "@TestBundle/Resources/config/routing.yml"
-    prefix:   /
-
 easy_admin_bundle:
     resource: "@EasyAdminBundle/Controller/AdminController.php"
     type:     annotation
