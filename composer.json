@@ -9,7 +9,8 @@
             "AlbumBundle\\": "src/AlbumBundle",
             "ReviewBundle\\": "src/ReviewBundle",
             "SearchBundle\\": "src/SearchBundle",
-            "TrackBundle\\": "src/TrackBundle"
+            "TrackBundle\\": "src/TrackBundle",
+            "Blaga\\DateFormatBundle\\": "lib/DateFormatBundle/src/"
         },
         "classmap": [
             "app/AppKernel.php",

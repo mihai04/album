@@ -1,0 +1,2 @@
+blaga_date_format:
+  date_format_provider: AlbumBundle\Service\CustomDateFormatProvider

@@ -4,6 +4,7 @@ namespace AlbumBundle\Controller;
 
 use AlbumBundle\Entity\Album;
 use AlbumBundle\Form\AddAlbumType;
+use Blaga\DateFormatBundle\DateFormat;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Exception;
@@ -30,16 +31,16 @@ class AlbumController extends Controller
     const INDICES = 'indices';
     const POPULATE_SEARCH_ENTITIES = 'populate:search:entities';
 
-//    /**
-//     * @var KnpUDataStyle
-//     */
-//    private $knpUIpsum;
-//
-//
-//    public function __construct(KnpUDataStyle $knpUIpsum)
-//    {
-//        $this->knpUIpsum = $knpUIpsum;
-//    }
+    /**
+     * @var DateFormat
+     */
+    private $dateFormat;
+
+
+    public function __construct(DateFormat $dateFormat)
+    {
+        $this->dateFormat = $dateFormat;
+    }
 
     /**
      * @param Request $request
@@ -276,7 +277,7 @@ class AlbumController extends Controller
     }
 
     /**
-     * Generated indicies for searching the newly added album.
+     * Generated indices for searching the newly added album.
      */
     public function updateEntitiesCommand() {
 

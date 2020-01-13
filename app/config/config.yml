@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: blaga_date_format.yml }
     - { resource: "@UserBundle/Resources/config/services.yml" }
     - { resource: "@AlbumBundle/Resources/config/services.yml" }
     - { resource: "@ReviewBundle/Resources/config/services.yml" }
