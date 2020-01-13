@@ -3,8 +3,6 @@
 namespace ReviewBundle\Controller;
 
 use AlbumBundle\Entity\Album;
-use BlogBundle\Entity\Entry;
-use BlogBundle\Form\EntryType;
 use Exception;
 use Knp\Component\Pager\Paginator;
 use ReviewBundle\Entity\Review;
@@ -43,7 +41,6 @@ class ReviewController extends Controller
             if (!$album) {
                 $this->addFlash("error", "Failed to find Album!");
             } else {
-
                 try {
                     /** @var User $user */
                     $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -149,7 +146,6 @@ class ReviewController extends Controller
             ]
         );
     }
-
 
     /**
      * Edit an existing review for a given album.

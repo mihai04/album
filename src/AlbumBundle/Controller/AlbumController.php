@@ -13,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -31,6 +30,17 @@ class AlbumController extends Controller
     const INDICES = 'indices';
     const POPULATE_SEARCH_ENTITIES = 'populate:search:entities';
 
+//    /**
+//     * @var KnpUDataStyle
+//     */
+//    private $knpUIpsum;
+//
+//
+//    public function __construct(KnpUDataStyle $knpUIpsum)
+//    {
+//        $this->knpUIpsum = $knpUIpsum;
+//    }
+
     /**
      * @param Request $request
      *
@@ -38,10 +48,8 @@ class AlbumController extends Controller
      */
     public function indexAction(Request $request)
     {
-
         $em = $this->getDoctrine()->getManager();
         $query = $em->getRepository(Album::class)->getAlbums();
-
 
         /** @var Paginator $paginator */
         $paginator = $this->get('knp_paginator');
@@ -161,12 +169,14 @@ class AlbumController extends Controller
                 return $this->redirect($this->generateUrl('add_album'));
             }
             else {
-                $this->addFlash('success', 'Album created');
-            }
+                $this->addFlash('success', 'Album '. $album->getTitle() .' was successfully created.');
 
-            // save image
-            $destination = $this->getParameter('uploads_directory');
-            $uploadedFile->move($destination, $newFileName);
+                // save image
+                $destination = $this->getParameter('uploads_directory');
+                $uploadedFile->move($destination, $newFileName);
+
+                return $this->redirect($this->generateUrl('album_homepage'));
+            }
         }
 
         return $this->render('AlbumBundle:Default:add_album.html.twig', [
@@ -233,12 +243,23 @@ class AlbumController extends Controller
     public function deleteAlbumAction(Request $request, $id)
     {
         try {
+
             $entityManager = $this->getDoctrine()->getManager();
+
             $album = $entityManager->getRepository(Album::class)
                 ->find($id);
 
             if (!$album) {
                 $this->addFlash('warning', 'Album does not exist!');
+            }
+
+            $reviews = $entityManager->getRepository(Review::class)
+                ->getReviewsByAlbumID($id);
+
+            /** @var Review $review */
+            foreach ($reviews as $review) {
+                $entityManager->remove($review);
+                $entityManager->flush();
             }
 
             $entityManager->remove($album);
@@ -247,7 +268,7 @@ class AlbumController extends Controller
             $this->addFlash('success', 'Album deleted');
         } catch (\Exception $e) {
             if ($this->getUser() !== null) {
-                $this->addFlash('error', 'Failed to delete album!');
+                $this->addFlash('error', 'Failed to delete album!' . $e->getMessage());
             }
         }
 

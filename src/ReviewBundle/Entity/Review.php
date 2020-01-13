@@ -38,8 +38,8 @@ class Review
      * @var string
      * @Assert\NotBlank()
      *
-     * @Assert\Length(max = 255,
-     *      maxMessage = "You cannot add a text longs than 255 words")
+     * @Assert\Length(min = 60,
+     *      maxMessage = "Your review is to short, add more text")
      * @ORM\Column(name="review", type="string", type="text", nullable=false)
      */
     private $review;
@@ -54,7 +54,6 @@ class Review
     private $rating;
 
     /**
-     * CHANGE HERE
      *
      * @var DateTime
      *

@@ -46,21 +46,15 @@ class SearchController extends Controller
                 ->getRepository($result->getEntity())
                 ->find($result->getForeignKey());
 
-            if (!$entity) {
-                $this->addFlash('error', "There are no entities defined to be searched.");
-                return $this->redirect($this->generateUrl('album_homepage'));
+            if ($entity instanceof User && !array_key_exists($entity->getId(), $users)) {
+                $users[$entity->getId()] = $entity;
             }
 
-            $entityId = $entity->getId();
-            if ($entity instanceof User && !array_key_exists($entityId, $users)) {
-                $users[$entityId] = $entity;
-            }
-
-            if ($entity instanceof Album && !array_key_exists($entityId, $albums)) {
-                $albums[$entityId] = $entity;
+            if ($entity instanceof Album && !array_key_exists($entity->getId(), $albums)) {
+                $albums[$entity->getId()] = $entity;
                 $reviews = $this->getDoctrine()
                     ->getRepository(Review::class)
-                    ->getReviewsByAlbumID($entityId)
+                    ->getReviewsByAlbumID($entity->getId())
                     ->getResult();
 
                 $totalReviews = 0;
@@ -82,7 +76,7 @@ class SearchController extends Controller
         /** @var Paginator $paginator */
         $paginator = $this->get('knp_paginator');
         $results = $paginator->paginate(array_merge($users, $albums),
-            $request->query->getInt('page', 1)
+            $request->query->getInt('page', 1), 3
         );
 
         return $this->render('SearchBundle:Default:index.html.twig', [

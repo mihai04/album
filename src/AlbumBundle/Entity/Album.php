@@ -81,7 +81,7 @@ class Album
      *
      * This is the inverse side of the relationship.
      *
-     * @ORM\OneToMany(targetEntity="ReviewBundle\Entity\Review", mappedBy="album")
+     * @ORM\OneToMany(targetEntity="ReviewBundle\Entity\Review", mappedBy="album", cascade={"remove"})
      * @ORM\OrderBy({"timestamp"="DESC"})
      */
     private $reviews;

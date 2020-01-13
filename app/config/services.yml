@@ -69,3 +69,7 @@ services:
     AlbumBundle\EventListener\ExceptionListener:
             tags:
                 - { name: kernel.event_listener, event: kernel.exception }
+
+    # reusable bundle. We need to register classes as services. Hence, we need to add AlbumBundle and my reusable bundle
+    AlbumBundle\:
+        resource: '../../src/AlbumBundle/*'

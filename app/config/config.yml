@@ -132,12 +132,6 @@ knp_paginator:
         sortable: '@KnpPaginator/Pagination/sortable_link.html.twig' # sort link template
         filtration: '@KnpPaginator/Pagination/filtration.html.twig'  # filters template
 
-#album_reusable_search:
-#  - entityName: 'AlbumBundle\Entity\Album'
-#    field: ['title', 'artist']
-#  - entityName: 'UserBundle\Entity\User'
-#    field: ['email', 'full_name']
-
 easy_admin:
     design:
         menu:
