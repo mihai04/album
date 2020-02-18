@@ -140,3 +140,7 @@ easy_admin:
     entities:
         - AlbumBundle\Entity\User
         - AlbumBundle\Entity\Album
+
+fos_rest:
+    routing_loader:
+        default_format: json

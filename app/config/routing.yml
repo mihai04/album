@@ -13,3 +13,8 @@ easy_admin_bundle:
     resource: "@EasyAdminBundle/Controller/AdminController.php"
     type:     annotation
     prefix:   /admin
+
+album_api:
+    type: rest
+    resource: "@AlbumBundle/Resources/config/routing_api.yml"
+    prefix: /api/v1

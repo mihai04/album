@@ -215,7 +215,7 @@ class ReviewController extends Controller
             if ($review->getReviewer() !== $this->getUser() &&
                 !$this->container->get('security.authorization_checker')
                     ->isGranted('ROLE_ADMIN')) {
-                $this->addFlash('error', 'You are not allowed to edit this review as you do not own it!');
+                $this->addFlash('error', 'You are not allowed to delete this review as you do not own it!');
                 return $this->redirect($this->generateUrl('album_homepage'));
             } else {
                 $em->remove($review);

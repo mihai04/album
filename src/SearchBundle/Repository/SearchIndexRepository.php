@@ -38,7 +38,7 @@ class SearchIndexRepository extends EntityRepository
             $searchIndex = new Indices();
             $searchIndex->setEntity($entity);
             $searchIndex->setSearchTerm($term[$field]);
-            $searchIndex->setForeignId($term['id']);
+            $searchIndex->setForeignKey($term['id']);
 
             $em->persist($searchIndex);
             $em->flush();

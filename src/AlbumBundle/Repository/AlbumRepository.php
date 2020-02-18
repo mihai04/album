@@ -17,15 +17,14 @@ use Doctrine\ORM\Query as QueryAlias;
 class AlbumRepository extends EntityRepository
 {
     /**
-     * Return all teh albums (Album Entity)
+     * Return all the albums (Album Entity)
      *
-     * @return Album
+     * @return QueryAlias
      */
     public function getAlbums() {
         $queryBuilder = $this->createQueryBuilder('album');
-        $query = $queryBuilder->getQuery();
 
-        return $query->getResult();
+        return $queryBuilder->getQuery();
     }
 
     /**

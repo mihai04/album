@@ -1,5 +1,7 @@
 <?php
 
+use FOS\RestBundle\FOSRestBundle;
+use JMS\SerializerBundle\JMSSerializerBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -26,6 +28,9 @@ class AppKernel extends Kernel
 
             new AlbumBundle\AlbumBundle(),
             new SearchBundle\SearchBundle(),
+
+            new FOSRestBundle(),
+            new JMSSerializerBundle()
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

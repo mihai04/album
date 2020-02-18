@@ -1,0 +1,5 @@
+api_album:
+  type: rest
+  resource: AlbumBundle\Controller\AlbumAPIController
+  name_prefix: api_album_
+  prefix: /

@@ -10,7 +10,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
-use UserBundle\Entity\User;
+use AlbumBundle\Entity\User;
 
 
 class RedirectAfterRegistrationSubscriber implements EventSubscriberInterface
