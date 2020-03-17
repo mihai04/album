@@ -1,0 +1,11 @@
+AlbumBundle\Entity\Album:
+  exclusion_policy: NONE
+  properties :
+       title :
+        exclude : true
+       artist :
+        exclude : true
+       reviews:
+        exclude : true
+       albumTracks:
+        exclude : true

@@ -7,7 +7,6 @@ namespace AlbumBundle\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use AlbumBundle\Entity\User;
 
 /**
  * Review
@@ -37,8 +36,6 @@ class Review
      * @var string
      * @Assert\NotBlank()
      *
-     * @Assert\Length(min = 60,
-     *      maxMessage = "Your review is to short, add more text")
      * @ORM\Column(name="review", type="string", type="text", nullable=false)
      */
     private $review;
@@ -96,7 +93,7 @@ class Review
 
     /**
      * @param $title
-     * @return mixed
+     * @return string
      */
     public function setTitle($title)
     {
@@ -112,7 +109,7 @@ class Review
     }
 
     /**
-     * @param User $review
+     * @param string
      */
     public function setReview($review)
     {

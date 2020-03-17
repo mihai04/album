@@ -30,7 +30,7 @@ class AppKernel extends Kernel
             new SearchBundle\SearchBundle(),
 
             new FOSRestBundle(),
-            new JMSSerializerBundle()
+            new JMSSerializerBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

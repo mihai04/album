@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AlbumBundle\Form\TrackEmbeddedForm;
+use Symfony\Component\Validator\Constraints\IsTrue;
 
 class AddAlbumType extends AbstractType
 {
@@ -39,6 +40,7 @@ class AddAlbumType extends AbstractType
                 ]
             ])
             ->add('albumTracks', CollectionType::class, [
+                    'mapped' => false,
                     'required' => true,
                     'entry_type' => TrackEmbeddedForm::class,
                     'allow_add' => true,
@@ -46,12 +48,18 @@ class AddAlbumType extends AbstractType
                     'allow_delete' => true,
                     'label' => false,
                     'entry_options' => ['label' => false],
+//                    'constraints' => new IsTrue(array('message' => 'AlbumTracks no accepted'))
                 ]
             )
             ->add('image', FileType::class, [
                 'data_class' => null,
-                'required' => true
+                'required' => true,
             ])
+//            ->add('image', TextareaType::class, [
+//                'attr' => [
+//                    'placeholder' => 'image.'
+//                ]
+//            ])
             ->add('submit', SubmitType::class, [
                 'attr' => [
                     'class' => 'addAlbum'
@@ -63,6 +71,8 @@ class AddAlbumType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Album::class,
+            'csrf_protection' => false,
+            "allow_extra_fields" => true
         ]);
     }
 

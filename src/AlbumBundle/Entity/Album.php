@@ -3,12 +3,10 @@
 
 namespace AlbumBundle\Entity;
 
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use AlbumBundle\Entity\Review;
 use Symfony\Component\Validator\Constraints as Assert;
-use AlbumBundle\Entity\Track;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Album
@@ -55,7 +53,6 @@ class Album
     /**
      * @var string
      *
-     * @Assert\NotBlank()
      * @Assert\Image(maxSize="2M")
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
      */
@@ -75,6 +72,13 @@ class Album
      * @ORM\Column(name="is_published", type="boolean")
      */
     private $isPublished = true;
+//
+//    /**
+//     * @var |DateTime|null
+//     *
+//     * @ORM\Column(name="timestamp", type="datetime", nullable=true)
+//     */
+//    private $timestamp;
 
     /**
      * @var ArrayCollection
@@ -274,4 +278,20 @@ class Album
         // no need to persist, keep in sync
         $track->setAlbum(null);
     }
+
+//    /**
+//     * @return DateTime
+//     */
+//    public function getTimestamp()
+//    {
+//        return $this->timestamp;
+//    }
+//
+//    /**
+//     * @param |DateTime $timestamp
+//     */
+//    public function setTimestamp($timestamp)
+//    {
+//        $this->timestamp = $timestamp;
+//    }
 }

@@ -27,7 +27,7 @@ framework:
     form: ~
     csrf_protection: ~
     validation: { enable_annotations: true }
-    #serializer: { enable_annotations: true }
+    serializer: true
     default_locale: '%locale%'
     trusted_hosts: ~
     session:
@@ -144,3 +144,39 @@ easy_admin:
 fos_rest:
     routing_loader:
         default_format: json
+#    body_listener: true
+#      param_fetcher_listener: true
+#      view:
+#        view_response_listener: 'force'
+#        exception_wrapper_handler:  null
+#        formats:
+#          jsonp: true
+#          json: true
+#          xml: false
+#          rss: false
+#        mime_types:
+#          json: ['application/json', 'application/x-json']
+#          jpg: 'image/jpeg'
+#          png: 'image/png'
+#        jsonp_handler: ~
+#      routing_loader:
+#        default_format:  json
+#        include_format:  false
+#      format_listener:
+#        rules:
+#          - path: ^/
+#          - priorities: [ json, jsonp ]
+#          - fallback_format: ~
+#          - prefer_extension: true
+#      exception:
+#        enabled: true
+
+jms_serializer:
+    metadata:
+      directories:
+        FOSUB:
+          namespace_prefix: "FOS\\UserBundle"
+          path: "%kernel.root_dir%/serializer/FOSUserBundle"
+        src:
+          namespace_prefix: "AlbumBundle"
+          path: "%kernel.root_dir%/serializer/AlbumBundle"

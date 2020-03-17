@@ -21,7 +21,7 @@ class AddReviewFormType extends AbstractType
                 'required' => true
             ])
             ->add('rating', RatingType::class, [
-            'label' => 'Rating'
+                'label' => 'Rating'
             ])
             ->add('submit', SubmitType::class);
     }

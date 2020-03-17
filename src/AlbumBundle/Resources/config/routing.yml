@@ -53,3 +53,15 @@ view_reviews_by_user:
     defaults: { _controller: AlbumBundle\Controller\UserController::viewAction }
     requirements:
         id: '\d+'
+
+past_event_homepage:
+    path:     /past_event_homepage
+    defaults: { _controller: AlbumBundle\Controller\Joindin:eventsAction }
+
+past_event_joindin:
+    path:     /past_event_joindin
+    defaults: { _controller: AlbumBundle\Controller\Joindin:eventAction }
+
+past_talk_joindin:
+    path:     /past_talk_joindin
+    defaults: { _controller: AlbumBundle\Controller\Joindin:talksAction }

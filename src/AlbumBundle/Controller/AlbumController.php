@@ -7,6 +7,7 @@ use AlbumBundle\Form\AddAlbumType;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Exception;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Knp\Component\Pager\Paginator;
 use AlbumBundle\Entity\Review;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -112,6 +113,8 @@ class AlbumController extends Controller
 
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $form['image']->getData();
+
+            var_dump($uploadedFile);die;
 
             if(!$uploadedFile) {
                 $this->addFlash('warning', 'You forgot to add an album image.');
