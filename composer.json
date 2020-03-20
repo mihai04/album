@@ -24,7 +24,6 @@
         "php": ">=5.5.9",
         "ext-json": "*",
         "blackknight467/star-rating-bundle": "2.*",
-        "blaga/date-format-bundle": "*@dev",
         "doctrine/annotations": "^1.8",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-migrations-bundle": "^2.1",

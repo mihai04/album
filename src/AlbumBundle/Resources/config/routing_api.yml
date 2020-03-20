@@ -3,3 +3,14 @@ api_album:
   resource: AlbumBundle\Controller\AlbumAPIController
   name_prefix: api_album_
   prefix: /
+
+users:
+  type: rest
+  resource: AlbumBundle\Controller\UserAPIController
+  name_prefix: users_
+
+user_reviews:
+  type: rest
+  resource: AlbumBundle\Controller\ReviewAPIController
+  name_prefix: reviews_
+  parent: users

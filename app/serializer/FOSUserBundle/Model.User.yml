@@ -2,4 +2,20 @@ FOS\UserBundle\Model\User:
   exclusion_policy: NONE
   properties:
     username:
-    expose: true
+      exclude: true
+    usernameCanonical:
+      exclude: true
+    emailCanonical:
+      exclude: true
+    enabled:
+      exclude: true
+    salt:
+      exclude: true
+    password:
+      exclude: true
+    lastLogin:
+      exclude: true
+    confirmationToken:
+      exclude: true
+    passwordRequestedAt:
+      exclude: true

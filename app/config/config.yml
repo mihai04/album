@@ -143,7 +143,10 @@ easy_admin:
 
 fos_rest:
     routing_loader:
-        default_format: json
+      default_format: json
+#    exception:
+#      enabled: true
+#      exception_controller: 'AlbumBundle\Controller\ExceptionController::showAction'
 #    body_listener: true
 #      param_fetcher_listener: true
 #      view:

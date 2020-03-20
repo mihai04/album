@@ -7,6 +7,7 @@ namespace AlbumBundle\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Review
@@ -59,6 +60,8 @@ class Review
 
     /**
      * @var User
+     *
+     * @Serializer\Exclude()
      *
      * @ORM\ManyToOne(targetEntity="AlbumBundle\Entity\User", inversedBy="reviews")
      * @ORM\JoinColumn(name="reviewer", referencedColumnName="id", nullable=false)

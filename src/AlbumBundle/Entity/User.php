@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use FOS\UserBundle\Model\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as Serializer;
 /**
  * User
  *
@@ -33,6 +34,7 @@ class User extends BaseUser
     /**
      * @var ArrayCollection
      *
+     * @Serializer\Exclude()
      * @ORM\OneToMany(targetEntity="AlbumBundle\Entity\Review", mappedBy="reviewer")
      */
     private $reviews;
@@ -89,5 +91,13 @@ class User extends BaseUser
             $this->roles[] = $role;
         }
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getReviews()
+    {
+        return $this->reviews;
     }
 }
