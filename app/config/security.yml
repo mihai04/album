@@ -10,12 +10,30 @@ security:
 
     providers:
         fos_userbundle:
-            id: fos_user.user_provider.username_email # or  fos_user.user_provider.username --> if emails does not exist
+            id: fos_user.user_provider.username_email # or  fos_user.user_provider.username -> if emails does not exist
 
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        oauth_token:    # Everyone can access the access token URL.
+            pattern:    ^/oauth/v2/token
+            security:   false
+
+        oauth_authorize:
+            pattern:    ^/oauth/v2/auth
+            form_login:
+                provider: fos_userbundle
+                check_path: /oauth/v2/auth_login_check
+                login_path: /oauth/v2/auth_login
+                use_referer: true
+
+        api:
+            pattern:    ^/api # All URLs are protected
+            fos_oauth:  true  # OAuth2 protected resource
+            stateless:  true  # Do no set session cookies
+            anonymous:  true # Anonymous access is not accepted
 
         main:
             pattern: ^/

@@ -7,15 +7,15 @@ use AlbumBundle\Entity\Album;
 use AlbumBundle\Entity\Review;
 use AlbumBundle\Entity\Track;
 use AlbumBundle\Form\AddAlbumType;
-use AlbumBundle\Helper\UploadedBase64File;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Normalizer\DataUriNormalizer;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use Swagger\Annotations as SWG;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 /**
@@ -26,12 +26,25 @@ use Symfony\Component\Serializer\Normalizer\DataUriNormalizer;
  */
 class AlbumAPIController extends FOSRestController
 {
+    /** @const string */
+    const ERROR = 'error';
+
     /**
-     * It retrieves all the albums.
+     * List an album specified by the user.
      *
-     * @Rest\Get("/albums")
+     * @Route("/api/v1/albums", methods={"GET"})
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns all albums.",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @Model(type=AlbumBundle\Entity\Album::class)
+     *     )
+     * )
+     * @SWG\Tag(name="album")
+     * @Security(name="Bearer")
      *
-     * @return Response
+     * @return JsonResponse|Response
      */
     public function getAlbumsAction()
     {
@@ -44,14 +57,31 @@ class AlbumAPIController extends FOSRestController
     }
 
     /**
-     * It retrieves user details based on the given id.
+     * List an album specified by the user.
      *
-     * @Rest\Get("/albums/{slug}")
+     * @Route("/api/v1/albums/{albumId}/", methods={"GET"})
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns a specified album",
+     *     @SWG\Schema(
+     *         type="array",
+     *          @Model(type=AlbumBundle\Entity\Album::class)
+     *     )
+     * )
+     * @SWG\Response(
+     *     response=404,
+     *     description="Album does not exist!"
+     * )
+     * @SWG\Parameter(
+     *     name="slug",
+     *     in="query",
+     *     type="string",
+     *     description="The field represents the id of an album."
+     * )
+     * @SWG\Tag(name="album")
+     * @Security(name="Bearer")
      *
-     * @param int $slug
-     *
-     * @throws 404 'not found' if the user with the given id is not found.
-     *
+     * @param $slug
      * @return JsonResponse|Response
      */
     public function getAlbumAction($slug)
@@ -63,7 +93,7 @@ class AlbumAPIController extends FOSRestController
 
         // check if album exists
         if(!$album) {
-            return new JsonResponse(['error' => 'Album with identifier [' . $slug .'] was not found!'],
+            return new JsonResponse([self::ERROR => 'Album with identifier [' . $slug .'] was not found!'],
                 Response::HTTP_NOT_FOUND);
         }
 
@@ -71,9 +101,29 @@ class AlbumAPIController extends FOSRestController
     }
 
     /**
-     * It returns the reviews for a given album.
+     * List reviews for a specified album identifier.
      *
-     * @Rest\Get("/album/{slug}/reviews")
+     * @Route("/api/v1/albums/{albumId}/reviews", methods={"GET"})
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the albums of an user",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @Model(type=AlbumBundle\Entity\Album::class)
+     *     )
+     * )
+     * @SWG\Response(
+     *     response=404,
+     *     description="Album does not exist!"
+     * )
+     * @SWG\Parameter(
+     *     name="albumId",
+     *     in="query",
+     *     type="string",
+     *     description="The field represents the id of an album"
+     * )
+     * @SWG\Tag(name="album")
+     * @Security(name="Bearer")
      *
      * @param int $slug
      *
@@ -90,7 +140,7 @@ class AlbumAPIController extends FOSRestController
 
         // check if the album exists.
         if(!$album) {
-            return new JsonResponse(['error' => "Album not found.", Response::HTTP_NOT_FOUND]);
+            return new JsonResponse([self::ERROR => "Album not found.", Response::HTTP_NOT_FOUND]);
         }
 
         $reviews = $em->getRepository(Review::class)->getReviewsByAlbumID($slug)
@@ -126,7 +176,7 @@ class AlbumAPIController extends FOSRestController
 
         // check if the album exists.
         if(!$album) {
-            return new JsonResponse(['error' => 'Album with identifier ['. $slug .'] not found!'],
+            return new JsonResponse([self::ERROR => 'Album with identifier ['. $slug .'] not found!'],
                 Response::HTTP_NOT_FOUND);
         }
 
@@ -135,13 +185,12 @@ class AlbumAPIController extends FOSRestController
 
         // check if the review exists.
         if(!$review) {
-            return new JsonResponse(['error' => 'Review with identifier ['. $id .'] not found!'],
+            return new JsonResponse([self::ERROR => 'Review with identifier ['. $id .'] not found!'],
                 Response::HTTP_NOT_FOUND);
         }
 
         return $this->handleView($this->view($review, Response::HTTP_OK));
     }
-
 
     /**
      * @Rest\Post("/users/{slug}/albums")
@@ -195,11 +244,15 @@ class AlbumAPIController extends FOSRestController
         else {
             return $this->handleView($this->view($form, Response::HTTP_BAD_REQUEST));
         }
-
-//     create an api form type
     }
 
-    function moveFileToPath($filePath, $base64_string) {
+    /**
+     * Persisting uploaded file.
+     *
+     * @param $filePath
+     * @param $base64_string
+     */
+    private function moveFileToPath($filePath, $base64_string) {
 
         $file = fopen($filePath, "w+");
 
@@ -211,6 +264,9 @@ class AlbumAPIController extends FOSRestController
 
         fclose($file);
     }
+
+
+
 
 //    /**
 //     * @Rest\Post("/users/{slug}/album")

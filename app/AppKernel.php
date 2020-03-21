@@ -1,5 +1,6 @@
 <?php
 
+use FOS\OAuthServerBundle\FOSOAuthServerBundle;
 use FOS\RestBundle\FOSRestBundle;
 use JMS\SerializerBundle\JMSSerializerBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -31,8 +32,9 @@ class AppKernel extends Kernel
 
             new FOSRestBundle(),
             new JMSSerializerBundle(),
+            new FOSOAuthServerBundle(),
+            new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
-//            new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

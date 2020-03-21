@@ -7,3 +7,10 @@ services:
     class: AlbumBundle\Form\ProfileFormType
     tags:
       - { name: form.type }
+
+#    nelmio_api_doc.yml_provider.api_yml_provider:
+#      class: AlbumBundle\Service\NelmioApiYmlProvider
+#      arguments:
+#        folder: '%kernel.root_dir%/../src/ApiBundle/Resources/apidoc'
+#      tags:
+#        - { name: nelmio_api_doc.extractor.annotations_provider }

@@ -57,7 +57,6 @@ class UserAPIController extends FOSRestController
         return $this->handleView($this->view($user, Response::HTTP_OK));
     }
 
-
     /**
      * It returns the reviews for a given user.
      *
@@ -118,7 +117,6 @@ class UserAPIController extends FOSRestController
             return new JsonResponse(['error' => 'User with identifier ['. $slug .'] not found.'],
                 Response::HTTP_NOT_FOUND);
         }
-
 
         /** @var Review $review */
         $review = $user->getReviews()->get($id);
