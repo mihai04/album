@@ -114,8 +114,6 @@ class AlbumController extends Controller
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $form['image']->getData();
 
-            var_dump($uploadedFile);die;
-
             if(!$uploadedFile) {
                 $this->addFlash('warning', 'You forgot to add an album image.');
                 return $this->redirect($this->generateUrl('add_album'));

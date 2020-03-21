@@ -4,9 +4,13 @@
 namespace AlbumBundle\Controller;
 
 use AlbumBundle\Entity\Review;
+use AlbumBundle\Helper\PaginatedCollection;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -21,16 +25,48 @@ class ReviewAPIController extends FOSRestController
      *
      * @Rest\Get("/reviews")
      *
+     * @param Request $request
      * @return Response
      */
-    public function getReviewsAction()
+    public function getReviewsAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $qb = $em->getRepository(Review::class)
+            ->findAllQueryBuilder();
 
-        $reviews = $em->getRepository(Review::class)
-            ->findAll();
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
 
-        return $this->handleView($this->view($reviews));
+        $page = $request->query->get('page', 1);
+        $pagerfanta->setMaxPerPage($this->getParameter('page_limit'));
+        $pagerfanta->setCurrentPage($page);
+
+        $reviews = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $reviews[] = $result;
+        }
+
+        $paginatedCollection = new PaginatedCollection($reviews, $pagerfanta->getNbPages());
+
+        $route = "reviews_get_reviews_reviews";
+
+        $routeParams = array();
+        $createLinkUrl = function ($targetPage) use ($route, $routeParams) {
+            return $this->generateUrl($route, array_merge($routeParams, array('page' => $targetPage)));
+        };
+
+        $paginatedCollection->addLink('self', $createLinkUrl($page));
+        $paginatedCollection->addLink('first', $createLinkUrl(1));
+        $paginatedCollection->addLink('last', $createLinkUrl($pagerfanta->getNbPages()));
+
+        if ($pagerfanta->hasNextPage()) {
+            $paginatedCollection->addLink('next', $createLinkUrl($pagerfanta->getNextPage()));
+        }
+        if ($pagerfanta->hasPreviousPage()) {
+            $paginatedCollection->addLink('prev', $createLinkUrl($pagerfanta->getPreviousPage()));
+        }
+
+        return $this->handleView($this->view($paginatedCollection));
     }
 
     /**

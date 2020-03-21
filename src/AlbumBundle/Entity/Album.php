@@ -27,7 +27,6 @@ class Album
     /**
      * @var string
      *
-     * @Assert\NotBlank()
      * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
     private $title;
@@ -35,7 +34,6 @@ class Album
     /**
      * @var string
      *
-     * @Assert\NotBlank()
      * @ORM\Column(name="artist", type="string", length=255, nullable=false)
      */
     private $artist;
@@ -43,7 +41,6 @@ class Album
     /**
      * @var string
      *
-     * @Assert\NotBlank()
      * @Assert\Length(max="15", maxMessage="Invalid ISRC - it requieres maximum 15 characters.")
      * @ORM\Column(name="isrc", type="string", length=15, unique=true, nullable=false)
      */
@@ -52,7 +49,6 @@ class Album
     /**
      * @var string
      *
-     * @Assert\Image(maxSize="2M")
      * @ORM\Column(name="image", type="string", length=255, nullable=true)
      */
     private $image;
@@ -60,7 +56,6 @@ class Album
     /**
      * @var string
      *
-     * @Assert\NotBlank()
      * @ORM\Column(name="summary", type="text", nullable=true)
      */
     private $summary;

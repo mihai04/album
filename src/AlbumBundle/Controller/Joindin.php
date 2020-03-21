@@ -25,10 +25,12 @@ class Joindin extends Controller
 
         $events = json_decode($response->getBody(), true);
 
-        $event = $events['events'][1];
-        $talksData = $client->request('GET', 'v2.1/' . $url, $event['talks_uri']);
+//        var_dump($events);die;
 
-        dump($talksData);die;
+//        $event = $events['events'][1];
+//        $talksData = $client->request('GET', 'v2.1/' . $url, $event['talks_uri']);
+
+//        dump($talksData);die;die
 
 
 //        dump($response->getStatusCode(), $response, $events['events']);die;
@@ -40,7 +42,7 @@ class Joindin extends Controller
 
 //        dump($response->getStatusCode(), $response, $data);die;
 
-        return $this->render('AlbumBundle:Default:event.html.twig', ['data' => $events]);
+        return $this->render('AlbumBundle:Default:event.html.twig', ['data' => $events['events']]);
     }
 
     public function eventAction() {

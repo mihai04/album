@@ -50,4 +50,9 @@ class ReviewRepository extends EntityRepository
 
         return $queryBuilder->getQuery();
     }
+
+    public function findAllQueryBuilder()
+    {
+        return $this->createQueryBuilder('album');
+    }
 }

@@ -5,13 +5,17 @@ namespace AlbumBundle\Controller;
 
 use AlbumBundle\Entity\Album;
 use AlbumBundle\Entity\Review;
+use AlbumBundle\Entity\Track;
 use AlbumBundle\Form\AddAlbumType;
-use AlbumBundle\Form\AddReviewFormType;
+use AlbumBundle\Helper\UploadedBase64File;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Normalizer\DataUriNormalizer;
 
 
 /**
@@ -139,13 +143,74 @@ class AlbumAPIController extends FOSRestController
     }
 
 
+    /**
+     * @Rest\Post("/users/{slug}/albums")
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function postAlbumAction(Request $request)
+    {
+        $album = new Album();
 
+        // prepare the form
+        $form = $this->createForm(AddAlbumType::class, $album, ['csrf_protection' => false]);
 
+        // check if the content type is json
+        if ($request->getContentType() != 'json') {
+            return $this->handleView($this->view(null, Response::HTTP_BAD_REQUEST));
+        }
 
+        // json_decode the request content and pass it to the form
+        $form->submit(json_decode($request->getContent(), true));
 
+        // check form
+        if ($form->isValid() && $form->isSubmitted()) {
+            $em = $this->getDoctrine()->getManager();
 
+            $base64_string = $form['image']->getData();
+            $pos  = strpos($base64_string, ';');
+            $type = explode('/', explode(':', substr($base64_string, 0, $pos))[1])[1];
+            $fileName =  uniqid() . '.' . $type;
 
+            $album->setImage($fileName);
+            $tracks = $form['albumTracks']->getData();
+            /**
+             * @var Track $track
+             */
+            foreach ($tracks as $track) {
+                $track->setAlbum($album);
+            }
 
+            $em->persist($album);
+            $em->flush();
+
+            $destination = $this->getParameter('uploads_directory');
+            $filePath = $destination . '/' . $fileName;
+            $this->moveFileToPath($filePath, $base64_string);
+
+            return $this->handleView($this->view(null, Response::HTTP_CREATED)->
+            setLocation($this->generateUrl('album_homepage')));
+        }
+        else {
+            return $this->handleView($this->view($form, Response::HTTP_BAD_REQUEST));
+        }
+
+//     create an api form type
+    }
+
+    function moveFileToPath($filePath, $base64_string) {
+
+        $file = fopen($filePath, "w+");
+
+        $data = explode(',', $base64_string);
+
+        fwrite($file, base64_decode($data[1]));
+
+        chmod($filePath, 0777);
+
+        fclose($file);
+    }
 
 //    /**
 //     * @Rest\Post("/users/{slug}/album")
@@ -153,7 +218,7 @@ class AlbumAPIController extends FOSRestController
 //     * @param Request $request
 //     * @return Response
 //     */
-//    public function postAlbumpostAction(Request $request)
+//    public function postAlbumAction(Request $request)
 //    {
 //        $album = new Album();
 //
@@ -181,8 +246,8 @@ class AlbumAPIController extends FOSRestController
 //        else {
 //            return $this->handleView($this->view($form, Response::HTTP_BAD_REQUEST));
 //        }
-//
-//        // create an api form type
+
+        // create an api form type
 //    }
 //
 //
