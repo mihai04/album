@@ -3,10 +3,10 @@
 
 namespace AlbumBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use JMS\Serializer\Annotation as JMS;
 
 /**
  * Album
@@ -68,13 +68,13 @@ class Album
      * @ORM\Column(name="is_published", type="boolean")
      */
     private $isPublished = true;
-//
-//    /**
-//     * @var |DateTime|null
-//     *
-//     * @ORM\Column(name="timestamp", type="datetime", nullable=true)
-//     */
-//    private $timestamp;
+
+    /**
+     * @var |DateTime|null
+     *
+     * @ORM\Column(name="timestamp", type="datetime", nullable=true)
+     */
+    private $timestamp;
 
     /**
      * @var ArrayCollection
@@ -275,19 +275,19 @@ class Album
         $track->setAlbum(null);
     }
 
-//    /**
-//     * @return DateTime
-//     */
-//    public function getTimestamp()
-//    {
-//        return $this->timestamp;
-//    }
-//
-//    /**
-//     * @param |DateTime $timestamp
-//     */
-//    public function setTimestamp($timestamp)
-//    {
-//        $this->timestamp = $timestamp;
-//    }
+    /**
+     * @return DateTime
+     */
+    public function getTimestamp()
+    {
+        return $this->timestamp;
+    }
+
+    /**
+     * @param |DateTime $timestamp
+     */
+    public function setTimestamp($timestamp)
+    {
+        $this->timestamp = $timestamp;
+    }
 }

@@ -14,32 +14,38 @@ easy_admin_bundle:
     type:     annotation
     prefix:   /admin
 
+# api routing version 1
 album_api:
     type: rest
     resource: "@AlbumBundle/Resources/config/routing_api.yml"
     prefix: /api/v1
 
+# oauth client creator
 client_creator:
     type: rest
     resource: AlbumBundle\Controller\ClientCreatorController
     prefix: /
 
+# oauth sever token
 fos_oauth_server_token:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
 
+# oauth sever authorize
 fos_oauth_server_authorize:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/authorize.xml"
 
-# > 3.0 version
+# api doc < 3.0 version
 #NelmioApiDocBundle:
 #    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
 #    prefix:   /api/doc
 
+# api doc > 3.0 version swagger ui
 app.swagger_ui:
     path: /api/doc
     methods: GET
     defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
 
+# api doc > 3.0 version swagger json format
 app.swagger:
     path: /api/doc.json
     methods: GET

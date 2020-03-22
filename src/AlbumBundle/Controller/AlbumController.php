@@ -119,7 +119,6 @@ class AlbumController extends Controller
                 return $this->redirect($this->generateUrl('add_album'));
             }
 
-
             $originalFileName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
             $newFileName = $this->hashImageName($originalFileName, $uploadedFile);
 
@@ -127,7 +126,6 @@ class AlbumController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $album->setImage($newFileName);
                 $tracks = $form['albumTracks']->getData();
-
 
                 if (count($tracks) === 0) {
                     $this->addFlash('warning', 'You forgot to add tracks.');

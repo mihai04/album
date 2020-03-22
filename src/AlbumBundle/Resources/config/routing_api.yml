@@ -1,16 +1,29 @@
-api_album:
+albums:
   type: rest
   resource: AlbumBundle\Controller\AlbumAPIController
-  name_prefix: api_album_
+  name_prefix: api_albums_
   prefix: /
+
+albums_reviews:
+  type: rest
+  resource: AlbumBundle\Controller\ReviewAPIController
+  parent: albums
+  name_prefix: api_reviews_
+
+albums_tracks:
+  type: rest
+  resource: AlbumBundle\Controller\TrackAPIController
+  parent: albums
+  name_prefix: api_tracks_
 
 users:
   type: rest
   resource: AlbumBundle\Controller\UserAPIController
-  name_prefix: users_
+  name_prefix: api_users_
+  prefix: /
 
-user_reviews:
+users_entries:
   type: rest
-  resource: AlbumBundle\Controller\ReviewAPIController
-  name_prefix: reviews_
+  resource: AlbumBundle\Controller\EntryAPIController
+  name_prefix: api_entries_
   parent: users

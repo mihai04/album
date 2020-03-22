@@ -141,10 +141,57 @@ easy_admin:
         - AlbumBundle\Entity\User
         - AlbumBundle\Entity\Album
 
+jms_serializer:
+    metadata:
+      directories:
+        FOSUB:
+          namespace_prefix: "FOS\\UserBundle"
+          path: "%kernel.root_dir%/serializer/FOSUserBundle"
+        src:
+          namespace_prefix: "AlbumBundle"
+          path: "%kernel.root_dir%/serializer/AlbumBundle"
+
+nelmio_api_doc:
+  documentation:
+    schemes: [http, https]
+    info:
+      title: Music Review API
+      description: This is the documentation for the Music Review website.
+      version: 1.0.0
+    securityDefinitions:
+      Bearer:
+        type: apiKey
+        description: 'Value: Bearer {jwt}'
+        name: Authorization
+        in: header
+    security:
+      - Bearer: []
+  areas:
+    path_patterns: # an array of regexps
+      - ^/api
+
+# FOSOAuthServerBundle Configuration
+fos_oauth_server:
+  db_driver: orm
+  client_class:        AlbumBundle\Entity\Client
+  access_token_class:  AlbumBundle\Entity\AccessToken
+  refresh_token_class: AlbumBundle\Entity\RefreshToken
+  auth_code_class:     AlbumBundle\Entity\AuthCode
+  service:
+    user_provider: fos_user.user_provider.username
+    options:
+      access_token_lifetime: 86400
+      refresh_token_lifetime: 1209600
+      auth_code_lifetime: 30
+#      supported_scopes:
+#        - user
+
 fos_rest:
-    routing_loader:
-      default_format: json
-      include_format: false   # All responses should be JSON formatted according to the requirement. There is no need to include format in request and thereby it default to JSON format.
+  routing_loader:
+    default_format: json
+    include_format: false   # All responses should be JSON formatted according to the requirement.
+    # There is no need to include format in request and thereby it default to JSON format.
+
 #    exception:
 #      enabled: true
 #      exception_controller: 'AlbumBundle\Controller\ExceptionController::showAction'
@@ -174,56 +221,3 @@ fos_rest:
 #          - prefer_extension: true
 #      exception:
 #        enabled: true
-
-jms_serializer:
-    metadata:
-      directories:
-        FOSUB:
-          namespace_prefix: "FOS\\UserBundle"
-          path: "%kernel.root_dir%/serializer/FOSUserBundle"
-        src:
-          namespace_prefix: "AlbumBundle"
-          path: "%kernel.root_dir%/serializer/AlbumBundle"
-
-nelmio_api_doc:
-  documentation:
-    host: 127.0.0.1
-    schemes: [http, https]
-    info:
-      title: Music Review
-      description: This is the documentation for the Music Review website.
-      version: 1.0.0
-  areas:
-    path_patterns: # an array of regexps
-      - ^/api
-#    default:
-#      path_patterns: [ ^/api ]
-#      host_patterns: [ ^api\. ]
-#    internal:
-#      path_patterns: [ ^/internal ]
-#    commercial:
-#      path_patterns: [ ^/commercial ]
-#    securityDefinitions:
-#      Bearer:
-#        type: apiKey
-#        description: 'Value: Bearer {jwt}'
-#        name: Authorization
-#        in: header
-#    security:
-#      - Bearer: []
-
-# FOSOAuthServerBundle Configuration
-fos_oauth_server:
-  db_driver: orm
-  client_class:        AlbumBundle\Entity\Client
-  access_token_class:  AlbumBundle\Entity\AccessToken
-  refresh_token_class: AlbumBundle\Entity\RefreshToken
-  auth_code_class:     AlbumBundle\Entity\AuthCode
-  service:
-    user_provider: fos_user.user_provider.username
-    options:
-      access_token_lifetime: 86400
-      refresh_token_lifetime: 1209600
-      auth_code_lifetime: 30
-#      supported_scopes:
-#        - user

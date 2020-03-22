@@ -30,7 +30,7 @@ class AddReviewFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Review::class,
-            'csrf_protection' => false
+//            'csrf_protection' => false
         ]);
     }
 

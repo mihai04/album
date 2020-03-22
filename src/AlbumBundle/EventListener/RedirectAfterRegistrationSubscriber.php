@@ -4,6 +4,8 @@
 namespace AlbumBundle\EventListener;
 
 
+use AlbumBundle\Entity\AuthCode;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\FOSUserEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -15,6 +17,9 @@ use AlbumBundle\Entity\User;
 
 class RedirectAfterRegistrationSubscriber implements EventSubscriberInterface
 {
+    /** @var EntityManagerInterface */
+    private $em;
+
     use TargetPathTrait;
     const ROLE_USER = 'ROLE_USER';
 
@@ -26,10 +31,12 @@ class RedirectAfterRegistrationSubscriber implements EventSubscriberInterface
     /**
      * RedirectAfterRegistrationSubscriber constructor.
      * @param RouterInterface $router
+     * @param EntityManager $em
      */
-    public function __construct(RouterInterface $router)
+    public function __construct(RouterInterface $router, EntityManagerInterface $em)
     {
         $this->router = $router;
+        $this->em = $em;
     }
 
     /**
@@ -53,7 +60,8 @@ class RedirectAfterRegistrationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-          FOSUserEvents::REGISTRATION_SUCCESS => 'onRegistrationSuccess'
+          FOSUserEvents::REGISTRATION_SUCCESS => 'onRegistrationSuccess',
+            FOSUserEvents::REGISTRATION_INITIALIZE => 'onRegistrationInit',
         ];
     }
 
@@ -64,7 +72,11 @@ class RedirectAfterRegistrationSubscriber implements EventSubscriberInterface
     {
         /** @var User $user  */
         $user = $event->getForm()->getData();
+
         $user->addRole(self::ROLE_USER);
+
+//        $apiToken = new ApiToken();
+//        $this->em->persist();
 
         $url = $this->getTargetPath($event->getRequest()->getSession(), 'main');
 

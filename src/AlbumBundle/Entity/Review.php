@@ -100,6 +100,9 @@ class Review
      */
     public function setTitle($title)
     {
+        if(empty($title)) {
+            return $this->title = "Unspecified title";
+        }
         return $this->title = $title;
     }
 
