@@ -17,7 +17,6 @@ use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
 
 /**
@@ -37,7 +36,8 @@ class AlbumAPIController extends FOSRestController
     /**
      * List all albums.
      *
-     * @Route("/api/v1/albums", methods={"GET"})
+     * @Rest\Get("/albums")
+     *
      * @SWG\Response(
      *     response=200,
      *     description="Returns all albums.",
@@ -64,7 +64,8 @@ class AlbumAPIController extends FOSRestController
     /**
      * List an album specified by the user.
      *
-     * @Route("/api/v1/albums/{albumId}/", methods={"GET"})
+     * @Rest\Get("/albums/{slug}")
+     *
      * @SWG\Response(
      *     response=200,
      *     description="Returns a specified album",
@@ -79,10 +80,19 @@ class AlbumAPIController extends FOSRestController
      * )
      * @SWG\Parameter(
      *     name="slug",
-     *     in="query",
+     *     in="path",
      *     type="string",
      *     description="The field represents the id of an album."
      * )
+     *
+     * @SWG\Parameter(
+     *     name="page",
+     *     in="query",
+     *     type="string",
+     *     required=false,
+     *     description="The page number."
+     * )
+     *
      * @SWG\Tag(name="albums")
      * @Security(name="Bearer")
      *
@@ -109,6 +119,32 @@ class AlbumAPIController extends FOSRestController
      * Create album.
      *
      * @Rest\Post("/albums")
+     *
+     * @SWG\Post(
+     *     operationId="addAbum",
+     *     summary="Add Album.",
+     *     @SWG\Parameter( 
+     *          name="slug", 
+     *          in="path", 
+     *          description="The field represent the album id.", 
+     *          required=true, 
+     *          type="string" 
+     *     ),
+     *     @SWG\Parameter(
+     *         name="json payload",
+     *         in="body",
+     *         required=true,
+     *         @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(property="title", type="string", example="My Album"), 
+     *              @SWG\Property(property="summary", type="string", example="My album is amazing"),
+     *              @SWG\Property(property="artist", type="string", example="My album artist"),
+     *              @SWG\Property(property="isrc", type="string", example="UK-A00-00-00000"),
+     *              @SWG\Property(property="image", type="string", example="image base 64 encoded"),
+     *           )
+     *        )
+     *     ),
+     * ),
      *
      * @SWG\Response(
      *     response=200,
@@ -199,6 +235,32 @@ class AlbumAPIController extends FOSRestController
      *
      * @Rest\Put("/albums/{slug}")
      *
+     * @SWG\Put(
+     *     operationId="editAlbum",
+     *     summary="Edit album.",
+     *     @SWG\Parameter( 
+     *          name="slug", 
+     *          in="path", 
+     *          description="The field represent the album id.", 
+     *          required=true, 
+     *          type="string" 
+     *     ),
+     *     @SWG\Parameter(
+     *         name="json payload",
+     *         in="body",
+     *         required=true,
+     *         @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(property="title", type="string", example="My Album"), 
+     *              @SWG\Property(property="summary", type="string", example="My album is amazing"),
+     *              @SWG\Property(property="artist", type="string", example="My album artist"),
+     *              @SWG\Property(property="isrc", type="string", example="UK-A00-00-00000"),
+     *              @SWG\Property(property="image", type="string", example="image base 64 encoded"),
+     *           )
+     *        )
+     *     ),
+     * ),
+     *
      * @SWG\Response(
      *     response=200,
      *     description="Successfully created a review for the specified album.",
@@ -215,12 +277,7 @@ class AlbumAPIController extends FOSRestController
      *     response=404,
      *     description="Album does not exist!"
      * )
-     * @SWG\Parameter(
-     *     name="slug",
-     *     in="path",
-     *     type="string",
-     *     description="The field represents the id of an album."
-     * )
+
      * @SWG\Tag(name="albums")
      * @Security(name="Bearer")
      *

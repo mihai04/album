@@ -60,8 +60,7 @@ class RedirectAfterRegistrationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-          FOSUserEvents::REGISTRATION_SUCCESS => 'onRegistrationSuccess',
-            FOSUserEvents::REGISTRATION_INITIALIZE => 'onRegistrationInit',
+          FOSUserEvents::REGISTRATION_SUCCESS => 'onRegistrationSuccess'
         ];
     }
 

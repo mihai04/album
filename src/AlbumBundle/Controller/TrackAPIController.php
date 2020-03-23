@@ -8,12 +8,9 @@ use AlbumBundle\Entity\Album;
 use AlbumBundle\Entity\Review;
 use AlbumBundle\Entity\Track;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use AlbumBundle\Helper\PaginatedCollection;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,37 +76,9 @@ class TrackAPIController extends FOSRestController
         $qb = $em->getRepository(Review::class)
             ->findAllQueryBuilder();
 
-        $adapter = new DoctrineORMAdapter($qb);
-        $pagerfanta = new Pagerfanta($adapter);
+        $paginatedCollection = $this->get('pagination_factory')->createCollection($qb->getQuery(), $request,
+            $this->getParameter('page_limit'), "api_tracks_get_album_tracks", $slug);
 
-        $page = $request->query->get('page', 1);
-        $pagerfanta->setMaxPerPage($this->getParameter('page_limit'));
-        $pagerfanta->setCurrentPage($page);
-
-        $reviews = [];
-        foreach ($pagerfanta->getCurrentPageResults() as $result) {
-            $reviews[] = $result;
-        }
-
-        $paginatedCollection = new PaginatedCollection($reviews, $pagerfanta->getNbPages());
-
-        $route = "api_tracks_get_album_tracks";
-
-        $routeParams = array();
-        $createLinkUrl = function ($slug, $targetPage) use ($route, $routeParams) {
-            return $this->generateUrl($route, array_merge($routeParams, array('slug' => $slug, 'page' => $targetPage)));
-        };
-
-        $paginatedCollection->addLink('self', $createLinkUrl($slug, $page));
-        $paginatedCollection->addLink('first', $createLinkUrl($slug, 1));
-        $paginatedCollection->addLink('last', $createLinkUrl($slug, $pagerfanta->getNbPages()));
-
-        if ($pagerfanta->hasNextPage()) {
-            $paginatedCollection->addLink('next', $createLinkUrl($slug, $pagerfanta->getNextPage()));
-        }
-        if ($pagerfanta->hasPreviousPage()) {
-            $paginatedCollection->addLink('prev', $createLinkUrl($slug, $pagerfanta->getPreviousPage()));
-        }
 
         return $this->handleView($this->view($paginatedCollection));
     }
@@ -130,6 +99,12 @@ class TrackAPIController extends FOSRestController
      * @SWG\Response(
      *     response=404,
      *     description="Album does not exist!"
+     * )
+     * @SWG\Parameter(
+     *     name="slug",
+     *     in="path",
+     *     type="string",
+     *     description="The field represents the id of an album."
      * )
      * @SWG\Parameter(
      *     name="id",

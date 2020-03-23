@@ -1,9 +1,0 @@
-AlbumBundle\Entity\Album:
-  exclusion_policy: NONE
-  properties :
-       reviews:
-        exclude : true
-       isPublished:
-        exclude : true
-       albumTracks:
-        exclude : true

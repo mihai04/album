@@ -32,6 +32,7 @@ class UserAPIController extends FOSRestController
      *         @Model(type=AlbumBundle\Entity\Album::class)
      *     )
      * )
+     *
      * @SWG\Tag(name="users")
      * @Security(name="Bearer")
      *

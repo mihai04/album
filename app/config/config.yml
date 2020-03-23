@@ -147,9 +147,6 @@ jms_serializer:
         FOSUB:
           namespace_prefix: "FOS\\UserBundle"
           path: "%kernel.root_dir%/serializer/FOSUserBundle"
-        src:
-          namespace_prefix: "AlbumBundle"
-          path: "%kernel.root_dir%/serializer/AlbumBundle"
 
 nelmio_api_doc:
   documentation:

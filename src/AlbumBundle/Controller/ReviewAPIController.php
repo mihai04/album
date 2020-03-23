@@ -7,13 +7,10 @@ use AlbumBundle\Entity\Album;
 use AlbumBundle\Entity\Review;
 use AlbumBundle\Entity\User;
 use AlbumBundle\Form\AddReviewFormType;
-use AlbumBundle\Helper\PaginatedCollection;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,20 +41,24 @@ class ReviewAPIController extends FOSRestController
      *         type="array",
      *         @Model(type=AlbumBundle\Entity\Review::class)
      *     )
-     * )
+     * ),
+     *
      * @SWG\Parameter(
      *     name="page",
      *     in="query",
      *     type="integer",
      *     description="The field represents the page number."
-     * )
+     * ),
+     *
      * @SWG\Parameter(
      *     name="slug",
      *     in="path",
      *     type="string",
-     *     description="The field represents the id of a user."
-     * )
-     * @SWG\Tag(name="reviews per album")
+     *     description="The field represents the id of an album."
+     * ),
+     *
+     * @SWG\Tag(name="reviews per album"),
+     *
      * @Security(name="Bearer")
      *
      * @param Request $request
@@ -70,37 +71,8 @@ class ReviewAPIController extends FOSRestController
         $qb = $em->getRepository(Review::class)
             ->findAllQueryBuilder();
 
-        $adapter = new DoctrineORMAdapter($qb);
-        $pagerfanta = new Pagerfanta($adapter);
-
-        $page = $request->query->get('page', 1);
-        $pagerfanta->setMaxPerPage($this->getParameter('page_limit'));
-        $pagerfanta->setCurrentPage($page);
-
-        $reviews = [];
-        foreach ($pagerfanta->getCurrentPageResults() as $result) {
-            $reviews[] = $result;
-        }
-
-        $paginatedCollection = new PaginatedCollection($reviews, $pagerfanta->getNbPages());
-
-        $route = "api_reviews_get_album_reviews";
-
-        $routeParams = array();
-        $createLinkUrl = function ($slug, $targetPage) use ($route, $routeParams) {
-            return $this->generateUrl($route, array_merge($routeParams, array('slug' => $slug, 'page' => $targetPage)));
-        };
-
-        $paginatedCollection->addLink('self', $createLinkUrl($slug, $page));
-        $paginatedCollection->addLink('first', $createLinkUrl($slug, 1));
-        $paginatedCollection->addLink('last', $createLinkUrl($slug, $pagerfanta->getNbPages()));
-
-        if ($pagerfanta->hasNextPage()) {
-            $paginatedCollection->addLink('next', $createLinkUrl($slug, $pagerfanta->getNextPage()));
-        }
-        if ($pagerfanta->hasPreviousPage()) {
-            $paginatedCollection->addLink('prev', $createLinkUrl($slug, $pagerfanta->getPreviousPage()));
-        }
+        $paginatedCollection = $this->get('pagination_factory')->createCollection($qb->getQuery(), $request,
+            $this->getParameter('page_limit'), "api_reviews_get_album_reviews", $slug);
 
         return $this->handleView($this->view($paginatedCollection));
     }
@@ -155,29 +127,50 @@ class ReviewAPIController extends FOSRestController
      *
      * @Rest\Post("/albums/{slug}/reviews")
      *
+     * @SWG\Post(
+     *     operationId="createReview",
+     *     summary="Create new review entry",
+     *     @SWG\Parameter( 
+     *          name="slug", 
+     *          in="path", 
+     *          description="The field represent the album id.", 
+     *          required=true, 
+     *          type="string" 
+     *     ),
+     *     @SWG\Parameter(
+     *         name="json payload",
+     *         in="body",
+     *         required=true,
+     *         @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(property="title", type="string", example="My Review"), 
+     *              @SWG\Property(property="review", type="string", example="I like Eminem Review"),
+     *              @SWG\Property(property="rating", type="integer", example=3),
+     *           )
+     *        )
+     *     ),
+     * ),
+     *
      * @SWG\Response(
      *     response=201,
      *     description="Successfully created a review for the specified album.",
      *     @SWG\Schema(
      *         type="array",
      *         @Model(type=AlbumBundle\Entity\Review::class)
-     *     )
-     * )
+     *     ),
+     * ),
+     *
      * @SWG\Response(
      *     response=400,
      *     description="Invalid data given: JSON format required!"
-     * )
+     * ),
+     *
      * @SWG\Response(
      *     response=404,
      *     description="Album does not exist!"
-     * )
-     * @SWG\Parameter(
-     *     name="slug",
-     *     in="path",
-     *     type="string",
-     *     description="The field represents the id of an album."
-     * )
-     * @SWG\Tag(name="reviews per album")
+     * ),
+     *
+     * @SWG\Tag(name="reviews per album"),
      * @Security(name="Bearer")
      *
      * @param Request $request
@@ -186,7 +179,8 @@ class ReviewAPIController extends FOSRestController
      */
     public function postReviewAction(Request $request, $slug) {
 
-        // get user for oauth
+        /** @var User $user */
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         /** @var Review $review */
         $review = new Review();
@@ -224,15 +218,6 @@ class ReviewAPIController extends FOSRestController
 
         try {
 
-            /** @var User $user */
-            $user = $em->getRepository(User::class)->find(11);
-
-            // check if user exists.
-            if(!$user) {
-                return new JsonResponse([self::ERROR => 'User with id [' . 11 .'] was not found!'],
-                    Response::HTTP_NOT_FOUND);
-            }
-
             $review->setReviewer($user);
             $review->setAlbum($album);
             $review->setTitle($form['title']->getData());
@@ -246,8 +231,7 @@ class ReviewAPIController extends FOSRestController
                 Response::HTTP_INTERNAL_SERVER_ERROR]);
         }
 
-        return $this->handleView($this->view(null, Response::HTTP_CREATED)->setLocation(
-            $this->generateUrl('api_reviews_get_album_review', ['slug' => $slug, 'id' => $review->getId()])));
+        return $this->handleView($this->view($review, Response::HTTP_CREATED));
     }
 
 
@@ -256,6 +240,37 @@ class ReviewAPIController extends FOSRestController
      *
      * @Rest\Put("/albums/{slug}/reviews{id}")
      *
+     * @SWG\Put(
+     *     operationId="editReview",
+     *     summary="Edit review.",
+     *     @SWG\Parameter( 
+     *          name="slug", 
+     *          in="path", 
+     *          description="The field represent the album id.", 
+     *          required=true, 
+     *          type="string" 
+     *     ),
+     *     @SWG\Parameter( 
+     *          name="id", 
+     *          in="path", 
+     *          description="The field represent the review id.", 
+     *          required=true, 
+     *          type="string" 
+     *     ),
+     *     @SWG\Parameter(
+     *         name="json payload",
+     *         in="body",
+     *         required=true,
+     *         @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(property="title", type="string", example="My Review"), 
+     *              @SWG\Property(property="review", type="string", example="I like Eminem Review"),
+     *              @SWG\Property(property="rating", type="integer", example=3),
+     *           )
+     *        )
+     *     ),
+     * ),
+     *
      * @SWG\Response(
      *     response=201,
      *     description="Successfully created a review for the specified album.",
@@ -263,22 +278,24 @@ class ReviewAPIController extends FOSRestController
      *         type="array",
      *         @Model(type=AlbumBundle\Entity\Review::class)
      *     )
-     * )
+     * ),
+     *
      * @SWG\Response(
      *     response=400,
      *     description="Invalid data given: JSON format required!"
-     * )
+     * ),
+     *
+     * @SWG\Response(
+     *     response=403,
+     *     description="You are not the owner of this review!"
+     * ),
+     *
      * @SWG\Response(
      *     response=404,
      *     description="Album does not exist!"
-     * )
-     * @SWG\Parameter(
-     *     name="slug",
-     *     in="path",
-     *     type="string",
-     *     description="The field represents the id of an album."
-     * )
-     * @SWG\Tag(name="reviews per album")
+     * ),
+     *
+     * @SWG\Tag(name="reviews per album"),
      * @Security(name="Bearer")
      *
      * @param Request $request
@@ -288,7 +305,8 @@ class ReviewAPIController extends FOSRestController
      */
     public function putReviewsAction(Request $request, $slug, $id)
     {
-        // check user later
+        /** @var User $currentUser */
+        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -302,6 +320,11 @@ class ReviewAPIController extends FOSRestController
         $review = $em->getRepository(Review::class)->find($id);
         if(!$review) {
             return new JsonResponse([self::ERROR => 'Review not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        if($review->getReviewer() !== $currentUser && !in_array($currentUser, $currentUser->getRoles())) {
+            return new JsonResponse([self::ERROR => 'Forbidden action you are not the owner of this review!'],
+                Response::HTTP_FORBIDDEN);
         }
 
         /* @var Review $updateReview */
@@ -325,9 +348,8 @@ class ReviewAPIController extends FOSRestController
                 /* @var Review $review */
                 $review->setAlbum($album);
                 $review->setTimestamp(new \DateTime());
-                if(!empty($updateReview->getReviewer())) {
-                    $review->setReviewer($updateReview->getReviewer());
-                }
+                $review->setReviewer($currentUser);
+
                 if(!empty($updateReview->getTitle())) {
                     $review->setTitle($updateReview->getTitle());
                 }
@@ -347,7 +369,7 @@ class ReviewAPIController extends FOSRestController
             }
 
             return $this->handleView($this->view([self::SUCCESS => 'Review with identifier ['. $slug .'] was modified.'],
-            Response::HTTP_CREATED)->setLocation($this->generateUrl('album_homepage')));
+            Response::HTTP_CREATED));
         }
         else {
             return $this->handleView($this->view($form, Response::HTTP_BAD_REQUEST));
@@ -393,6 +415,9 @@ class ReviewAPIController extends FOSRestController
      */
     public function deleteReviewsAction(Request $request, $slug, $id) {
 
+        /** @var User $currentUser */
+        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
+
         $em = $this->getDoctrine()->getManager();
 
         /* @var Review $review */
@@ -400,6 +425,11 @@ class ReviewAPIController extends FOSRestController
         if (!$review) {
             return $this->handleView($this->view([self::ERROR => 'Review with identifier ['. $id .'] was not found.'],
                 Response::HTTP_NOT_FOUND));
+        }
+
+        if($review->getReviewer() !== $currentUser && !in_array($currentUser, $currentUser->getRoles())) {
+            return new JsonResponse([self::ERROR => 'Forbidden action you are not the owner of this review!'],
+                Response::HTTP_FORBIDDEN);
         }
 
         try {

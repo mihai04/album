@@ -53,3 +53,8 @@ services:
     # reusable bundle. We need to register classes as services. Hence, we need to add AlbumBundle and my reusable bundle
     AlbumBundle\:
         resource: '../../src/AlbumBundle/*'
+
+    pagination_factory:
+        class: AlbumBundle\Helper\PaginationFactory
+        arguments: ['@router']
+        public: true

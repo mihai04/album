@@ -20,6 +20,8 @@ class Review
     /**
      * @var int
      *
+     * @Serializer\Exclude()
+     *
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(name="id", type="integer")
@@ -54,6 +56,8 @@ class Review
      *
      * @var DateTime
      *
+     * @Serializer\Exclude()
+     *
      * @ORM\Column(name="timestamp", type="datetime")
      */
     private $timestamp;
@@ -61,7 +65,6 @@ class Review
     /**
      * @var User
      *
-     * @Serializer\Exclude()
      *
      * @ORM\ManyToOne(targetEntity="AlbumBundle\Entity\User", inversedBy="reviews")
      * @ORM\JoinColumn(name="reviewer", referencedColumnName="id", nullable=false)
@@ -72,6 +75,7 @@ class Review
      * @var Album
      *
      * This is the owning side of the relationship.
+     *
      *
      * @ORM\ManyToOne(targetEntity="AlbumBundle\Entity\Album", inversedBy="reviews")
      * @ORM\JoinColumn(name="album", referencedColumnName="id", nullable=false)

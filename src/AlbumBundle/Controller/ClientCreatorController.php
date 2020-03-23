@@ -4,6 +4,8 @@
 namespace AlbumBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,9 +18,26 @@ use Symfony\Component\HttpFoundation\Response;
 class ClientCreatorController extends Controller
 {
     /**
+     * Retrieve a client.
+     *
      * @Rest\Get("/clients")
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns a client id and a client secret to be posterd to /oauth/v2/token for token generation.",
+     *     @SWG\Schema(
+     *         @SWG\Items(
+     *          @SWG\Property(type="string",property="client_id",description="client id"),
+     *          @SWG\Property(type="string",property="client_secret",description="client secret"),
+     *          )
+     *      )
+     * )
+     * @SWG\Tag(name="clients")
+     * @Security(name="Bearer")
+     *
+     * @return JsonResponse|Response
      */
-    public function postClientAction()
+    public function getClientsAction()
     {
         $clientManager = $this->container->get('fos_oauth_server.client_manager.default');
         $publicId = $this->getParameter('client_public_id');

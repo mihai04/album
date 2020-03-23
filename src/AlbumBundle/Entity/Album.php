@@ -7,6 +7,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Album
@@ -29,6 +30,8 @@ class Album
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
     private $title;
@@ -36,12 +39,16 @@ class Album
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(name="artist", type="string", length=255, nullable=false)
      */
     private $artist;
 
     /**
      * @var string
+     *
+     * @Assert\NotBlank()
      *
      * @Assert\Length(max="15", maxMessage="Invalid ISRC - it requieres maximum 15 characters.")
      * @ORM\Column(name="isrc", type="string", length=15, unique=true, nullable=false)
@@ -58,12 +65,16 @@ class Album
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(name="summary", type="text", nullable=true)
      */
     private $summary;
 
     /**
      * @var bool
+     *
+     * @Serializer\Exclude()
      *
      * @ORM\Column(name="is_published", type="boolean")
      */
@@ -79,6 +90,8 @@ class Album
     /**
      * @var ArrayCollection
      *
+     * @Serializer\Exclude()
+     *
      * This is the inverse side of the relationship.
      *
      * @ORM\OneToMany(targetEntity="AlbumBundle\Entity\Review", mappedBy="album", cascade={"remove"})
@@ -88,6 +101,8 @@ class Album
 
     /**
      * @var ArrayCollection $albumTracks
+     *
+     * @Serializer\Exclude()
      *
      * @ORM\OneToMany(targetEntity="AlbumBundle\Entity\Track",
      *     mappedBy="album",

@@ -24,7 +24,7 @@ album_api:
 client_creator:
     type: rest
     resource: AlbumBundle\Controller\ClientCreatorController
-    prefix: /
+    prefix: /api/v1
 
 # oauth sever token
 fos_oauth_server_token:

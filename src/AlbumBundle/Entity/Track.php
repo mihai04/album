@@ -5,6 +5,7 @@ namespace AlbumBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as Serializer;
 /**
  * Class Track
  *
@@ -33,6 +34,9 @@ class Track
     private $trackName;
 
     /**
+     *
+     * @Serializer\Exclude()
+     *
      * @ORM\ManyToOne(targetEntity="AlbumBundle\Entity\Album", inversedBy="albumTracks")
      * @ORM\JoinColumn(name="album", referencedColumnName="id", nullable=false)
      *

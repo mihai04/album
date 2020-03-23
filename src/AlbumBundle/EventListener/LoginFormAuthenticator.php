@@ -74,7 +74,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $csrfToken = $request->request->get('_csrf_token');
 
         if (false === $this->csrfTokenManager->isTokenValid(new CsrfToken('authenticate', $csrfToken))) {
-            throw new InvalidCsrfTokenException('Invalid CSRF toke!');
+            throw new InvalidCsrfTokenException('Invalid CSRF token!');
         }
 
         $request->getSession()->set(Security::LAST_USERNAME, $username);

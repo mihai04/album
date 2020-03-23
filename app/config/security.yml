@@ -68,4 +68,5 @@ security:
         - { path: ^/view_reviews_by_user, role: ROLE_USER }
         - { path: ^/admin, role: ROLE_ADMIN }
         - { path: ^/edit_album, role: ROLE_ADMIN }
-        - { path: ^/api/v1/albums/, role: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/v1/albums, role: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/v1/users, role: IS_AUTHENTICATED_FULLY }

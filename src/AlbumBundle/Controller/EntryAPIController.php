@@ -6,13 +6,10 @@ namespace AlbumBundle\Controller;
 
 use AlbumBundle\Entity\Review;
 use AlbumBundle\Entity\User;
-use AlbumBundle\Helper\PaginatedCollection;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,9 +33,9 @@ class EntryAPIController extends FOSRestController
      * )
      * @SWG\Parameter(
      *     name="slug",
-     *     in="query",
+     *     in="path",
      *     type="string",
-     *     description="The field represents the id of a user."
+     *     description="The field represents the id of an user."
      * )
      * @SWG\Tag(name="entries per user")
      * @Security(name="Bearer")
@@ -62,37 +59,8 @@ class EntryAPIController extends FOSRestController
         $qb = $em->getRepository(Review::class)
             ->getReviewsByUser($slug);
 
-        $adapter = new DoctrineORMAdapter($qb);
-        $pagerfanta = new Pagerfanta($adapter);
-
-        $page = $request->query->get('page', 1);
-        $pagerfanta->setMaxPerPage($this->getParameter('page_limit'));
-        $pagerfanta->setCurrentPage($page);
-
-        $reviews = [];
-        foreach ($pagerfanta->getCurrentPageResults() as $result) {
-            $reviews[] = $result;
-        }
-
-        $paginatedCollection = new PaginatedCollection($reviews, $pagerfanta->getNbPages());
-
-        $route = "api_entries_get_user_entries";
-
-        $routeParams = array();
-        $createLinkUrl = function ($slug, $targetPage) use ($route, $routeParams) {
-            return $this->generateUrl($route, array_merge($routeParams, array('slug' => $slug, 'page' => $targetPage)));
-        };
-
-        $paginatedCollection->addLink('self', $createLinkUrl($slug, $page));
-        $paginatedCollection->addLink('first', $createLinkUrl($slug, 1));
-        $paginatedCollection->addLink('last', $createLinkUrl($slug, $pagerfanta->getNbPages()));
-
-        if ($pagerfanta->hasNextPage()) {
-            $paginatedCollection->addLink('next', $createLinkUrl($slug, $pagerfanta->getNextPage()));
-        }
-        if ($pagerfanta->hasPreviousPage()) {
-            $paginatedCollection->addLink('prev', $createLinkUrl($slug, $pagerfanta->getPreviousPage()));
-        }
+        $paginatedCollection = $this->get('pagination_factory')
+            ->createCollection($qb, $request, 1, "api_entries_get_user_entries", $slug);
 
         return $this->handleView($this->view($paginatedCollection));
     }
@@ -105,18 +73,20 @@ class EntryAPIController extends FOSRestController
      * @SWG\Response(
      *     response=200,
      *     description="Returns the specified review.",
-     *     @SWG\Schema(
-     *         type="array",
-     *         @Model(type=AlbumBundle\Entity\Review::class)
-     *     )
      * )
      * @SWG\Response(
      *     response=404,
      *     description="Review does not exist!"
      * )
      * @SWG\Parameter(
+     *     name="slug",
+     *     in="path",
+     *     type="string",
+     *     description="The field represents the id of a user."
+     * )
+     * @SWG\Parameter(
      *     name="id",
-     *     in="query",
+     *     in="path",
      *     type="string",
      *     description="The field represents the id of a review."
      * )
