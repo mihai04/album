@@ -162,7 +162,7 @@ span {
 #search {
     margin-top: 10px;
     outline: 0;
-    width: 300px;
+    width: 250px;
     box-sizing: border-box;
     border-radius: 4px;
     font-size: 18px;
@@ -180,7 +180,7 @@ span {
 
 #search:focus {
     color: #2b669a;
-    width: 350px;
+    width: 300px;
 }
 
 /**                                        STYLE FOR SIDEBAR                                                    **/
@@ -328,6 +328,7 @@ label input[type="file"] {
     width: 270px;
     height: 300px;
      border-radius: 16px;
+     margin-left: -20px;
 }
 
 .row {
@@ -764,4 +765,21 @@ h4 {
         text-align: center;
         background-color: #ffffff;
     }
+
+
+  ul#display-inline-block-example,
+  ul#display-inline-block-example li {
+      margin: 0;
+      padding: 0;
+  }
+
+  ul#display-inline-block-example li {
+      display: inline-block;
+      width: 100px;
+      min-height: 100px;
+      background: #ccc;
+      vertical-align: top;
+
+  }
+
 }

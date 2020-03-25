@@ -1,9 +1,9 @@
 <?php
 
 
-namespace AlbumBundle\Helper;
+namespace AlbumBundle\Service;
 
-
+use AlbumBundle\Entity\PaginatedCollection;
 use Doctrine\ORM\Query;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;

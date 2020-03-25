@@ -15,7 +15,13 @@ parameters:
     uploads_directory: '%kernel.project_dir%/web/public/uploads_directory'
     commandName: 'populate:search:entities'
     page_limit: 6
-
+    latitude: 53.4839
+    longitude: -2.2446
+    radius: 5
+    limit: 13
+    event: FEST
+    page_limit_festivals: 3
+    search_limit: 5
 
 framework:
     #esi: ~
@@ -188,6 +194,8 @@ fos_rest:
     default_format: json
     include_format: false   # All responses should be JSON formatted according to the requirement.
     # There is no need to include format in request and thereby it default to JSON format.
+  cache_dir: '%kernel.cache_dir%/fos_rest'
+
 
 #    exception:
 #      enabled: true
@@ -218,3 +226,6 @@ fos_rest:
 #          - prefer_extension: true
 #      exception:
 #        enabled: true
+
+cmen_google_charts:
+  version: "45"

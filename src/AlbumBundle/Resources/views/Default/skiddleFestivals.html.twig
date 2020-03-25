@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+    {% if festivals is empty %}
+        <div class="center-div">
+            No reviews found for this user
+        </div>
+    {% else %}
+        <div class="wrapper">
+            <h2> Upcoming Festivals:</h2>
+            {% for festival in festivals %}
+            {% if festival is defined %}
+            <div class="row col-sm-12 col-lg-12">
+                    <div>
+                        {% if festival.name is defined %}
+                        <p class="row col-sm-12 col-lg-12">
+                            <b style="color: #2b669a;">{{ festival.name }}</b>
+                        </p>
+                        {% endif %}
+                        <div class="row col-sm-12">
+                            {% if festival.largeimageurl is defined %}
+                            <div class="col-sm-6">
+                                    <img alt="{{ festival.largeimageurl }}" src="{{ festival.largeimageurl }}"/>
+                            </div>
+                            {% endif %}
+                            {% if festival.venue is defined %}
+                                {% if festival.rating is defined %}
+                            <div class="col-sm-12">
+                                    {{ festival.venue.rating|rating(5, 'fa-star') }}
+                            </div>
+                                {% endif %}
+                            {% endif %}
+                            <div class="col-sm-6">
+                                {% if festival.venue is defined %}
+                                    {% if festival.venue.name is defined %}
+                                        <p> Venue Details: {{ festival.venue.name }}</p>
+                                    {% endif %}
+
+                                    {% if festival.venue.country is defined %}
+                                        <p>Postcode: {{ festival.venue.country }} - {{ festival.venue.postcode }} </p>
+                                    {% endif %}
+                                {% else %}
+                                    <p>No venue details</p>
+                                {% endif %}
+                                {% if festival.date is defined %}
+                                    <p>Date: {{ festival.date }}</p>
+                                {% endif %}
+
+                                {% if festival.entryprice is defined %}
+                                    <p>Price: {{ festival.entryprice }}</p>
+                                {% endif %}
+                                {% if festival.minage is defined %}
+                                    <p>Min age: {{ festival.minage }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <br/>
+
+                        <p><b>Description:</b></p>
+                        <h4 class="row col-sm-12">
+                            {{ festival.description }}
+                        </h4>
+
+                        {%  if festival.artists is defined %}
+                            <p><b>Artists present:</b></p>
+                            <ul class="row">
+                            {% for artist in festival.artists %}
+                                <div class="col-sm-6">
+                                    {% if artist.name is defined %}
+                                        <li>{{ artist.name }}</li>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                            </ul>
+                        {% else %}
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <b>Artists are still unknown for the event.</b>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="row col-sm-12">
+                            <hr>
+                        </div>
+                    </br></br>
+                {% endif %}
+                {% endfor %}
+                    </div>
+                    </div>
+                </div>
+            <div class="row navigation text-center col-md-12 col-sm-12 col-xs-12">
+                {{ knp_pagination_render(festivals) }}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

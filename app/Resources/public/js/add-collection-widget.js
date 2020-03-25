@@ -101,3 +101,4 @@ function addTagFormDeleteLink($tagFormLi) {
 //     $('.rating-well').hover(turnToStar,turnStarBack);
 //
 // });
+

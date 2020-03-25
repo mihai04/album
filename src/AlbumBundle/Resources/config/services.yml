@@ -7,3 +7,8 @@ services:
     class: AlbumBundle\Form\ProfileFormType
     tags:
       - { name: form.type }
+
+  skiddle.events:
+    class: AlbumBundle\Service\SkiddleService
+    arguments:
+      - '@service_container'

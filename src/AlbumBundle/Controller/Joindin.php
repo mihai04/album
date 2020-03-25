@@ -3,6 +3,7 @@
 
 namespace AlbumBundle\Controller;
 
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\Material\BarChart;
 use GuzzleHttp\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -46,13 +47,32 @@ class Joindin extends Controller
     }
 
     public function eventAction() {
-        $options =
-            ['query' => [
-                'title' => 'java' ]
-            ]
-        ;
+//        $options =
+//            ['query' => [
+//                'title' => 'java' ]
+//            ]
+//        ;
+//
+//        return $this->eventsAction('events', $options);
 
-        return $this->eventsAction('events', $options);
+        $bar = new BarChart();
+        $bar->getData()->setArrayToDataTable([
+            ['City', '2010 Population', '2000 Population'],
+            ['New York City, NY', 8175000, 8008000],
+            ['Los Angeles, CA', 3792000, 3694000],
+            ['Chicago, IL', 2695000, 2896000],
+            ['Houston, TX', 2099000, 1953000],
+            ['Philadelphia, PA', 1526000, 1517000]
+        ]);
+        $bar->getOptions()->setTitle('Population of Largest U.S. Cities');
+        $bar->getOptions()->getHAxis()->setTitle('Population of Largest U.S. Cities');
+        $bar->getOptions()->getHAxis()->setMinValue(0);
+        $bar->getOptions()->getVAxis()->setTitle('City');
+        $bar->getOptions()->setWidth(900);
+        $bar->getOptions()->setHeight(500);
+
+        return $this->render("@Album/Default/event.html.twig", ['bar' => $bar]);
+
     }
 
     public function talksAction() {

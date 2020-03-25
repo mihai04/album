@@ -65,3 +65,18 @@ past_event_joindin:
 past_talk_joindin:
     path:     /past_talk_joindin
     defaults: { _controller: AlbumBundle\Controller\Joindin:talksAction }
+
+get_top_tracks:
+    path:     /top_tracks
+    defaults: { _controller: AlbumBundle\Controller\LastFMController::getTopAlbumsAction }
+
+skiddle_festivals:
+    path:     /festivals
+    defaults: { _controller: AlbumBundle\Controller\SkiddleController:viewFestivals }
+
+live_search:
+    path:     /search
+    defaults: { _controller: AlbumBundle\Controller\LastFMController::getAlbumInfoAction }
+#    requirements:
+#        album: '[a-z_A-Z]+'
+#        artist: '[a-z_A-Z]+'

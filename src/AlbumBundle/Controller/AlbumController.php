@@ -4,6 +4,7 @@ namespace AlbumBundle\Controller;
 
 use AlbumBundle\Entity\Album;
 use AlbumBundle\Form\AddAlbumType;
+use AlbumBundle\Service\LastFMService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Exception;
@@ -30,6 +31,21 @@ class AlbumController extends Controller
 {
     const INDICES = 'indices';
     const POPULATE_SEARCH_ENTITIES = 'populate:search:entities';
+
+
+    /** @var LastFMService $lastFMService */
+    private $lastFMService;
+
+    /**
+     * LastFMController constructor.
+     *
+     * @param LastFMService $lastFMService
+     */
+    public function __construct(LastFMService $lastFMService)
+    {
+        $this->lastFMService = $lastFMService;
+    }
+
 
     /**
      * @param Request $request
@@ -111,20 +127,20 @@ class AlbumController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            /** @var UploadedFile $uploadedFile */
-            $uploadedFile = $form['image']->getData();
-
-            if(!$uploadedFile) {
-                $this->addFlash('warning', 'You forgot to add an album image.');
-                return $this->redirect($this->generateUrl('add_album'));
-            }
-
-            $originalFileName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $newFileName = $this->hashImageName($originalFileName, $uploadedFile);
+//            /** @var UploadedFile $uploadedFile */
+//            $uploadedFile = $form['image']->getData();
+//
+//            if(!$uploadedFile) {
+//                $this->addFlash('warning', 'You forgot to add an album image.');
+//                return $this->redirect($this->generateUrl('add_album'));
+//            }
+//
+//            $originalFileName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+//            $newFileName = $this->hashImageName($originalFileName, $uploadedFile);
 
             try {
                 $em = $this->getDoctrine()->getManager();
-                $album->setImage($newFileName);
+//                $album->setImage($newFileName);
                 $tracks = $form['albumTracks']->getData();
 
                 if (count($tracks) === 0) {
@@ -136,6 +152,10 @@ class AlbumController extends Controller
                  * @var Track $track
                  */
                 foreach ($tracks as $track) {
+
+                    $result = $this->lastFMService->getTrackData($album->getArtist(), $track->getTrackName());
+                    var_dump($result, 'hi');die;
+
                     $track->setAlbum($album);
                 }
 

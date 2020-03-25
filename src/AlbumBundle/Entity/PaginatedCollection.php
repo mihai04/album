@@ -1,7 +1,7 @@
 <?php
 
 
-namespace AlbumBundle\Helper;
+namespace AlbumBundle\Entity;
 
 /**
  * Class PaginatedCollection
