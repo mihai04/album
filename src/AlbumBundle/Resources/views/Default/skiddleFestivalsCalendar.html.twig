@@ -2,16 +2,16 @@
 
 {% block body %}
 
-    {% if calendar is defined %}
+    {% if calendar is null %}
+        <div class="center-div">
+            No calendar data! Error {{ error }}.
+        </div>
+    {% else %}
         <div id="div_calendar"></div>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript">
             {{ gc_draw(calendar, 'div_calendar') }}
         </script>
-    {% else %}
-        <div class="center-div">
-            No calendar data!
-        </div>
     {% endif %}
 
 {% endblock %}

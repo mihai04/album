@@ -2,17 +2,37 @@
 
 {% block body %}
 
+
     <div class="wrapper">
         <div class="row" style="background-color: #ffffff">
+            {% if album.title is defined %}
             <h1>Album title: {{ album.title|capitalize }}</h1>
+            {% endif %}
             <div class="col-sm-6">
                 <div style="text-align: center;">
-                    <img style="border-radius: 30px" src="{{ asset( album.image ) }}">
+                    {% if album.image is defined %}
+                    <img style="border-radius: 30px" src="{{ asset( album.image ) }}" alt="album">
+                    {% endif %}
+
+                    {% if album.artist is defined %}
                     <p><b>Artist: </b> {{ album.artist|capitalize }} </p>
+                    {% endif %}
+
+                    {% if album.isrc is defined %}
                     <p><b>ISRC: </b> {{ album.isrc }} </p>
+                    {% endif %}
+
+                    {% if album.listeners is defined %}
                     <p><b>Listeners: </b> {{ album.listeners|number_format(0, '.', ',') }} </p>
+                    {% endif %}
+
+                    {% if album.playcount is defined %}
                     <p><b>Play Count: </b> {{ album.playcount|number_format(0, '.', ',') }} </p>
+                    {% endif %}
+
+                    {% if album.tags is defined %}
                     <p><b>Tags: </b> {{ album.tags }} </p>
+                    {% endif %}
                 </div>
             </div>
             <div class="col-sm-6" style="text-align: center">
@@ -20,8 +40,10 @@
                 <p><b>Track List:</b></p>
                 <ol>
                     {% for track in tracks %}
-                        {% if track.duration > 0 %}
-                            <li>{{ track.trackName|capitalize }} - {{ track.duration }}</li>
+                        {% if track.trackName is defined %}
+                            {% if (track.duration is defined and track.duration > 0) %}
+                                <li>{{ track.trackName|capitalize }} - {{ track.duration }}</li>
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                 </ol>
@@ -33,31 +55,35 @@
             </div>
             {% endif %}
 
-            {% if similarArtists is defined %}
+            {% if similarArtists is not null %}
             <div class="row">
                 <div class="col-sm-12">
                     {% for similarArtist in similarArtists %}
                         <div class="col-sm-4" style="text-align: center">
+                            {% if similarArtist.name is defined %}
                             <p><b>Artist Name: </b> {{ similarArtist.name }} </p>
+                            {% endif %}
+
+                            {% if similarArtist.url is defined %}
                             <p style="margin: 10px; text-align: center;"><a href="{{ similarArtist.url }}">View Artist</a></p>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>
             </div>
             {% endif %}
         </div>
-
     </div>
 
-        {%  if ( is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') ) %}
+{#        {%  if ( is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') ) %}#}
             <div class="col-sm-12 col-lg-12" style="text-align: center">
-                {#            <a href="{{ path('add_review', {id: album.id}) }}">#}
-                <button type="button" id="register_button">
-                    Save Album
-                </button>
-                {#            </a>#}
+                <a href="{{ path('save_searched_album', {album: album.title, artist: album.artist}) }}">
+                    <button type="button" id="register_button">
+                        Save Album
+                    </button>
+                </a>
             </div>
-        {% endif %}
+{#        {% endif %}#}
 
 {% endblock %}
 

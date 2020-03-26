@@ -1,19 +1,10 @@
 {% extends 'base.html.twig' %}
 
-
 {% block body %}
 
-    {% if calendar is defined %}
-        <div id="div_calendar"></div>
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <script type="text/javascript">
-            {{ gc_draw(calendar, 'div_calendar') }}
-        </script>
-    {% endif %}
-
-    {% if festivals is not defined %}
+    {% if festivals is null %}
         <div class="center-div">
-            No festivals found!
+            No festivals found! Error: {{ error }}
         </div>
     {% else %}
         <div class="wrapper">
@@ -29,7 +20,7 @@
                         {% endif %}
                         <div class="row col-sm-12">
                             {% if festival.largeimageurl is defined %}
-                            <div class="col-sm-6">
+                            <div class="col-sm-5">
                                     <img alt="{{ festival.largeimageurl }}" src="{{ festival.largeimageurl }}"/>
                             </div>
                             {% endif %}
@@ -40,7 +31,7 @@
                             </div>
                                 {% endif %}
                             {% endif %}
-                            <div class="col-sm-6">
+                            <div class="col-sm-7">
                                 {% if festival.venue is defined %}
                                     {% if festival.venue.name is defined %}
                                         <p> Venue Details: {{ festival.venue.name }}</p>
@@ -54,6 +45,7 @@
                                 {% else %}
                                     <p>No venue details</p>
                                 {% endif %}
+
                                 {% if festival.date is defined %}
                                     <p>Date: {{ festival.date }}</p>
                                 {% endif %}
@@ -62,28 +54,34 @@
                                     <p>Current number of attendance: {{ festival.goingtocount }}</p>
                                 {% endif %}
 
-                                {% if ((festival.entryprice is defined) and (festival.entryprice > 0)) %}
+                                {% if ( (festival.entryprice is defined) and (festival.entryprice > 0) ) %}
                                     <p>Price: £ {{ festival.entryprice }}</p>
                                 {% endif %}
 
-                                {% if ((festival.minage is defined) and (festival.minage > 0 )) %}
+                                {% if ( (festival.minage is defined) and (festival.minage > 0 ) ) %}
                                     <p>Min age: {{ festival.minage }}</p>
                                 {% endif %}
 
-                                <br/>
+                                {% if (festival.link is defined) %}
+                                    <p><a href="{{ festival.link }}">Check link for more details</a></p>
+                                {% endif %}
+
                                 {% if (festival.cancellationReason is defined) and
                                     (festival.cancellationReason | length > 0) %}
                                     <p> <span style="color: red">Cancellation:</span>
                                         {{ festival.cancellationReason }}</p>
                                 {% endif %}
+                                <br/>
                             </div>
                         </div>
                         <br/>
 
+                        {% if festival.description is defined %}
                         <p><b>Description:</b></p>
                         <h4 class="row col-sm-12">
                             {{ festival.description }}
                         </h4>
+                        {% endif %}
 
                         {%  if festival.artists is defined %}
                             <p><b>Artists present:</b></p>
@@ -116,6 +114,5 @@
             <div class="row navigation text-center col-md-12 col-sm-12 col-xs-12">
                 {{ knp_pagination_render(festivals) }}
             </div>
-        </div>
     {% endif %}
 {% endblock %}

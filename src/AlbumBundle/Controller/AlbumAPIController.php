@@ -192,6 +192,7 @@ class AlbumAPIController extends FOSRestController
 
                 $album->setImage($fileName);
                 $tracks = $form['albumTracks']->getData();
+
                 /**
                  * @var Track $track
                  */

@@ -3,6 +3,7 @@
 namespace AlbumBundle\Controller;
 
 use AlbumBundle\Entity\Album;
+use AlbumBundle\Helper\AlbumHelper;
 use AlbumBundle\Service\LastFMService;
 use Exception;
 use Knp\Component\Pager\Paginator;
@@ -94,6 +95,8 @@ class ReviewController extends Controller
         $em = $this->getDoctrine()->getManager();
         $query = $em->getRepository(Review::class)
             ->getReviewsByAlbumID($id);
+
+        /** @var Album $album */
         $album = $em->getRepository(Album::class)
             ->find($id);
 
@@ -130,29 +133,7 @@ class ReviewController extends Controller
         }
 
         $similar = $this->lastFMService->getSimilar($album->getArtist(), $this->getParameter('similar_artist'));
-
-        $similarArtists = [];
-        if (array_key_exists('similarartists', $similar)) {
-
-            if(array_key_exists('artist', $similar['similarartists'])) {
-
-                $similarArtist = [];
-                foreach ($similar['similarartists']['artist'] as $artistEntry) {
-
-                    if (array_key_exists('name', $artistEntry)) {
-                        $similarArtist['name'] = $artistEntry['name'];
-                    }
-
-                    if (array_key_exists('url', $artistEntry)) {
-                        $similarArtist['url'] = $artistEntry['url'];
-                    }
-
-                    if (!empty($similarArtist)) {
-                        $similarArtists[] = $similarArtist;
-                    }
-                }
-            }
-        }
+        $similarArtists = AlbumHelper::processSimilarArtistsResults($similar);
 
         return $this->render('AlbumBundle:Default:viewByAlbum.html.twig', [
                 'album' => $album,

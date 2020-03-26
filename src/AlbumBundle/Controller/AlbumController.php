@@ -6,6 +6,7 @@ use AlbumBundle\Entity\Album;
 use AlbumBundle\Entity\Review;
 use AlbumBundle\Entity\Track;
 use AlbumBundle\Form\AddAlbumType;
+use AlbumBundle\Helper\AlbumHelper;
 use AlbumBundle\Service\LastFMService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -28,6 +29,9 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AlbumController extends Controller
 {
+    /** @var string */
+    const TRACK_TIME_FORMAT = '%02d:%02d';
+
     /** @const string  */
     const INDICES = 'indices';
 
@@ -168,18 +172,10 @@ class AlbumController extends Controller
                             }
                         }
 
-                        if (array_key_exists('tags', $albumResult['album'])) {
-                            if (array_key_exists('tag', $albumResult['album']['tags'])) {
-                                $tagData = "";
-                                foreach ($albumResult['album']['tags']['tag'] as $tag) {
-                                    if (array_key_exists('name', $tag)) {;
-                                        $tagData .= $tag['name'] . ', ';
-                                    }
-                                }
-                                $replacedTagData = rtrim($tagData, ", ");
-                                $album->setTags($replacedTagData);
-                            }
-                        }
+                        /** @var  $replacedTagData */
+                        $replacedTagData = AlbumHelper::getAlbumTags($albumResult);
+                        $album->setTags($replacedTagData);
+
                     }
                 } catch (Exception $e) {
                     // fail silently
@@ -193,8 +189,14 @@ class AlbumController extends Controller
 
                             if (array_key_exists('duration', $tracksResults['track'])) {
 
-                                $time = date("i:s", $tracksResults['track']['duration'] / 1000);
-                                $track->setDuration($time);
+
+                                $milliseconds =  $tracksResults['track']['duration'] / 1000;
+                                $seconds = $milliseconds / 1000;
+                                $minutes = round($seconds / 60);
+                                $remainMinutes = ($minutes % 60);
+
+                                $track->setDuration((sprintf(self::TRACK_TIME_FORMAT, $minutes, $remainMinutes)));
+
                             }
                             $track->setAlbum($album);
                         }

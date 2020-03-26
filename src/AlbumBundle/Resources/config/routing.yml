@@ -88,3 +88,7 @@ live_search:
 #    requirements:
 #        album: '[a-z_A-Z]+'
 #        artist: '[a-z_A-Z]+'
+
+save_searched_album:
+    path:     /saveAlbum
+    defaults: { _controller: AlbumBundle\Controller\LastFMController::saveAlbum }

@@ -127,7 +127,6 @@
     </div>
 
 </div>
-
 <script type="text/javascript">
     jQuery(document).ready(function() {
         let searchRequest = null;
@@ -150,35 +149,42 @@
                     success: function(msg){
                          if (value === $(oldValue).val()) {
                             if (msg !== null) {
+                                try {
                                 let results = JSON.parse(msg);
-                                if (results.length !== 0) {
+                                    if (results.length !== 0) {
+                                        entitySelector.append('<b>External suggestions:</b>').append("</br>");
+                                        $.each(results, function (key, arr) {
+                                            let url = '{{ path("live_search", {album: 'albumVal', artist: 'artistVal'}) }}'
+                                                .replace('albumVal', arr["name"])
+                                                .replace('artistVal', arr["artist"]);
 
-                                    entitySelector.append('<b>External suggestions:</b>').append("</br>");
-                                    $.each(results, function (key, arr) {
-                                        let url = '{{ path("live_search", {album: 'albumVal', artist: 'artistVal'}) }}'
-                                            .replace('albumVal', arr["name"])
-                                            .replace('artistVal', arr["artist"]);
+                                            arr["name"] += " by ";
+                                            let link = $('<a style="font-size: 16px;" href="' + url + '">' + arr["name"]  +
+                                                arr["artist"] + '</a>');
 
-                                        arr["name"] += " by ";
-                                        let link = $('<a style="font-size: 16px;" href="' + url + '">' + arr["name"]  +
-                                            arr["artist"] + '</a>');
-
-                                        entitySelector.append(link).append("</br>");
-                                    });
+                                            entitySelector.append(link).append("</br>");
+                                        });
+                                    }
+                                    else {
+                                        entitySelector.append($('<p style="font-size: 16px;">No suggestions</p>'));
+                                    }
                                 }
-                                else
+                                catch (e) {
+                                    console.log('Failed to parse json data from server! Error: ' + e.message);
                                     entitySelector.append($('<p style="font-size: 16px;">No suggestions</p>'));
+                                }
+                            } else {
+                                entitySelector.append($('<p style="font-size: 16px;">No suggestions</p>'));
                             }
                          }
                     },
                     error: function(e) {
-                        console.log(e);
+                        console.error(e);
                     },
                 });
             }
         });
     });
 </script>
-
 </body>
 </html>
