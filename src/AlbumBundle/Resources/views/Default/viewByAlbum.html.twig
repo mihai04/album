@@ -4,28 +4,48 @@
 
     <div class="wrapper">
         <div class="row" style="background-color: #ffffff">
-            <h1>Album title: {{ album.title }}</h1>
+            <h1>Album title: {{ album.title|capitalize }}</h1>
             <div class="col-sm-6">
-                <div style="text-align: center">
+                <div style="text-align: center;">
                     <img style="border-radius: 30px" src="{{ asset('public/uploads_directory/' ~ album.image ) }}">
-                    <p><b>Artist:</b> {{ album.artist }} </p>
-                    <p><b>ISRC:</b> {{ album.isrc }} </p>
+                    <p><b>Artist: </b> {{ album.artist|capitalize }} </p>
+                    <p><b>ISRC: </b> {{ album.isrc }} </p>
+                    <p><b>Listeners: </b> {{ album.listeners|number_format(0, '.', ',') }} </p>
+                    <p><b>Play Count: </b> {{ album.playcount|number_format(0, '.', ',') }} </p>
+                    <p><b>Tags: </b> {{ album.tags }} </p>
                 </div>
             </div>
             <div class="col-sm-6" style="text-align: center">
                 <p><b>Track List:</b></p>
                 <ol>
                     {% for track in album.albumTracks %}
-                        <li>{{ track.trackName }}</li>
+                        {% if track.duration > 0 %}
+                            <li>{{ track.trackName|capitalize }} - {{ track.duration }}</li>
+                        {% endif %}
                     {% endfor %}
                 </ol>
             </div>
             <div class="col-sm-12 col-lg-12">
                 <h3 style="margin: 20px; text-indent: 2em; text-align: justify;"><b>Summary:</b></h3>
-                <p style="margin: 20px; text-indent: 2em; text-align: justify;">{{ album.summary }}</p>
+                <p style="margin: 20px; text-indent: 2em; text-align: justify;">{{ album.summary|capitalize }}</p>
             </div>
+
+            {% if similarArtists is defined %}
+                <div class="row">
+                    <div class="col-sm-12">
+                        {% for similarArtist in similarArtists %}
+                            <div class="col-sm-4" style="text-align: center">
+                                <p><b>Artist Name: </b> {{ similarArtist.name }} </p>
+                                <p style="margin: 10px; text-align: center;"><a href="{{ similarArtist.url }}">View Artist</a></p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
         </div>
 
+        {% if reviews is defined %}
         <div class="row">
             {% for review in reviews %}
                 <div class="col-sm-12" id="reviewsBackground">
@@ -74,6 +94,9 @@
             {% endfor %}
         </div>
 
+        {% endif %}
+
+        {%  if ( is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') ) %}
         <div class="col-sm-12 col-lg-12" style="text-align: center">
             <a href="{{ path('add_review', {id: album.id}) }}">
                 <button type="button" id="register_button">
@@ -81,6 +104,7 @@
                 </button>
             </a>
         </div>
+        {% endif %}
     </div>
 
 {% endblock %}

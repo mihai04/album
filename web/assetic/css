@@ -63,7 +63,7 @@ span {
 #search {
     margin-top: 10px;
     outline: 0;
-    width: 250px;
+    width: 150px;
     box-sizing: border-box;
     border-radius: 4px;
     font-size: 18px;
@@ -81,7 +81,7 @@ span {
 
 #search:focus {
     color: #2b669a;
-    width: 300px;
+    width: 165px;
 }
 
 /**                                        STYLE FOR SIDEBAR                                                    **/

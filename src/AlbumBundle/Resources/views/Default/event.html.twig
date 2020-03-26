@@ -2,25 +2,16 @@
 
 {% block body %}
 
-
-    <div id="div_histogram"></div>
-
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-{#        {{ gc_language('fr') }}#}
-        {{ gc_draw(bar, 'div_histogram') }}
-    </script>
-
-
-    <div class="wrapper">
-        <div class="row" style="background-color: #ffffff">
-
-        <div class="row">
-{#            {% for d in data %}d#}
-{#                {{ d['name'] }}   </br>#}
-{#            {% endfor %}#}
-        </div>
-
+    <div>
+    {% if error is defined %}
+        <p>Unavailable data: {{ error }}</p>
+    {% else %}
+        <div id="div_histogram"></div>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            {{ gc_draw(bar, 'div_histogram') }}
+        </script>
+    {% endif %}
     </div>
 
 {% endblock %}

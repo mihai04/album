@@ -45,7 +45,7 @@
             {% endif %}
             <div class="navbar-header">
                 <a type="button" class="navbar-brand" href="{{ path('album_homepage') }}">
-                    <span id="navMenu" class="glyphicon glyphicon-music">Albums</span>
+                    <span id="navMenu" class="glyphicon glyphicon-home">Home</span>
                 </a>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navCollapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -66,18 +66,21 @@
                                 Login<span id="navMenu" class="glyphicon glyphicon-log-in"></span></a>
                         </li>
                     {% endif %}
-                    <li><a href="{{ path('past_event_joindin') }}">
-                            Test<span id="navMenu" class="glyphicon glyphicon-music"></span></a>
+                    <li><a href="{{ path('get_stats') }}">
+                            Stats<span id="navMenu" class="glyphicon glyphicon-list-alt"></span></a>
+                    </li>
+                    <li><a href="{{ path('skiddle_festivals_calendar') }}">
+                            Calendar<span id="navMenu" class="glyphicon glyphicon-calendar"></span></a>
                     </li>
                     <li><a href="{{ path('skiddle_festivals') }}">
-                           UK Festivals<span id="navMenu" class="glyphicon glyphicon-music"></span></a>
+                            Festivals<span id="navMenu" class="glyphicon glyphicon-music"></span></a>
                     </li>
                 </ul>
 
                 <form class="navbar-form navbar-right" role="search" action="{{ path('search_homepage') }}">
                     <div class="input-group add-on">
                         <label for="search"></label>
-                        <input class="form-control" autocomplete="off" placeholder="Search for albums..."
+                        <input class="form-control" autocomplete="off" placeholder="Search..."
                                                         name="search"  id="search" type="text">
                         <div class="input-group-btn">
                             <button class="btn btn-default" type="submit">
@@ -140,7 +143,7 @@
 
                 searchRequest = $.ajax({
                     type: "GET",
-                    url: "{{ path('get_top_tracks') }}",
+                    url: "{{ path('get_albums') }}",
                     data : {"q" : value},
                     dataType: "text",
                     async : true,
@@ -149,6 +152,8 @@
                             if (msg !== null) {
                                 let results = JSON.parse(msg);
                                 if (results.length !== 0) {
+
+                                    entitySelector.append('<b>External suggestions:</b>').append("</br>");
                                     $.each(results, function (key, arr) {
                                         let url = '{{ path("live_search", {album: 'albumVal', artist: 'artistVal'}) }}'
                                             .replace('albumVal', arr["name"])

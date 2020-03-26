@@ -54,25 +54,33 @@ view_reviews_by_user:
     requirements:
         id: '\d+'
 
-past_event_homepage:
-    path:     /past_event_homepage
-    defaults: { _controller: AlbumBundle\Controller\Joindin:eventsAction }
+#past_event_homepage:
+#    path:     /past_event_homepage
+#    defaults: { _controller: AlbumBundle\Controller\Joindin:eventsAction }
 
-past_event_joindin:
-    path:     /past_event_joindin
-    defaults: { _controller: AlbumBundle\Controller\Joindin:eventAction }
+#past_event_joindin:
+#    path:     /past_event_joindin
+#    defaults: { _controller: AlbumBundle\Controller\Joindin:eventAction }
 
 past_talk_joindin:
     path:     /past_talk_joindin
     defaults: { _controller: AlbumBundle\Controller\Joindin:talksAction }
 
-get_top_tracks:
-    path:     /top_tracks
-    defaults: { _controller: AlbumBundle\Controller\LastFMController::getTopAlbumsAction }
+get_albums:
+    path:     /albums
+    defaults: { _controller: AlbumBundle\Controller\LastFMController::getAlbumsAction }
+
+get_stats:
+    path:     /stats
+    defaults: { _controller: AlbumBundle\Controller\LastFMController::getStatsAction }
 
 skiddle_festivals:
     path:     /festivals
     defaults: { _controller: AlbumBundle\Controller\SkiddleController:viewFestivals }
+
+skiddle_festivals_calendar:
+    path:     /calendar
+    defaults: { _controller: AlbumBundle\Controller\SkiddleController:viewFestivalsCalender }
 
 live_search:
     path:     /search

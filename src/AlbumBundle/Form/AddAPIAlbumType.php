@@ -5,16 +5,13 @@ namespace AlbumBundle\Form;
 use AlbumBundle\Entity\Album;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use AlbumBundle\Form\TrackEmbeddedForm;
-use Symfony\Component\Validator\Constraints\IsTrue;
 
-class AddAlbumType extends AbstractType
+class AddAPIAlbumType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -40,7 +37,8 @@ class AddAlbumType extends AbstractType
                 ]
             ])
             ->add('albumTracks', CollectionType::class, [
-                    'required' => false,
+                    'mapped' => false,
+                    'required' => true,
                     'entry_type' => TrackEmbeddedForm::class,
                     'allow_add' => true,
                     'by_reference' => false,
@@ -49,9 +47,10 @@ class AddAlbumType extends AbstractType
                     'entry_options' => ['label' => false],
                 ]
             )
-            ->add('image', FileType::class, [
-                'label' => 'Image Upload',
-                'required' => false
+            ->add('image', TextareaType::class, [
+                'attr' => [
+                    'placeholder' => 'image'
+                ]
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [
@@ -70,6 +69,6 @@ class AddAlbumType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'album_bundle_add_album_type';
+        return 'album_bundle_add_apialbum_type';
     }
 }

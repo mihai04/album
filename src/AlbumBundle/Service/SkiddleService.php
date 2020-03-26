@@ -57,9 +57,6 @@ class SkiddleService
         $options = [
             'query' => [
                 'api_key' => self::SKIDDLE_API_KEY,
-                'latitude' => $festivalsLocation->getLatitude(),
-                'longitude' => $festivalsLocation->getLongitude(),
-                'radius' => $festivalsLocation->getRadius(),
                 'limit' => $festivalsLocation->getLimit(),
                 'eventcode' => $festivalsLocation->getEvent(),
                 'description' => self::DEFAULT_DESCRIPTION,

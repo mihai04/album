@@ -10,52 +10,19 @@ namespace AlbumBundle\Entity;
  */
 class FestivalsLocation
 {
-    private $latitude;
-    private $longitude;
-    private $radius;
     private $limit;
     private $event;
 
     /**
      * UKFestivalsLocation constructor.
      *
-     * @param string $latitude
-     * @param string  $longitude
-     * @param string $radius
      * @param integer $limit
      * @param string $event
      */
-    public function __construct($latitude, $longitude, $radius, $limit, $event)
+    public function __construct($limit, $event)
     {
-        $this->latitude = $latitude;
-        $this->longitude = $longitude;
-        $this->radius = $radius;
         $this->limit = $limit;
         $this->event = $event;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLatitude()
-    {
-        return $this->latitude;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLongitude()
-    {
-        return $this->longitude;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRadius()
-    {
-        return $this->radius;
     }
 
     /**

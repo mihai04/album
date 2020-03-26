@@ -4,6 +4,7 @@ namespace AlbumBundle\Form;
 
 use AlbumBundle\Entity\Track;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -17,6 +18,9 @@ class TrackEmbeddedForm extends AbstractType
     {
         $builder->add('trackName', null, [
             'label' => false
+        ])
+        ->add('duration', HiddenType::class, [
+            'required' => false,
         ]);
     }
 

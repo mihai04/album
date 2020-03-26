@@ -66,27 +66,7 @@ class LastFMService
 
         $jsonData = $response->getBody()->getContents();
 
-        var_dump($jsonData, $options);die;
         return json_decode($jsonData, true);
-    }
-
-    /**
-     * @param string $artist
-     * @param string $track
-     */
-    public function getTrackData($artist, $track)
-    {
-        $options = [
-            'query' => [
-                'method' => LastFMMethod::TRACK_INFO,
-                'artist' => $artist,
-                'track' => $track,
-                'api_key' => self::LAST_FM_API_KEY,
-                'format' => self::JSON_FORMAT
-            ]
-        ];
-
-        $this->consumeMusic($options);
     }
 
     /**
@@ -111,8 +91,30 @@ class LastFMService
     }
 
     /**
+     * @param string $name
+     * @param integer $limit
+     *
+     * @return mixed
+     */
+    public function searchTracks($name, $limit)
+    {
+        $options = [
+            'query' => [
+                'method' => 'track.search',
+                'api_key' => self::LAST_FM_API_KEY,
+                'track' => $name,
+                'limit' => $limit,
+                'format' => self::JSON_FORMAT
+            ]
+        ];
+
+        return $this->consumeMusic($options);
+    }
+
+    /**
      * @param $albumName
      * @param $artistName
+     *
      * @return mixed
      */
     public function getAlbumInfo($albumName, $artistName)
@@ -129,4 +131,68 @@ class LastFMService
 
         return $this->consumeMusic($options);
     }
+
+    /**
+     * @param $artistName
+     * @param $trackName
+     *
+     * @return mixed
+     */
+    public function getTrackInfo($artistName, $trackName)
+    {
+        $options = [
+            'query' => [
+                'method' => LastFMMethod::TRACK_INFO,
+                'api_key' => self::LAST_FM_API_KEY,
+                'artist' => $artistName,
+                'track' => $trackName,
+                'format' => self::JSON_FORMAT
+            ]
+        ];
+
+        return $this->consumeMusic($options);
+    }
+
+    /**
+     * @param $limit
+     *
+     * @return mixed
+     */
+    public function getTopTracks($limit) {
+
+        $options = [
+            'query' => [
+                'method' => LastFMMethod::CHART_TOP_TRACKS,
+                'api_key' => self::LAST_FM_API_KEY,
+                'limit' => $limit,
+                'format' => self::JSON_FORMAT
+            ]
+        ];
+
+        return $this->consumeMusic($options);
+    }
+
+    /**
+     * @param $artist
+     * @param $limit
+     *
+     * @return mixed
+     */
+    public function getSimilar($artist, $limit) {
+
+        $options = [
+            'query' => [
+                'method' => LastFMMethod::ARTIST_SIMILAR,
+                'api_key' => self::LAST_FM_API_KEY,
+                'artist' => $artist,
+                'limit' => $limit,
+                'format' => self::JSON_FORMAT
+
+            ]
+        ];
+
+        return $this->consumeMusic($options);
+    }
+
+
 }

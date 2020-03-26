@@ -2,11 +2,8 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
-#    - { resource: "@UserBundle/Resources/config/services.yml" }
     - { resource: "@AlbumBundle/Resources/config/services.yml" }
-#    - { resource: "@ReviewBundle/Resources/config/services.yml" }
     - { resource: "@SearchBundle/Resources/config/services.yml" }
-#    - { resource: "@TrackBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -15,13 +12,13 @@ parameters:
     uploads_directory: '%kernel.project_dir%/web/public/uploads_directory'
     commandName: 'populate:search:entities'
     page_limit: 6
-    latitude: 53.4839
-    longitude: -2.2446
-    radius: 5
-    limit: 13
+    trending_tracks_limit: 5
+    limit: 50
     event: FEST
     page_limit_festivals: 3
     search_limit: 5
+    similar_artist: 3
+    client_public_id: ~
 
 framework:
     #esi: ~
@@ -195,37 +192,6 @@ fos_rest:
     include_format: false   # All responses should be JSON formatted according to the requirement.
     # There is no need to include format in request and thereby it default to JSON format.
   cache_dir: '%kernel.cache_dir%/fos_rest'
-
-
-#    exception:
-#      enabled: true
-#      exception_controller: 'AlbumBundle\Controller\ExceptionController::showAction'
-#    body_listener: true
-#      param_fetcher_listener: true
-#      view:
-#        view_response_listener: 'force'
-#        exception_wrapper_handler:  null
-#        formats:
-#          jsonp: true
-#          json: true
-#          xml: false
-#          rss: false
-#        mime_types:
-#          json: ['application/json', 'application/x-json']
-#          jpg: 'image/jpeg'
-#          png: 'image/png'
-#        jsonp_handler: ~
-#      routing_loader:
-#        default_format:  json
-#        include_format:  false
-#      format_listener:
-#        rules:
-#          - path: ^/
-#          - priorities: [ json, jsonp ]
-#          - fallback_format: ~
-#          - prefer_extension: true
-#      exception:
-#        enabled: true
 
 cmen_google_charts:
   version: "45"

@@ -3,9 +3,17 @@
 
 {% block body %}
 
-    {% if festivals is empty %}
+    {% if calendar is defined %}
+        <div id="div_calendar"></div>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            {{ gc_draw(calendar, 'div_calendar') }}
+        </script>
+    {% endif %}
+
+    {% if festivals is not defined %}
         <div class="center-div">
-            No reviews found for this user
+            No festivals found!
         </div>
     {% else %}
         <div class="wrapper">
@@ -38,7 +46,9 @@
                                         <p> Venue Details: {{ festival.venue.name }}</p>
                                     {% endif %}
 
-                                    {% if festival.venue.country is defined %}
+                                    {% if (festival.venue.country is defined) and
+                                        ((festival.venue.postcode is defined)
+                                        and (festival.venue.postcode | length > 0)) %}
                                         <p>Postcode: {{ festival.venue.country }} - {{ festival.venue.postcode }} </p>
                                     {% endif %}
                                 {% else %}
@@ -48,11 +58,23 @@
                                     <p>Date: {{ festival.date }}</p>
                                 {% endif %}
 
-                                {% if festival.entryprice is defined %}
-                                    <p>Price: {{ festival.entryprice }}</p>
+                                {% if festival.goingtocount is defined %}
+                                    <p>Current number of attendance: {{ festival.goingtocount }}</p>
                                 {% endif %}
-                                {% if festival.minage is defined %}
+
+                                {% if ((festival.entryprice is defined) and (festival.entryprice > 0)) %}
+                                    <p>Price: £ {{ festival.entryprice }}</p>
+                                {% endif %}
+
+                                {% if ((festival.minage is defined) and (festival.minage > 0 )) %}
                                     <p>Min age: {{ festival.minage }}</p>
+                                {% endif %}
+
+                                <br/>
+                                {% if (festival.cancellationReason is defined) and
+                                    (festival.cancellationReason | length > 0) %}
+                                    <p> <span style="color: red">Cancellation:</span>
+                                        {{ festival.cancellationReason }}</p>
                                 {% endif %}
                             </div>
                         </div>

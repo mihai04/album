@@ -51,7 +51,7 @@ class Album
      * @Assert\NotBlank()
      *
      * @Assert\Length(max="15", maxMessage="Invalid ISRC - it requieres maximum 15 characters.")
-     * @ORM\Column(name="isrc", type="string", length=15, unique=true, nullable=false)
+     * @ORM\Column(name="isrc", type="string", length=50, unique=true, nullable=false)
      */
     private $isrc;
 
@@ -86,6 +86,41 @@ class Album
      * @ORM\Column(name="timestamp", type="datetime", nullable=true)
      */
     private $timestamp;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="published", type="string", length=255, nullable=true)
+     */
+    private $published;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="listeners", type="string", length=255, nullable=true)
+     */
+    private $listeners;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="playcount", type="string", length=255, nullable=true)
+     */
+    private $playcount;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tags", type="string", nullable=true)
+     */
+    private $tags;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="url", type="string", nullable=true)
+     */
+    private $url;
 
     /**
      * @var ArrayCollection
@@ -304,5 +339,85 @@ class Album
     public function setTimestamp($timestamp)
     {
         $this->timestamp = $timestamp;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPublished()
+    {
+        return $this->published;
+    }
+
+    /**
+     * @param string $published
+     */
+    public function setPublished($published)
+    {
+        $this->published = $published;
+    }
+
+    /**
+     * @return string
+     */
+    public function getListeners()
+    {
+        return $this->listeners;
+    }
+
+    /**
+     * @param string $listeners
+     */
+    public function setListeners($listeners)
+    {
+        $this->listeners = $listeners;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlaycount()
+    {
+        return $this->playcount;
+    }
+
+    /**
+     * @param string $playcount
+     */
+    public function setPlaycount($playcount)
+    {
+        $this->playcount = $playcount;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param string $tags
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
     }
 }

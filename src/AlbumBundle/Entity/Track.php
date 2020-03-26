@@ -34,6 +34,14 @@ class Track
     private $trackName;
 
     /**
+     * @var string
+     *
+     * @Assert\NotBlank()
+     * @ORM\Column(name="duration", type="string", length=255, nullable=true)
+     */
+    private $duration;
+
+    /**
      *
      * @Serializer\Exclude()
      *
@@ -82,5 +90,21 @@ class Track
     public function setAlbum(Album $album)
     {
         $this->album = $album;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @param string $duration
+     */
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
     }
 }

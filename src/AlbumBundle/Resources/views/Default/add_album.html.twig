@@ -9,7 +9,7 @@
         <div class="col-md-offset-0" id="create_first_div">
             <div id="title_div">
                 <h2>
-                    Add You Favourite Album
+                    Add Your Favourite Album - without worrying about tracks
                 </h2>
             </div>
             <div id="form_div">
@@ -33,9 +33,9 @@
 {#                </p>#}
                 <p id="create_property">{{ form_row(form.image) }}
                 </p>
-{#                <p class="align_add_review_label">#}
-{#                    <b>Tracks</b>#}
-{#                </p>#}
+                <p class="align_add_review_label">
+                    <b>Tracks</b>
+                </p>
             <div id="create_property">
                 <ol class="track"
                     data-prototype="{{ form_widget(form.albumTracks.vars.prototype)|e('html_attr') }}">
