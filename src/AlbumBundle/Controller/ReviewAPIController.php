@@ -139,6 +139,15 @@ class ReviewAPIController extends FOSRestController
      * @SWG\Post(
      *     operationId="createReview",
      *     summary="Create new review entry",
+     *
+     *     @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     required=true,
+     *     type="string",
+     *     default="Bearer TOKEN",
+     *     description="Authorization" ),
+     *
      *     @SWG\Parameter( 
      *          name="slug", 
      *          in="path", 
@@ -159,7 +168,7 @@ class ReviewAPIController extends FOSRestController
      *        )
      *     ),
      * ),
-     *
+
      * @SWG\Response(
      *     response=201,
      *     description="Successfully created a review for the specified album.",
@@ -378,7 +387,7 @@ class ReviewAPIController extends FOSRestController
                     Response::HTTP_INTERNAL_SERVER_ERROR]);
             }
 
-            return $this->handleView($this->view([self::SUCCESS => 'Review with identifier ['. $slug .'] was modified.'],
+            return $this->handleView($this->view([self::SUCCESS => 'Review with identifier ['. $id .'] was modified.'],
             Response::HTTP_CREATED));
         }
         else {
@@ -452,7 +461,7 @@ class ReviewAPIController extends FOSRestController
                 Response::HTTP_INTERNAL_SERVER_ERROR]);
         }
 
-        return $this->handleView($this->view([self::SUCCESS => 'Review with identifier ['. $slug .'] was deleted.'],
+        return $this->handleView($this->view([self::SUCCESS => 'Review with identifier ['. $id .'] was deleted.'],
             Response::HTTP_OK));
     }
 }
