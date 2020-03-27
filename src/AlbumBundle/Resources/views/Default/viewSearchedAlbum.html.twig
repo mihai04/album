@@ -49,6 +49,14 @@
                 </ol>
                 {% endif %}
             </div>
+
+            {% if album.summary is defined %}
+            <div class="col-sm-12 col-lg-12">
+                <h3 style="margin: 20px; text-indent: 2em; text-align: justify;"><b>Summary:</b></h3>
+                <p style="margin: 20px; text-indent: 2em; text-align: justify;">{{ album.summary|capitalize }}</p>
+            </div>
+            {% endif %}
+
             {% if album.url is defined %}
             <div class="col-sm-12 col-lg-12" style="text-align: center">
                 <p style="margin: 30px; text-align: center;"><a href="{{ album.url }}">Check link for more details</a></p>
@@ -75,7 +83,7 @@
         </div>
     </div>
 
-{#        {%  if ( is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') ) %}#}
+        {%  if ( is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') ) %}
             <div class="col-sm-12 col-lg-12" style="text-align: center">
                 <a href="{{ path('save_searched_album', {album: album.title, artist: album.artist}) }}">
                     <button type="button" id="register_button">
@@ -83,7 +91,7 @@
                     </button>
                 </a>
             </div>
-{#        {% endif %}#}
+        {% endif %}
 
 {% endblock %}
 

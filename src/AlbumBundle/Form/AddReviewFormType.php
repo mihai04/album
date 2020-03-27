@@ -21,7 +21,8 @@ class AddReviewFormType extends AbstractType
                 'required' => true
             ])
             ->add('rating', RatingType::class, [
-                'label' => 'Rating'
+                'label' => 'Rating',
+                'required' => false
             ])
             ->add('submit', SubmitType::class);
     }
@@ -30,7 +31,6 @@ class AddReviewFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Review::class,
-//            'csrf_protection' => false
         ]);
     }
 

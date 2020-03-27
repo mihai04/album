@@ -58,6 +58,10 @@ class AlbumHelper
                 if (array_key_exists('published', $result['album']['wiki'])) {
                     $album->setPublished($result['album']['wiki']['published']);
                 }
+
+                if (array_key_exists('summary', $result['album']['wiki'])) {
+                    $album->setSummary($result['album']['wiki']['summary']);
+                }
             }
 
             if (array_key_exists('playcount',$result['album'])) {

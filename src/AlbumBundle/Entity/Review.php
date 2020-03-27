@@ -43,12 +43,12 @@ class Review
 
     /**
      * @var int
-     * @Assert\NotBlank()
+
      * @Assert\Range(min=0, max=5)
      *
      * @ORM\Column(name="rating", type="string")
      */
-    private $rating;
+    private $rating = 0;
 
     /**
      *

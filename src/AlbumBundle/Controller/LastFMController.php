@@ -4,15 +4,17 @@ namespace AlbumBundle\Controller;
 
 use AlbumBundle\Entity\Album;
 use AlbumBundle\Entity\AlbumResult;
-use AlbumBundle\Entity\Track;
 use AlbumBundle\Helper\AlbumHelper;
 use AlbumBundle\Service\LastFMService;
 use CMEN\GoogleChartsBundle\GoogleCharts\Charts\Material\BarChart;
 use Pagerfanta\Exception\Exception;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Class LastFMController
@@ -22,6 +24,12 @@ class LastFMController extends Controller
 {
     /** @var LastFMService $lastFMService */
     private $lastFMService;
+
+    /** @const string  */
+    const INDICES = 'indices';
+
+    /** @const string  */
+    const POPULATE_SEARCH_ENTITIES = 'populate:search:entities';
 
     /**
      * LastFMController constructor.
@@ -98,11 +106,17 @@ class LastFMController extends Controller
 
             $em->flush();
 
-            return $this->renderView('AlbumBundle:Default:index.html.twig');
+            $this->updateEntitiesCommand();
 
         } catch (\Exception $e) {
-            return $this->renderView('AlbumBundle:Default:index.html.twig');
+
+            return $this->render('AlbumBundle:Default:index.html.twig', ['error' => $e->getMessage()]);
         }
+
+        $this->addFlash('success', 'Album '. $album->getTitle() .' was successfully created.');
+
+        return$this->redirect($this->generateUrl('view_reviews_by_album', array('id' => $album->getId())),
+            Response::HTTP_PERMANENTLY_REDIRECT);
     }
 
 
@@ -230,7 +244,7 @@ class LastFMController extends Controller
      * @param int $order
      * @return array
      */
-    private function array_sort($array, $on, $order=SORT_ASC){
+    private function array_sort($array, $on, $order = SORT_ASC){
 
         $new_array = array();
         $sortable_array = array();
@@ -263,5 +277,28 @@ class LastFMController extends Controller
         }
 
         return $new_array;
+    }
+
+    /**
+     * Generated indices for searching the newly added album.
+     */
+    public function updateEntitiesCommand() {
+
+        $kernel = $this->get('kernel');
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => '' . self::POPULATE_SEARCH_ENTITIES . '',
+            'tableName' => self::INDICES,
+        ));
+
+        $output = new BufferedOutput(OutputInterface::VERBOSITY_NORMAL);
+        try {
+            $output->writeln('<fg=green;options=bold>Generating indexes...');
+            $application->run($input, $output);
+        } catch (\Exception $e) {
+            $output->writeln('<fg=red;options=bold>Command for updating search indices failed!');
+        }
     }
 }

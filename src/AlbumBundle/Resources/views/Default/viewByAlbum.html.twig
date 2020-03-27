@@ -7,7 +7,11 @@
             <h1>Album title: {{ album.title|capitalize }}</h1>
             <div class="col-sm-6">
                 <div style="text-align: center;">
-                    <img style="border-radius: 30px" src="{{ asset('public/uploads_directory/' ~ album.image ) }}">
+                    {% if album.url is not null %}
+                        <img src="{{ asset(album.image) }}" alt="{{ album.image }}"/>
+                    {% else %}
+                        <img src="{{ asset('public/uploads_directory/' ~ album.image ) }}" alt="{{ album.image }}"/>
+                    {% endif %}
                     <p><b>Artist: </b> {{ album.artist|capitalize }} </p>
                     <p><b>ISRC: </b> {{ album.isrc }} </p>
                     <p><b>Listeners: </b> {{ album.listeners|number_format(0, '.', ',') }} </p>
@@ -16,14 +20,24 @@
                 </div>
             </div>
             <div class="col-sm-6" style="text-align: center">
+                {% if album.albumTracks is defined %}
                 <p><b>Track List:</b></p>
                 <ol>
                     {% for track in album.albumTracks %}
-                        {% if track.duration > 0 %}
-                            <li>{{ track.trackName|capitalize }} - {{ track.duration }}</li>
+                        <li>
+                        {% if track.trackName is defined %}
+                            {{ track.trackName|capitalize }}
                         {% endif %}
+
+                        {% if track.duration > 0 %}
+                            - {{ track.duration }}
+                        {% endif %}
+                        </li>
                     {% endfor %}
                 </ol>
+                {% else %}
+                    <p>No track results at the moment,</p>
+                {% endif %}
             </div>
             <div class="col-sm-12 col-lg-12">
                 <h3 style="margin: 20px; text-indent: 2em; text-align: justify;"><b>Summary:</b></h3>

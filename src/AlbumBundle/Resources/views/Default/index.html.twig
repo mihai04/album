@@ -5,6 +5,12 @@
 {% block body %}
 
     <div class="wrapper">
+        {% if error is defined %}
+            <div class="center-div">
+                Error: {{ error }}. Try again.
+            </div>
+        {% else %}
+
         <div class="col-xs-12 col-md-12">
                 {% if albums is empty%}
                     <div class="center-div">
@@ -15,7 +21,11 @@
                     <tbody id="album_object_tbody">
                     <div id="albumSet">
                         <div class="row" style="height: 75%">
-                            <img src="{{ asset('public/uploads_directory/' ~ album.image ) }}"/>
+                            {% if album.url is not null %}
+                                <img src="{{ asset(album.image) }}" alt="{{ album.image }}"/>
+                            {% else %}
+                                <img src="{{ asset('public/uploads_directory/' ~ album.image ) }}" alt="{{ album.image }}"/>
+                            {% endif %}
                             <p><b>Title:</b> {{ album.title }}</p>
                             <p><b>Author:</b> {{ album.artist }}</p>
                         </div>
@@ -35,6 +45,7 @@
                     </div>
             {% endif %}
         </div>
+        {% endif %}
     </div>
 
 {% endblock %}

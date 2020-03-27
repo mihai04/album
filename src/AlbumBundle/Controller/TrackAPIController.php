@@ -26,9 +26,6 @@ class TrackAPIController extends FOSRestController
     /** @const string */
     const ERROR = 'error';
 
-    /** @const string */
-    const SUCCESS = 'success';
-
     /**
      * List all tracks of an album following a pagination system.
      *
