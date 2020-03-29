@@ -173,7 +173,8 @@ class SkiddleController extends Controller
      */
     private function getFestivalDetails()
     {
-        return new FestivalsLocation($this->getParameter('limit'), $this->getParameter('event'));
+        return new FestivalsLocation($this->getParameter('skiddle_limit'),
+            $this->getParameter('skiddle_event'));
     }
 
     /**

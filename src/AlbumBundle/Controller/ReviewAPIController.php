@@ -49,7 +49,7 @@ class ReviewAPIController extends FOSRestController
      *     description="The field represents the id of an album."
      * ),
      *
-     * @SWG\Tag(name="reviews per album"),
+     * @SWG\Tag(name="reviews"),
      *
      * @Security(name="Bearer")
      *
@@ -102,7 +102,7 @@ class ReviewAPIController extends FOSRestController
      *     type="string",
      *     description="The field represents the id of a review."
      * )
-     * @SWG\Tag(name="reviews per album")
+     * @SWG\Tag(name="reviews")
      * @Security(name="Bearer")
      *
      * @param $id

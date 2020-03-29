@@ -12,9 +12,10 @@ parameters:
     uploads_directory: '%kernel.project_dir%/web/public/uploads_directory'
     commandName: 'populate:search:entities'
     page_limit: 6
-    trending_tracks_limit: 5
+    trending_tracks_limit: 6
+    skiddle_limit: 5
     default_limit: 15
-    event: FEST
+    skiddle_event: FEST
     page_limit_festivals: 3
     search_limit: 5
     similar_artist: 3
