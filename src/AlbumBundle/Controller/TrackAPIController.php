@@ -70,10 +70,10 @@ class TrackAPIController extends FOSRestController
                 Response::HTTP_NOT_FOUND);
         }
 
-        $qb = $em->getRepository(Review::class)
-            ->findAllQueryBuilder();
+        $qb = $em->getRepository(Track::class)
+            ->getTracks();
 
-        $paginatedCollection = $this->get('pagination_factory')->createCollection($qb->getQuery(), $request,
+        $paginatedCollection = $this->get('pagination_factory')->createCollectionBySlug($qb, $request,
             $this->getParameter('page_limit'), "api_tracks_get_album_tracks", $slug);
 
 

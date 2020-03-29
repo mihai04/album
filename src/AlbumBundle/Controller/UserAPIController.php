@@ -22,33 +22,6 @@ class UserAPIController extends FOSRestController
     const ERROR = 'error';
 
     /**
-     * List all users.
-     *
-     * @SWG\Response(
-     *     response=200,
-     *     description="Returns all users.",
-     *     @SWG\Schema(
-     *         type="array",
-     *         @Model(type=AlbumBundle\Entity\Album::class)
-     *     )
-     * )
-     *
-     * @SWG\Tag(name="users")
-     * @Security(name="Bearer")
-     *
-     * @return JsonResponse|Response
-     */
-    public function getUsersAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $users = $em->getRepository(User::class)
-            ->findAll();
-
-        return $this->handleView($this->view($users));
-    }
-
-    /**
      * List all users specified by client.
      *
      * @SWG\Response(

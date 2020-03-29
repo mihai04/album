@@ -34,6 +34,29 @@ class PaginationFactory
     }
 
     /**
+     * @param Query $qb
+     * @param Request $request
+     * @param $maxPerPage
+     * @return array
+     */
+    private static function getItems(Query $qb, Request $request, $maxPerPage)
+    {
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+
+        $page = $request->query->get('page', 1);
+        $pagerfanta->setMaxPerPage($maxPerPage);
+        $pagerfanta->setCurrentPage($page);
+
+        $items = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $items[] = $result;
+        }
+
+        return array($pagerfanta, $page, $items);
+    }
+
+    /**
      * Create a collection for any given request.
      *
      * @param Query $qb
@@ -45,23 +68,12 @@ class PaginationFactory
      *
      * @return PaginatedCollection
      */
-    public function createCollection(Query $qb, Request $request, $maxPerPage, $route, $slug,
+    public function createCollectionBySlug(Query $qb, Request $request, $maxPerPage, $route, $slug,
                                      array $routeParameters = array()) {
 
-        $adapter = new DoctrineORMAdapter($qb);
-        $pagerfanta = new Pagerfanta($adapter);
+        list($pagerfanta, $page, $items) = self::getItems($qb, $request, $maxPerPage);
 
-        $page = $request->query->get('page', 1);
-        $pagerfanta->setMaxPerPage($maxPerPage);
-        $pagerfanta->setCurrentPage($page);
-
-        $reviews = [];
-        foreach ($pagerfanta->getCurrentPageResults() as $result) {
-            $reviews[] = $result;
-        }
-
-        $paginatedCollection = new PaginatedCollection($reviews, $pagerfanta->getNbPages());
-
+        $paginatedCollection = new PaginatedCollection($items, $pagerfanta->getNbPages());
 
         $createLinkUrl = function ($slug, $targetPage) use ($route, $routeParameters) {
             return $this->router->generate($route, array_merge($routeParameters,
@@ -77,6 +89,43 @@ class PaginationFactory
         }
         if ($pagerfanta->hasPreviousPage()) {
             $paginatedCollection->addLink('prev', $createLinkUrl($slug, $pagerfanta->getPreviousPage()));
+        }
+
+        return $paginatedCollection;
+    }
+
+    /**
+     * Create a collection for any given request.
+     *
+     * @param Query $qb
+     * @param Request $request
+     * @param $maxPerPage
+     * @param $route
+     * @param array $routeParameters
+     *
+     * @return PaginatedCollection
+     */
+    public function createCollection(Query $qb, Request $request, $maxPerPage, $route,
+                                     array $routeParameters = array()) {
+
+        list($pagerfanta, $page, $items) = self::getItems($qb, $request, $maxPerPage);
+
+        $paginatedCollection = new PaginatedCollection($items, $pagerfanta->getNbPages());
+
+        $createLinkUrl = function ($targetPage) use ($route, $routeParameters) {
+            return $this->router->generate($route, array_merge($routeParameters,
+                array('page' => $targetPage)));
+        };
+
+        $paginatedCollection->addLink('self', $createLinkUrl( $page));
+        $paginatedCollection->addLink('first', $createLinkUrl(1));
+        $paginatedCollection->addLink('last', $createLinkUrl($pagerfanta->getNbPages()));
+
+        if ($pagerfanta->hasNextPage()) {
+            $paginatedCollection->addLink('next', $createLinkUrl($pagerfanta->getNextPage()));
+        }
+        if ($pagerfanta->hasPreviousPage()) {
+            $paginatedCollection->addLink('prev', $createLinkUrl($pagerfanta->getPreviousPage()));
         }
 
         return $paginatedCollection;

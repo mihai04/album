@@ -27,4 +27,15 @@ class TrackRepository extends EntityRepository
 
         return $qb->getQuery();
     }
+
+    /**
+     * Return all the albums (Track Entity)
+     *
+     * @return QueryAlias
+     */
+    public function getTracks() {
+        $queryBuilder = $this->createQueryBuilder('track');
+
+        return $queryBuilder->getQuery();
+    }
 }

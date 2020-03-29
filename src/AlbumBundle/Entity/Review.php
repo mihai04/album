@@ -29,12 +29,17 @@ class Review
     /**
      * @var string
      *
+     * @Assert\NotNull()
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
     private $title;
 
     /**
      * @var string
+     *
+     * @Assert\NotNull()
      * @Assert\NotBlank()
      *
      * @ORM\Column(name="review", type="string", type="text", nullable=false)
@@ -43,7 +48,8 @@ class Review
 
     /**
      * @var int
-
+     *
+     * @Assert\NotNull()
      * @Assert\Range(min=0, max=5)
      *
      * @ORM\Column(name="rating", type="string")
@@ -73,7 +79,6 @@ class Review
      * @var Album
      *
      * This is the owning side of the relationship.
-     *
      *
      * @ORM\ManyToOne(targetEntity="AlbumBundle\Entity\Album", inversedBy="reviews")
      * @ORM\JoinColumn(name="album", referencedColumnName="id", nullable=false)

@@ -60,7 +60,7 @@ class EntryAPIController extends FOSRestController
             ->getReviewsByUser($slug);
 
         $paginatedCollection = $this->get('pagination_factory')
-            ->createCollection($qb, $request, 1, "api_entries_get_user_entries", $slug);
+            ->createCollectionBySlug($qb, $request, 1, "api_entries_get_user_entries", $slug);
 
         return $this->handleView($this->view($paginatedCollection));
     }
@@ -111,7 +111,7 @@ class EntryAPIController extends FOSRestController
 
         $review = $em->getRepository(Review::class)->find($id);
 
-        // check if album exists
+        // check if review exists
         if(!$review) {
             return new JsonResponse(['error' => 'Review with identifier [' . $id .'] was not found!'],
                 Response::HTTP_NOT_FOUND);

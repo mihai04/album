@@ -45,10 +45,6 @@ services:
         arguments:
             - "@app.data_helper_impl" # autowire:true could have been used, but it is better to specify it
 
-    # Handle no route errors
-    AlbumBundle\EventListener\ExceptionListener:
-            tags:
-                - { name: kernel.event_listener, event: kernel.exception }
 
     # reusable bundle. We need to register classes as services. Hence, we need to add AlbumBundle and my reusable bundle
     AlbumBundle\:
@@ -58,3 +54,8 @@ services:
         class: AlbumBundle\Service\PaginationFactory
         arguments: ['@router']
         public: true
+
+    # Exception listener
+    AlbumBundle\EventListener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }

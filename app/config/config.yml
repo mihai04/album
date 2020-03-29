@@ -13,7 +13,7 @@ parameters:
     commandName: 'populate:search:entities'
     page_limit: 6
     trending_tracks_limit: 5
-    limit: 50
+    default_limit: 15
     event: FEST
     page_limit_festivals: 3
     search_limit: 5
@@ -156,7 +156,7 @@ nelmio_api_doc:
     schemes: [http, https]
     info:
       title: Music Review API
-      description: This is the documentation for the Music Review website.
+      description: This is the REST API documentation for the Music Review website.
       version: 1.0.0
     securityDefinitions:
       Bearer:

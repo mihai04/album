@@ -6,9 +6,9 @@ albums:
 
 albums_reviews:
   type: rest
-  resource: AlbumBundle\Controller\ReviewAPIController
+  resource: AlbumBundle\Controller\AlbumReviewAPIController
   parent: albums
-  name_prefix: api_reviews_
+  name_prefix: api_album_reviews_
 
 albums_tracks:
   type: rest
@@ -27,3 +27,8 @@ users_entries:
   resource: AlbumBundle\Controller\EntryAPIController
   name_prefix: api_entries_
   parent: users
+
+reviews:
+  type: rest
+  resource: AlbumBundle\Controller\ReviewAPIController
+  name_prefix: api_reviews_
