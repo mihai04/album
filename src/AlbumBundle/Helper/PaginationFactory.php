@@ -1,7 +1,7 @@
 <?php
 
 
-namespace AlbumBundle\Service;
+namespace AlbumBundle\Helper;
 
 use AlbumBundle\Entity\PaginatedCollection;
 use Doctrine\ORM\Query;

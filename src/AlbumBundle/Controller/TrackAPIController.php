@@ -5,12 +5,15 @@ namespace AlbumBundle\Controller;
 
 
 use AlbumBundle\Entity\Album;
+use AlbumBundle\Entity\APIError;
 use AlbumBundle\Entity\Review;
 use AlbumBundle\Entity\Track;
+use AlbumBundle\Exceptions\APIErrorException;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
+use Pagerfanta\Exception\OutOfRangeCurrentPageException as OutOfRangeCurrentPageExceptionAlias;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,6 +48,14 @@ class TrackAPIController extends FOSRestController
      *     type="integer",
      *     description="The field represents the page number."
      * )
+     *
+     * @SWG\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     type="integer",
+     *     description="The field represents the limit of results per page."
+     * )
+     *
      * @SWG\Parameter(
      *     name="slug",
      *     in="path",
@@ -66,15 +77,28 @@ class TrackAPIController extends FOSRestController
         $album = $em->getRepository(Album::class)->find($slug);
         // check if album exists.
         if(!$album) {
-            return new JsonResponse([self::ERROR => 'Album with id [' . $slug .'] was not found!'],
+            return new JsonResponse([self::ERROR => 'Album with id [' . $slug .'] was not found.'],
                 Response::HTTP_NOT_FOUND);
         }
 
-        $qb = $em->getRepository(Track::class)
-            ->getTracks();
+        try {
 
-        $paginatedCollection = $this->get('pagination_factory')->createCollectionBySlug($qb, $request,
-            $this->getParameter('page_limit'), "api_tracks_get_album_tracks", $slug);
+            $clientLimit = $request->get('limit');
+            $limit = $this->getParameter('page_limit');
+            if (null !== $clientLimit && ($clientLimit > 1 && $clientLimit < 101)) {
+                $limit = $clientLimit;
+            }
+
+            $qb = $em->getRepository(Track::class)
+                ->getTracksByAlbumID($slug);
+
+            $paginatedCollection = $this->get('pagination_factory')->createCollectionBySlug($qb, $request,
+                $limit, "api_tracks_get_album_tracks", $slug);
+
+        } catch (OutOfRangeCurrentPageExceptionAlias $e) {
+            $apiError = new APIError(Response::HTTP_BAD_REQUEST, $e->getMessage());
+            throw new APIErrorException($apiError);
+        }
 
 
         return $this->handleView($this->view($paginatedCollection));
@@ -120,7 +144,7 @@ class TrackAPIController extends FOSRestController
     {
         $em = $this->getDoctrine()->getManager();
 
-        /** @var Album $user */
+        /** @var Album $album */
         $album = $em->getRepository(Album::class)->find($slug);
         // check if album exists.
         if(!$album) {
@@ -132,7 +156,8 @@ class TrackAPIController extends FOSRestController
 
         // check if track exists
         if(!$track) {
-            return new JsonResponse([self::ERROR => 'Track with id [' . $id .'] was not found for album with id ['.$slug.']!'],
+            return new JsonResponse([self::ERROR => 'Track with id [' . $id .'] was not found for album with 
+            id ['.$slug.'].'],
                 Response::HTTP_NOT_FOUND);
         }
 

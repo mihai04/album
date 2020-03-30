@@ -53,7 +53,7 @@ class ClientCreatorController extends Controller
             if (!$client) {
                 $client = $clientManager->createClient();
                 $client->setRedirectUris(['http://127.0.0.1:8000']);
-                $client->setAllowedGrantTypes(['password']);
+                $client->setAllowedGrantTypes(['password', 'refresh_token']);
                 $clientManager->updateClient($client);
             }
 

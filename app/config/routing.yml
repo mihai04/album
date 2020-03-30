@@ -29,12 +29,12 @@ client_creator:
 # oauth sever token
 fos_oauth_server_token:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
-    prefix: /api/v1
+    prefix: /
 
 # oauth sever authorize
 fos_oauth_server_authorize:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/authorize.xml"
-    prefix: /api/v1
+    prefix: /
 
 # api doc < 3.0 version
 #NelmioApiDocBundle:

@@ -88,8 +88,8 @@
                             </button>
                         </div>
                     </div>
-                    <div style="margin-top: 20px" id="livesearch"></div>
                 </form>
+                <div style="margin-top: 20px" id="livesearch"></div>
             </div>
         </div>
     </nav>
@@ -152,7 +152,7 @@
                                 try {
                                 let results = JSON.parse(msg);
                                     if (results.length !== 0) {
-                                        entitySelector.append('<b>External suggestions:</b>').append("</br>");
+                                        entitySelector.append('<b>Suggestions:</b>').append("</br>");
                                         $.each(results, function (key, arr) {
                                             let url = '{{ path("live_search", {album: 'albumVal', artist: 'artistVal'}) }}'
                                                 .replace('albumVal', arr["name"])
@@ -166,15 +166,15 @@
                                         });
                                     }
                                     else {
-                                        entitySelector.append($('<p style="font-size: 16px;">No suggestions</p>'));
+                                        entitySelector.append("</br>").append($('<p style="font-size: 16px;">No suggestions</p>'));
                                     }
                                 }
                                 catch (e) {
                                     console.log('Failed to parse json data from server! Error: ' + e.message);
-                                    entitySelector.append($('<p style="font-size: 16px;">No suggestions</p>'));
+                                    entitySelector.append("</br>").append($('<p style="font-size: 16px;">No suggestions</p>'));
                                 }
                             } else {
-                                entitySelector.append($('<p style="font-size: 16px;">No suggestions</p>'));
+                                entitySelector.append("</br>").append($('<p style="font-size: 16px;">No suggestions</p>'));
                             }
                          }
                     },

@@ -21,8 +21,28 @@ class AlbumRepository extends EntityRepository
      *
      * @return QueryAlias
      */
-    public function getAlbums() {
+    public function findAllQueryBuilder() {
         $queryBuilder = $this->createQueryBuilder('album');
+
+        return $queryBuilder->getQuery();
+    }
+
+
+    /**
+     * Checks it the album with the given id or isrc exists.
+     *
+     * @param $id
+     * @param $isrc
+     * @return QueryAlias
+     */
+    public function checkIfAlbumExists($id, $isrc)
+    {
+        $queryBuilder = $this->createQueryBuilder('review');
+        $queryBuilder
+            ->where('id = :albumId')
+            ->orWhere('isrc = :isrc')
+            ->setParameter(':albumId', $id)
+            ->setParameter(':isrc', $isrc);
 
         return $queryBuilder->getQuery();
     }

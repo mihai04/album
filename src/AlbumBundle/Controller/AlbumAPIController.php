@@ -4,8 +4,11 @@
 namespace AlbumBundle\Controller;
 
 use AlbumBundle\Entity\Album;
+use AlbumBundle\Entity\APIError;
 use AlbumBundle\Entity\Review;
 use AlbumBundle\Entity\Track;
+use AlbumBundle\Entity\User;
+use AlbumBundle\Exceptions\APIErrorException;
 use AlbumBundle\Form\AddAPIAlbumType;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -13,6 +16,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
+use Pagerfanta\Exception\OutOfRangeCurrentPageException as OutOfRangeCurrentPageExceptionAlias;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,25 +50,56 @@ class AlbumAPIController extends FOSRestController
      *         @Model(type=AlbumBundle\Entity\Album::class)
      *     )
      * )
+     *
+     * @SWG\Parameter(
+     *     name="page",
+     *     in="query",
+     *     type="integer",
+     *     description="The field represents the page number."
+     * ),
+     *
+     * @SWG\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     type="integer",
+     *     description="The field represents the limit of results per page."
+     * ),
+     *
      * @SWG\Tag(name="albums")
      * @Security(name="Bearer")
      *
+     * @param Request $request
      * @return JsonResponse|Response
      */
-    public function getAlbumsAction()
+    public function getAlbumsAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $albums = $em->getRepository(Album::class)
-            ->findAll();
+        $qb = $em->getRepository(Album::class)
+            ->findAllQueryBuilder();
 
-        return $this->handleView($this->view($albums));
+        try {
+
+            $clientLimit = (int) $request->get('limit');
+            $limit = $this->getParameter('page_limit');
+            if (null !== $clientLimit && ($clientLimit > 0 && $clientLimit < 101)) {
+                $limit = $clientLimit;
+            }
+
+            $paginatedCollection = $this->get('pagination_factory')->createCollection($qb, $request,
+                $limit, "api_albums_get_albums");
+
+        } catch (OutOfRangeCurrentPageExceptionAlias $e) {
+            $apiError = new APIError(Response::HTTP_BAD_REQUEST, $e->getMessage());
+            throw new APIErrorException($apiError);
+        }
+        return $this->handleView($this->view($paginatedCollection));
     }
 
     /**
      * List an album specified by the user.
      *
-     * @Rest\Get("/albums/{slug}")
+     * @Rest\Get("/albums/{id}")
      *
      * @SWG\Response(
      *     response=200,
@@ -79,36 +114,28 @@ class AlbumAPIController extends FOSRestController
      *     description="Album does not exist!"
      * )
      * @SWG\Parameter(
-     *     name="slug",
+     *     name="id",
      *     in="path",
      *     type="string",
      *     description="The field represents the id of an album."
      * )
      *
-     * @SWG\Parameter(
-     *     name="page",
-     *     in="query",
-     *     type="string",
-     *     required=false,
-     *     description="The page number."
-     * )
-     *
      * @SWG\Tag(name="albums")
      * @Security(name="Bearer")
      *
-     * @param $slug
+     * @param $id
      * @return JsonResponse|Response
      */
-    public function getAlbumAction($slug)
+    public function getAlbumAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
         $album = $em->getRepository(Album::class)
-            ->find($slug);
+            ->find($id);
 
         // check if album exists
         if (!$album) {
-            return new JsonResponse([self::ERROR => 'Album with identifier [' . $slug . '] was not found!'],
+            return new JsonResponse([self::ERROR => 'Album with identifier [' . $id . '] was not found.'],
                 Response::HTTP_NOT_FOUND);
         }
 
@@ -123,24 +150,13 @@ class AlbumAPIController extends FOSRestController
      * @SWG\Post(
      *     operationId="addAbum",
      *     summary="Add Album.",
-     *     @SWG\Parameter( 
-     *          name="slug", 
-     *          in="path", 
-     *          description="The field represent the album id.", 
-     *          required=true, 
-     *          type="string" 
-     *     ),
      *     @SWG\Parameter(
      *         name="json payload",
      *         in="body",
      *         required=true,
      *         @SWG\Schema(
-     *              type="object",
-     *              @SWG\Property(property="title", type="string", example="My Album"), 
-     *              @SWG\Property(property="summary", type="string", example="My album is amazing"),
-     *              @SWG\Property(property="artist", type="string", example="My album artist"),
-     *              @SWG\Property(property="isrc", type="string", example="UK-A00-00-00000"),
-     *              @SWG\Property(property="image", type="string", example="image base 64 encoded"),
+     *              type="array",
+     *              @Model(type=AlbumBundle\Entity\Album::class)
      *           )
      *        )
      *     ),
@@ -232,7 +248,7 @@ class AlbumAPIController extends FOSRestController
     }
 
     /**
-     * Modify an alum for a specified id.
+     * Modify an album for a specified id (only admins allowed).
      *
      * @Rest\Put("/albums/{slug}")
      *
@@ -401,24 +417,30 @@ class AlbumAPIController extends FOSRestController
     }
 
     /**
-     * Delete album specified by client.
+     * Delete album specified by client (only admins allowed).
      *
-     * @Rest\Delete("/albums/{slug}")
+     * @Rest\Delete("/albums/{id}")
      *
      * @SWG\Response(
      *     response=200,
      *     description="Successfully deleted the specified album.",
      *     @SWG\Schema(
      *         type="array",
-     *         @Model(type=AlbumBundle\Entity\Review::class)
+     *         @Model(type=AlbumBundle\Entity\Album::class)
      *     )
      * )
      * @SWG\Response(
      *     response=404,
      *     description="Album no found!"
      * )
+     *
+     * @SWG\Response(
+     *     response=403,
+     *     description="Fobidden action!"
+     * )
+     *
      * @SWG\Parameter(
-     *     name="slug",
+     *     name="id",
      *     in="path",
      *     type="string",
      *     description="The field represents the id of an album."
@@ -426,26 +448,32 @@ class AlbumAPIController extends FOSRestController
      * @SWG\Tag(name="albums")
      * @Security(name="Bearer")
      *
-     * @param Request $request
-     * @param $slug
+     * @param $id
      * @return JsonResponse|Response
      */
-    public function deleteAlbumAction(Request $request, $slug)
+    public function deleteAlbumAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
+        /** @var User $user */
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        $em = $this->getDoctrine()->getManager();
         $album = $em->getRepository(Album::class)
-            ->find($slug);
+            ->find($id);
 
         // check if album exists
         if (!$album) {
-            return new JsonResponse([self::ERROR => 'Album with identifier [' . $slug . '] was not found!'],
+            return new JsonResponse([self::ERROR => 'Album with identifier [' . $id . '] was not found.'],
                 Response::HTTP_NOT_FOUND);
+        }
+
+        if(!in_array('ROLE_ADMIN', $user->getRoles())) {
+            return new JsonResponse([self::ERROR => 'Forbidden action you do not have admin rights.'],
+                Response::HTTP_FORBIDDEN);
         }
 
         try {
             /* @var Review $reviews */
-            $reviews = $em->getRepository(Review::class)->getReviewsByAlbumID($slug);
+            $reviews = $em->getRepository(Review::class)->getReviewsByAlbumID($id);
 
             /** @var Review $review */
             foreach ($reviews as $review) {
@@ -457,11 +485,10 @@ class AlbumAPIController extends FOSRestController
             $em->flush();
 
         } catch (\Exception $e) {
-            return new JsonResponse([self::ERROR => 'Failed to delete review [' . $slug . '] for album with identifier [' . $slug . '].',
+            return new JsonResponse([self::ERROR => 'Failed to remove album with id [' . $id . ']',
                 Response::HTTP_INTERNAL_SERVER_ERROR]);
         }
 
-        return $this->handleView($this->view([self::SUCCESS => 'Review with identifier [' . $slug . '] was deleted.'],
-            Response::HTTP_OK));
+        return $this->handleView($this->view($album, Response::HTTP_OK));
     }
 }

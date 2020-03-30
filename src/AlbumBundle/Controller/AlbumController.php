@@ -59,7 +59,7 @@ class AlbumController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $query = $em->getRepository(Album::class)->getAlbums();
+        $query = $em->getRepository(Album::class)->findAllQueryBuilder();
 
         /** @var Paginator $paginator */
         $paginator = $this->get('knp_paginator');
@@ -289,11 +289,10 @@ class AlbumController extends Controller
     /**
      * Deletes album (only admins allowed).
      *
-     * @param Request $request
      * @param $id
      * @return RedirectResponse
      */
-    public function deleteAlbumAction(Request $request, $id)
+    public function deleteAlbumAction($id)
     {
         try {
 

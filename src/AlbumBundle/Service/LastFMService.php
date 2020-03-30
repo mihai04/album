@@ -91,27 +91,6 @@ class LastFMService
     }
 
     /**
-     * @param string $name
-     * @param integer $limit
-     *
-     * @return mixed
-     */
-    public function searchTracks($name, $limit)
-    {
-        $options = [
-            'query' => [
-                'method' => 'track.search',
-                'api_key' => self::LAST_FM_API_KEY,
-                'track' => $name,
-                'limit' => $limit,
-                'format' => self::JSON_FORMAT
-            ]
-        ];
-
-        return $this->consumeMusic($options);
-    }
-
-    /**
      * @param $albumName
      * @param $artistName
      *

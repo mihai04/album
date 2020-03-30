@@ -51,7 +51,7 @@ services:
         resource: '../../src/AlbumBundle/*'
 
     pagination_factory:
-        class: AlbumBundle\Service\PaginationFactory
+        class: AlbumBundle\Helper\PaginationFactory
         arguments: ['@router']
         public: true
 

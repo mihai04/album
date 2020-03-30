@@ -18,9 +18,9 @@ class AlbumHelper
     }
 
     /**
-     *
      * @param $result
      * @return AlbumResult
+     * @throws \Exception
      */
     public static function processAlbum($result) {
 
@@ -104,6 +104,8 @@ class AlbumHelper
             /** @var  $replacedTagData */
             $replacedTagData = AlbumHelper::getAlbumTags($result);
             $album->setTags($replacedTagData);
+
+            $album->setTimestamp(new \DateTime());
         }
 
         return new AlbumResult($album, $tracks);

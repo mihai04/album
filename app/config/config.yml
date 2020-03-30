@@ -14,7 +14,7 @@ parameters:
     page_limit: 6
     trending_tracks_limit: 6
     skiddle_limit: 5
-    default_limit: 15
+    default_limit: 10
     skiddle_event: FEST
     page_limit_festivals: 3
     search_limit: 5
@@ -165,11 +165,19 @@ nelmio_api_doc:
         description: 'Value: Bearer {jwt}'
         name: Authorization
         in: header
+      OAuth2:
+        type: oauth2
+        flow: password
+        authorizationUrl: http://127.0.0.1:8000/oauth/v2/token
+        tokenUrl: http://127.0.0.1:8000/oauth/v2/token
+        name: Authorization
+        scopes: {}
     security:
       - Bearer: []
+      - OAuth2: []
   areas:
     path_patterns: # an array of regexps
-      - ^/api
+      - ^/api/v1/
 
 # FOSOAuthServerBundle Configuration
 fos_oauth_server:
@@ -181,11 +189,11 @@ fos_oauth_server:
   service:
     user_provider: fos_user.user_provider.username
     options:
+      token_type: Bearer
+      supported_scopes: user
       access_token_lifetime: 86400
       refresh_token_lifetime: 1209600
       auth_code_lifetime: 30
-#      supported_scopes:
-#        - user
 
 fos_rest:
   routing_loader:

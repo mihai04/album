@@ -29,7 +29,6 @@ class AlbumReviewAPIController extends FOSRestController
     /** @const string */
     const SUCCESS = 'success';
 
-
     /**
      * List all reviews for a specific album following a pagination system.
      *
@@ -47,13 +46,20 @@ class AlbumReviewAPIController extends FOSRestController
      * @SWG\Response(
      *     response=404,
      *     description="Review does not exist!"
-     * )
+     * ),
      *
      * @SWG\Parameter(
      *     name="page",
      *     in="query",
      *     type="integer",
      *     description="The field represents the page number."
+     * ),
+     *
+     * @SWG\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     type="integer",
+     *     description="The field represents the limit of results per page."
      * ),
      *
      * @SWG\Parameter(
@@ -166,9 +172,9 @@ class AlbumReviewAPIController extends FOSRestController
      *         required=true,
      *         @SWG\Schema(
      *              type="object",
-     *              @SWG\Property(property="title", type="string", example="My Review"), 
-     *              @SWG\Property(property="review", type="string", example="I like Eminem Review"),
-     *              @SWG\Property(property="rating", type="integer", example=3),
+     *              @SWG\Property(property="title", type="string", example="My Review Title"), 
+     *              @SWG\Property(property="review", type="string", example="My Album Review"),
+     *              @SWG\Property(property="rating", type="integer", example=4),
      *           )
      *        )
      *     ),
@@ -223,8 +229,8 @@ class AlbumReviewAPIController extends FOSRestController
         // validate POST data against the form requirements
         if (!$form->isValid()) {
             // the form is not valid and thereby return a status code of 400
-            return new JsonResponse([self::ERROR => 'Invalid data given!'],
-                Response::HTTP_BAD_REQUEST);
+            return new JsonResponse([self::ERROR => 'Invalid data given! Check the API documentation for parameters 
+            constraints.'], Response::HTTP_BAD_REQUEST);
         }
 
         // the form is valid and hence create a new Review instance and persist it to the database
@@ -257,7 +263,6 @@ class AlbumReviewAPIController extends FOSRestController
 
         return $this->handleView($this->view($review, Response::HTTP_CREATED));
     }
-
 
     /**
      * Modify a review for a specified album id.
@@ -346,8 +351,9 @@ class AlbumReviewAPIController extends FOSRestController
             return new JsonResponse([self::ERROR => 'Review not found'], Response::HTTP_NOT_FOUND);
         }
 
-        if($review->getReviewer() !== $currentUser && !in_array($currentUser, $currentUser->getRoles())) {
-            return new JsonResponse([self::ERROR => 'Forbidden action you are not the owner of this review!'],
+        if($review->getReviewer() !== $currentUser && !in_array('ROLE_ADMIN', $currentUser->getRoles())) {
+            return new JsonResponse([self::ERROR => 'Forbidden action you are not the owner of this review or you 
+            do not have admin rights!'],
                 Response::HTTP_FORBIDDEN);
         }
 
@@ -364,6 +370,13 @@ class AlbumReviewAPIController extends FOSRestController
 
         // json_decode the request content and pass it to the form
         $form->submit(json_decode($request->getContent(), true));
+
+        // validate PUT data against the form requirements
+        if (!$form->isValid()) {
+            // the form is not valid and thereby return a status code of 400
+            return new JsonResponse([self::ERROR => 'Invalid data given! Check the API documentation for parameters 
+            constraints.'], Response::HTTP_BAD_REQUEST);
+        }
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -392,8 +405,7 @@ class AlbumReviewAPIController extends FOSRestController
                     Response::HTTP_INTERNAL_SERVER_ERROR]);
             }
 
-            return $this->handleView($this->view([self::SUCCESS => 'Review with identifier ['. $id .'] was modified.'],
-            Response::HTTP_CREATED));
+            return $this->handleView($this->view($review, Response::HTTP_CREATED));
         }
         else {
             return $this->handleView($this->view($form, Response::HTTP_BAD_REQUEST));
@@ -439,10 +451,16 @@ class AlbumReviewAPIController extends FOSRestController
      */
     public function deleteReviewsAction(Request $request, $slug, $id) {
 
-        /** @var User $currentUser */
-        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
+        /** @var User $user */
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
+
+        /* @var Album $album */
+        $album = $em->getRepository(Album::class)->find($slug);
+        if(!$album) {
+            return new JsonResponse([self::ERROR => 'Album not found'], Response::HTTP_NOT_FOUND);
+        }
 
         /* @var Review $review */
         $review = $em->getRepository(Review::class)->find($id);
@@ -451,7 +469,7 @@ class AlbumReviewAPIController extends FOSRestController
                 Response::HTTP_NOT_FOUND));
         }
 
-        if($review->getReviewer() !== $currentUser && !in_array($currentUser, $currentUser->getRoles())) {
+        if($review->getReviewer() !== $user && !in_array($user, $user->getRoles())) {
             return new JsonResponse([self::ERROR => 'Forbidden action you are not the owner of this review!'],
                 Response::HTTP_FORBIDDEN);
         }

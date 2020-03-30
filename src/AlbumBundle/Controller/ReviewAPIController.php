@@ -10,7 +10,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
-use Pagerfanta\Exception\OutOfRangeCurrentPageException;
+use Pagerfanta\Exception\OutOfRangeCurrentPageException as OutOfRangeCurrentPageExceptionAlias;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,6 +43,13 @@ class ReviewAPIController extends FOSRestController
      * ),
      *
      * @SWG\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     type="integer",
+     *     description="The field represents the limit of items per page to be returned."
+     * ),
+     *
+     * @SWG\Parameter(
      *     name="page",
      *     in="query",
      *     type="string",
@@ -65,14 +72,15 @@ class ReviewAPIController extends FOSRestController
         try {
 
             $clientLimit = $request->get('limit');
-
-            $limit = (null === $clientLimit || $clientLimit > 100) ? $this->getParameter('page_limit') :
-                $request->get('default_limit');
+            $limit = $this->getParameter('page_limit');
+            if (null !== $clientLimit && ($clientLimit > 1 && $clientLimit < 101)) {
+                $limit = $clientLimit;
+            }
 
             $paginatedCollection = $this->get('pagination_factory')->createCollection($qb->getQuery(), $request,
                 $limit, "api_reviews_get_reviews");
 
-        } catch (OutOfRangeCurrentPageException $e) {
+        } catch (OutOfRangeCurrentPageExceptionAlias $e) {
             $apiError = new APIError(Response::HTTP_BAD_REQUEST, $e->getMessage());
             throw new APIErrorException($apiError);
         }

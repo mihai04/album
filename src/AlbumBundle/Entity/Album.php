@@ -81,7 +81,7 @@ class Album
     private $isPublished = true;
 
     /**
-     * @var |DateTime|null
+     * @var DateTime
      *
      * @ORM\Column(name="timestamp", type="datetime", nullable=true)
      */
@@ -136,8 +136,6 @@ class Album
 
     /**
      * @var ArrayCollection $albumTracks
-     *
-     * @Serializer\Exclude()
      *
      * @ORM\OneToMany(targetEntity="AlbumBundle\Entity\Track",
      *     mappedBy="album",
