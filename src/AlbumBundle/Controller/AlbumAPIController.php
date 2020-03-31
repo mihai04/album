@@ -10,6 +10,7 @@ use AlbumBundle\Entity\Track;
 use AlbumBundle\Entity\User;
 use AlbumBundle\Exceptions\APIErrorException;
 use AlbumBundle\Form\AddAPIAlbumType;
+use AlbumBundle\Service\LastFMService;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -34,8 +35,21 @@ class AlbumAPIController extends FOSRestController
     /** @const string */
     const ERROR = 'error';
 
-    /** @const string */
-    const SUCCESS = 'success';
+    /** @var string */
+    const TRACK_TIME_FORMAT = '%02d:%02d';
+
+    /** @var LastFMService $lastFMService */
+    private $lastFMService;
+
+    /**
+     * LastFMController constructor.
+     *
+     * @param LastFMService $lastFMService
+     */
+    public function __construct(LastFMService $lastFMService)
+    {
+        $this->lastFMService = $lastFMService;
+    }
 
     /**
      * List all albums.
@@ -103,12 +117,13 @@ class AlbumAPIController extends FOSRestController
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Returns a specified album",
+     *     description="Successfully updated the specified album.",
      *     @SWG\Schema(
      *         type="array",
-     *          @Model(type=AlbumBundle\Entity\Album::class)
+     *         @Model(type=AlbumBundle\Entity\Album::class)
      *     )
-     * )
+     * ),
+     *
      * @SWG\Response(
      *     response=404,
      *     description="Album does not exist!"
@@ -154,26 +169,48 @@ class AlbumAPIController extends FOSRestController
      *         name="json payload",
      *         in="body",
      *         required=true,
-     *         @SWG\Schema(
-     *              type="array",
-     *              @Model(type=AlbumBundle\Entity\Album::class)
-     *           )
+     *     @SWG\Schema(
+     *         type="object",
+     *         @SWG\Property(property="title", type="string", example="My Album"), 
+     *         @SWG\Property(property="artist", type="string", example="My album artist"),
+     *         @SWG\Property(property="isrc", type="string", example="UK-A00-00-00000"),
+     *         @SWG\Property(property="image", type="string", example="image base 64 encoded"),
+     *         @SWG\Property(property="summary", type="string", example="My album is amazing"),
+     *         @SWG\Property(property="listeners", type="string", example="1000"),
+     *         @SWG\Property(property="playcount", type="string", example="1000"),
+     *         @SWG\Property(property="published", type="string", example="22 03 2019"),
+     *         @SWG\Property(property="url", type="string", example="url to artist"),
+     *         @SWG\Property(property="tags", type="string", example="disco, etno"),
+     *         @SWG\Property(property="albumTracks", type="array",
+     *              @SWG\Items(type="object",
+     *              @SWG\Property(property="trackName", type="string", example="track name"), 
+     *              @SWG\Property(property="duration", type="string", example="duration in ms"),
+     *              ),
+     *             )
+     *          )
      *        )
      *     ),
      * ),
      *
      * @SWG\Response(
-     *     response=200,
-     *     description="Successfully created the album.",
+     *     response=201,
+     *     description="Successfully created a review for the specified album.",
      *     @SWG\Schema(
      *         type="array",
      *         @Model(type=AlbumBundle\Entity\Album::class)
      *     )
+     * ),
+     *
+     *@SWG\Response(
+     *     response=400,
+     *     description="Invalid data given: JSON format required!"
      * )
+     *
      * @SWG\Response(
      *     response=409,
      *     description="There is already an album with this ISRC!"
      * )
+     *
      * @SWG\Tag(name="albums")
      * @Security(name="Bearer")
      *
@@ -182,6 +219,7 @@ class AlbumAPIController extends FOSRestController
      */
     public function postAlbumAction(Request $request)
     {
+        /** @var Album $album */
         $album = new Album();
 
         // prepare the form
@@ -189,7 +227,8 @@ class AlbumAPIController extends FOSRestController
 
         // check if the content type is json
         if ($request->getContentType() != 'json') {
-            return $this->handleView($this->view(null, Response::HTTP_BAD_REQUEST));
+            return $this->handleView($this->view([self::ERROR => 'Invalid data format, only JSON is accepted!'],
+            Response::HTTP_BAD_REQUEST));
         }
 
         // json_decode the request content and pass it to the form
@@ -201,20 +240,33 @@ class AlbumAPIController extends FOSRestController
 
             try {
 
-                $base64_string = $form['image']->getData();
-                $pos = strpos($base64_string, ';');
-                $type = explode('/', explode(':', substr($base64_string, 0, $pos))[1])[1];
-                $fileName = uniqid() . '.' . $type;
+                try {
 
-                $album->setImage($fileName);
-                $tracks = $form['albumTracks']->getData();
+                    $base64_string = $form['image']->getData();
+                    $fileName = $this->processImage($base64_string);
 
-                /**
-                 * @var Track $track
-                 */
-                foreach ($tracks as $track) {
-                    $track->setAlbum($album);
+                    $album->setImage($fileName);
+
+                } catch (\Exception $e) {
+                    return new JsonResponse([self::ERROR => 'Invalid based 64 encoded image. Add 
+                    [data:image/jpeg;base64,]'], Response::HTTP_BAD_REQUEST);
                 }
+
+                $trackResults = $form['albumTracks']->getData();
+                /** @var Track $track */
+                foreach ($trackResults as $track) {
+
+                    $seconds = $track->getDuration() / 1000;
+                    $minutes = round($seconds / 60);
+                    $remainMinutes = ($minutes % 60);
+
+                    $track->setDuration((sprintf(self::TRACK_TIME_FORMAT, $minutes, $remainMinutes)));
+
+
+                    $album->addAlbumTracks($track);
+                }
+
+                $album->setTimestamp(new \DateTime);
 
                 $em->persist($album);
                 $em->flush();
@@ -222,23 +274,23 @@ class AlbumAPIController extends FOSRestController
                 $destination = $this->getParameter('uploads_directory');
                 $filePath = $destination . '/' . $fileName;
                 $this->moveFileToPath($filePath, $base64_string);
+
             } catch (UniqueConstraintViolationException $e) {
 
                 $message = 'DBALException [%i]: %s' . $e->getMessage();
-                return new JsonResponse([self::ERROR => $message, Response::HTTP_CONFLICT]);
+                return new JsonResponse([self::ERROR => $message], Response::HTTP_CONFLICT);
 
             } catch (TableNotFoundException $e) {
 
                 $message = 'ORMException [%i]: %s' . $e->getMessage();
-                return new JsonResponse([self::ERROR => $message,
-                    Response::HTTP_INTERNAL_SERVER_ERROR]);
+                return new JsonResponse([self::ERROR => $message],
+                    Response::HTTP_INTERNAL_SERVER_ERROR);
 
             } catch (\Exception $e) {
 
                 $message = 'Exception [%i]: %s' . $e->getMessage();
-                return new JsonResponse([self::ERROR => $message,
-                    Response::HTTP_INTERNAL_SERVER_ERROR]);
-
+                return new JsonResponse([self::ERROR => $message],
+                    Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
             return $this->handleView($this->view($album, Response::HTTP_CREATED));
@@ -250,13 +302,13 @@ class AlbumAPIController extends FOSRestController
     /**
      * Modify an album for a specified id (only admins allowed).
      *
-     * @Rest\Put("/albums/{slug}")
+     * @Rest\Put("/albums/{id}")
      *
      * @SWG\Put(
      *     operationId="editAlbum",
-     *     summary="Edit album.",
+     *     summary="Edit album (only admins).",
      *     @SWG\Parameter( 
-     *          name="slug", 
+     *          name="id", 
      *          in="path", 
      *          description="The field represent the album id.", 
      *          required=true, 
@@ -266,26 +318,37 @@ class AlbumAPIController extends FOSRestController
      *         name="json payload",
      *         in="body",
      *         required=true,
-     *         @SWG\Schema(
-     *              type="object",
-     *              @SWG\Property(property="title", type="string", example="My Album"), 
-     *              @SWG\Property(property="summary", type="string", example="My album is amazing"),
-     *              @SWG\Property(property="artist", type="string", example="My album artist"),
-     *              @SWG\Property(property="isrc", type="string", example="UK-A00-00-00000"),
-     *              @SWG\Property(property="image", type="string", example="image base 64 encoded"),
-     *           )
+     *     @SWG\Schema(
+     *         type="object",
+     *         @SWG\Property(property="title", type="string", example="My Album"), 
+     *         @SWG\Property(property="artist", type="string", example="My album artist"),
+     *         @SWG\Property(property="isrc", type="string", example="UK-A00-00-00000"),
+     *         @SWG\Property(property="image", type="string", example="image base 64 encoded"),
+     *         @SWG\Property(property="summary", type="string", example="My album is amazing"),
+     *         @SWG\Property(property="listeners", type="string", example="1000"),
+     *         @SWG\Property(property="playcount", type="string", example="1000"),
+     *         @SWG\Property(property="url", type="string", example="external url image"),
+     *         @SWG\Property(property="tags", type="string", example="disco, etno"),
+     *         @SWG\Property(property="albumTracks", type="array",
+     *              @SWG\Items(type="object",
+     *              @SWG\Property(property="trackName", type="string", example="track name"), 
+     *              @SWG\Property(property="duration", type="string", example="duration in ms"),
+     *              ),
+     *             )
+     *          )
      *        )
      *     ),
      * ),
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Successfully created a review for the specified album.",
+     *     description="Successfully updated the specified album.",
      *     @SWG\Schema(
      *         type="array",
-     *         @Model(type=AlbumBundle\Entity\Review::class)
+     *         @Model(type=AlbumBundle\Entity\Album::class)
      *     )
-     * )
+     * ),
+     *
      * @SWG\Response(
      *     response=400,
      *     description="Invalid data given: JSON format required!"
@@ -294,27 +357,39 @@ class AlbumAPIController extends FOSRestController
      *     response=404,
      *     description="Album does not exist!"
      * )
-
+     *
+     * @SWG\Response(
+     *     response=403,
+     *     description="Fobidden action!"
+     * )
+     *
      * @SWG\Tag(name="albums")
      * @Security(name="Bearer")
      *
      * @param Request $request
-     * @param $slug
      * @param $id
      * @return JsonResponse|Response
      */
-    public function putAlbumsAction(Request $request, $slug, $id)
+    public function putAlbumsAction(Request $request, $id)
     {
+        /** @var User $user */
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        if(!in_array('ROLE_ADMIN', $user->getRoles())) {
+            return new JsonResponse([self::ERROR => 'Forbidden action you do not have admin rights.'],
+                Response::HTTP_FORBIDDEN);
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         /* @var Album $album */
-        $album = $em->getRepository(Album::class)->find($slug);
+        $album = $em->getRepository(Album::class)->find($id);
         if (!$album) {
             return new JsonResponse([self::ERROR => 'Album not found'], Response::HTTP_NOT_FOUND);
         }
 
         /* @var Album $updateAlbum */
-        $updateReview = new Album();
+        $updateAlbum = new Album();
 
         // prepare form
         $form = $this->createForm(AddAPIAlbumType::class, $updateAlbum, ['csrf_protection' => false]);
@@ -333,49 +408,65 @@ class AlbumAPIController extends FOSRestController
 
                 $em = $this->getDoctrine()->getManager();
 
-                if (!empty($updateReview->getTitle())) {
-                    $album->setTitle($updateReview->getTitle());
+                if (!empty($updateAlbum->getTitle())) {
+                    $album->setTitle($updateAlbum->getTitle());
                 }
-                if (!empty($updateReview->getArtist())) {
-                    $album->setTitle($updateReview->getArtist());
+                if (!empty($updateAlbum->getArtist())) {
+                    $album->setArtist($updateAlbum->getArtist());
                 }
-                if (!empty($updateReview->getIsrc())) {
-                    $album->setIsrc($updateReview->getIsrc());
+                if (!empty($updateAlbum->getIsrc())) {
+                    $album->setIsrc($updateAlbum->getIsrc());
                 }
 
-                $base64_string = $form['image']->getData();
-                $pos = strpos($base64_string, ';');
-                $type = explode('/', explode(':', substr($base64_string, 0, $pos))[1])[1];
-                $fileName = uniqid() . '.' . $type;
+                try {
+                    $base64_string = $form['image']->getData();
+                    $fileName = $this->processImage($base64_string);
 
-                $album->setImage($fileName);
+                    $album->setImage($fileName);
 
-                if (!empty($updateReview->getSummary())) {
-                    $album->setSummary($updateReview->getSummary());
+                } catch (\Exception $e) {
+                    return new JsonResponse([self::ERROR => 'Invalid based 64 encoded image. Add 
+                    [data:image/jpeg;base64,]'], Response::HTTP_BAD_REQUEST);
                 }
-                if (!empty($updateReview->isPublished())) {
-                    $album->setIsPublished($updateReview->isPublished());
+
+                if (!empty($updateAlbum->getSummary())) {
+                    $album->setSummary($updateAlbum->getSummary());
                 }
+
+                if (!empty($updateAlbum->getPublished())) {
+                    $album->setPublished($updateAlbum->getPublished());
+                }
+
+                if (!empty($updateAlbum->getListeners())) {
+                    $album->setListeners($updateAlbum->getListeners());
+                }
+
+                if (!empty($updateAlbum->getPlaycount())) {
+                    $album->setPlaycount($updateAlbum->getPlaycount());
+                }
+
                 $album->setTimestamp(new \DateTime);
 
-                // there is no need to set reviews given the relationship.
-                // have a look at the setter for setting reviews using an Album instance.
-                if (!empty($updateReview->getReviews())) {
-                    $album->setReviews($updateReview->getReviews());
+                /** @var Track $track */
+                foreach ($album->getAlbumTracks() as $track) {
+                    $album->removeAlbum($track);
                 }
 
                 $tracks = $form['albumTracks']->getData();
-                /**
-                 * @var Track $track
-                 */
+                /** @var Track $track */
                 foreach ($tracks as $track) {
-                    $track->setAlbum($album);
-                }
 
-                // there is no need to set album tracks given the relationship.
-                // have a look at the setter for setting reviews using an Album instance.
-                if (!empty($updateReview->getAlbumTracks())) {
-                    $album->setAlbumTracks($updateReview->getAlbumTracks());
+                    try {
+                        $seconds = $track->getDuration() / 1000;
+                        $minutes = round($seconds / 60);
+                        $remainMinutes = ($minutes % 60);
+
+                        $track->setDuration((sprintf(self::TRACK_TIME_FORMAT, $minutes, $remainMinutes)));
+
+                        $album->addAlbumTracks($track);
+                    } catch (\Exception $e) {
+                        // fail silently if duration is not valid
+                    }
                 }
 
                 $em->persist($album);
@@ -386,15 +477,26 @@ class AlbumAPIController extends FOSRestController
                 $this->moveFileToPath($filePath, $base64_string);
 
             } catch (\Exception $e) {
-                return new JsonResponse([self::ERROR => 'Failed to modify review for album with identifier [' . $slug . '].',
-                    Response::HTTP_INTERNAL_SERVER_ERROR]);
+                return new JsonResponse([self::ERROR => 'Failed to modify album with identifier [' . $id . '].' .
+                    $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
-            return $this->handleView($this->view([self::SUCCESS => 'Review with identifier [' . $slug . '] was modified.'],
-                Response::HTTP_CREATED)->setLocation($this->generateUrl('album_homepage')));
+            return $this->handleView($this->view($album, Response::HTTP_OK));
         } else {
             return $this->handleView($this->view($form, Response::HTTP_BAD_REQUEST));
         }
+    }
+
+    /**
+     * @param string $base64_string
+     * @return string
+     */
+    private function processImage($base64_string) {
+
+        $pos = strpos($base64_string, ';');
+        $type = explode('/', explode(':', substr($base64_string, 0, $pos))[1])[1];
+
+        return uniqid() . '.' . $type;
     }
 
     /**

@@ -111,6 +111,39 @@ class AlbumHelper
         return new AlbumResult($album, $tracks);
     }
 
+    /**
+     * @param $albumResult
+     * @param Album $album
+     * @return void
+     */
+    public static function populateAlbum($albumResult, $album) {
+        try {
+            if ($albumResult !== null && array_key_exists('album', $albumResult)) {
+
+                if (array_key_exists('listeners', $albumResult['album'])) {
+                    $album->setListeners($albumResult['album']['listeners']);
+                }
+
+                if (array_key_exists('playcount', $albumResult['album'])) {
+                    $album->setPlaycount($albumResult['album']['playcount']);
+                }
+
+                if (array_key_exists('wiki', $albumResult['album'])) {
+
+                    if (array_key_exists('published', $albumResult['album']['wiki'])) {
+                        $album->setPublished($albumResult['album']['wiki']['published']);
+                    }
+                }
+
+                /** @var  $replacedTagData */
+                $replacedTagData = AlbumHelper::getAlbumTags($albumResult);
+                $album->setTags($replacedTagData);
+            }
+        } catch (\Exception $e) {
+            // fail silently
+        }
+    }
+
     public static function getAlbumTags($result)
     {
         $replacedTagData = "";

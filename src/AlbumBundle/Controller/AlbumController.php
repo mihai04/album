@@ -152,34 +152,8 @@ class AlbumController extends Controller
                     return $this->redirect($this->generateUrl('add_album'));
                 }
 
-                try {
-                    $albumResult = $this->lastFMService->getAlbumInfo($album->getTitle(),  $album->getArtist());
-
-                    if ($albumResult !== null && array_key_exists('album', $albumResult)) {
-
-                        if (array_key_exists('listeners', $albumResult['album'])) {
-                            $album->setListeners($albumResult['album']['listeners']);
-                        }
-
-                        if (array_key_exists('playcount', $albumResult['album'])) {
-                            $album->setPlaycount($albumResult['album']['playcount']);
-                        }
-
-                        if (array_key_exists('wiki', $albumResult['album'])) {
-
-                            if (array_key_exists('published', $albumResult['album']['wiki'])) {
-                                $album->setPublished($albumResult['album']['wiki']['published']);
-                            }
-                        }
-
-                        /** @var  $replacedTagData */
-                        $replacedTagData = AlbumHelper::getAlbumTags($albumResult);
-                        $album->setTags($replacedTagData);
-
-                    }
-                } catch (Exception $e) {
-                    // fail silently
-                }
+                $albumResult = $this->lastFMService->getAlbumInfo($album->getTitle(),  $album->getArtist());
+                AlbumHelper::populateAlbum($albumResult, $album);
 
                 /** @var Track $track */
                 foreach ($tracks as $track) {
@@ -189,7 +163,6 @@ class AlbumController extends Controller
 
                             if (array_key_exists('duration', $tracksResults['track'])) {
 
-
                                 $milliseconds =  $tracksResults['track']['duration'] / 1000;
                                 $seconds = $milliseconds / 1000;
                                 $minutes = round($seconds / 60);
@@ -198,7 +171,7 @@ class AlbumController extends Controller
                                 $track->setDuration((sprintf(self::TRACK_TIME_FORMAT, $minutes, $remainMinutes)));
 
                             }
-                            $track->setAlbum($album);
+                            $album->addAlbumTracks($track);
                         }
                     } catch (Exception $e) {
                         // fail silently

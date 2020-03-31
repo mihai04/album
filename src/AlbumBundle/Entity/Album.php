@@ -18,6 +18,7 @@ use JMS\Serializer\Annotation as Serializer;
 class Album
 {
     /**
+     *
      * @var int
      *
      * @ORM\Column(name="id", type="integer")
@@ -50,7 +51,7 @@ class Album
      *
      * @Assert\NotBlank()
      *
-     * @Assert\Length(max="15", maxMessage="Invalid ISRC - it requieres maximum 15 characters.")
+     * @Assert\Length(max="50", maxMessage="Invalid ISRC - it requieres maximum 15 characters.")
      * @ORM\Column(name="isrc", type="string", length=50, unique=true, nullable=false)
      */
     private $isrc;
@@ -64,8 +65,6 @@ class Album
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
      *
      * @ORM\Column(name="summary", type="text", nullable=true)
      */
@@ -141,7 +140,7 @@ class Album
      *     mappedBy="album",
      *     fetch="EXTRA_LAZY",
      *     orphanRemoval=true,
-     *     cascade={"persist"})
+     *     cascade={"persist", "remove"})
      *
      * @ORM\JoinColumn(name="album", referencedColumnName="id", nullable=false)
      */
@@ -417,5 +416,13 @@ class Album
     public function setUrl($url)
     {
         $this->url = $url;
+    }
+
+    /**
+     * @param Track $track
+     */
+    public function removeAlbum(Track $track)
+    {
+        $this->albumTracks->removeElement($track);
     }
 }

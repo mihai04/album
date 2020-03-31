@@ -114,12 +114,21 @@ class AlbumReviewAPIController extends FOSRestController
      *     response=404,
      *     description="Resource does not exist!"
      * )
+     *
+     * @SWG\Parameter(
+     *     name="slug",
+     *     in="path",
+     *     type="string",
+     *     description="The field represents the id of an album."
+     * )
+     *
      * @SWG\Parameter(
      *     name="id",
      *     in="path",
      *     type="string",
      *     description="The field represents the id of a review."
      * )
+     *
      * @SWG\Tag(name="reviews per album")
      * @Security(name="Bearer")
      *
@@ -211,6 +220,18 @@ class AlbumReviewAPIController extends FOSRestController
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        // the form is valid and hence create a new Review instance and persist it to the database
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var Album $album */
+        $album = $em->getRepository(Album::class)->find($slug);
+
+        // check if the album exists.
+        if(!$album) {
+            return new JsonResponse([self::ERROR => 'Album with identifier ['. $slug .'] not found.',
+                Response::HTTP_NOT_FOUND]);
+        }
+
         /** @var Review $review */
         $review = new Review();
 
@@ -233,17 +254,6 @@ class AlbumReviewAPIController extends FOSRestController
             constraints.'], Response::HTTP_BAD_REQUEST);
         }
 
-        // the form is valid and hence create a new Review instance and persist it to the database
-        $em = $this->getDoctrine()->getManager();
-
-        /** @var Album $album */
-        $album = $em->getRepository(Album::class)->find($slug);
-
-        // check if the album exists.
-        if(!$album) {
-            return new JsonResponse([self::ERROR => 'Album with identifier ['. $slug .'] not found.',
-                Response::HTTP_NOT_FOUND]);
-        }
 
         try {
 
@@ -301,7 +311,7 @@ class AlbumReviewAPIController extends FOSRestController
      * ),
      *
      * @SWG\Response(
-     *     response=201,
+     *     response=200,
      *     description="Successfully created a review for the specified album.",
      *     @SWG\Schema(
      *         type="array",
@@ -321,7 +331,7 @@ class AlbumReviewAPIController extends FOSRestController
      *
      * @SWG\Response(
      *     response=404,
-     *     description="Album does not exist!"
+     *     description="Resource does not exist!"
      * ),
      *
      * @SWG\Tag(name="reviews per album"),
@@ -444,12 +454,11 @@ class AlbumReviewAPIController extends FOSRestController
      * @SWG\Tag(name="reviews per album")
      * @Security(name="Bearer")
      *
-     * @param Request $request
      * @param $slug
      * @param $id
      * @return JsonResponse|Response
      */
-    public function deleteReviewsAction(Request $request, $slug, $id) {
+    public function deleteReviewsAction($slug, $id) {
 
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -480,8 +489,8 @@ class AlbumReviewAPIController extends FOSRestController
             $em->flush();
 
         } catch (\Exception $e) {
-            return new JsonResponse([self::ERROR => 'Failed to delete review ['.$id.'] for album with identifier ['. $slug .'].',
-                Response::HTTP_INTERNAL_SERVER_ERROR]);
+            return new JsonResponse([self::ERROR => 'Failed to delete review ['.$id.'] for album with identifier ['. $slug .'].' .
+                 $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR]);
         }
 
         return $this->handleView($this->view([self::SUCCESS => 'Review with identifier ['. $id .'] was deleted.'],

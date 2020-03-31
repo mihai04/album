@@ -3,6 +3,7 @@
 namespace AlbumBundle\Form;
 
 use AlbumBundle\Entity\Album;
+use Doctrine\DBAL\Types\StringType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -47,6 +48,26 @@ class AddAPIAlbumType extends AbstractType
                     'entry_options' => ['label' => false],
                 ]
             )
+            ->add('published', TextareaType::class, [
+                'attr' => [
+                    'placeholder' => 'published'
+                ]
+            ])
+            ->add('listeners', TextareaType::class, [
+                'attr' => [
+                    'placeholder' => 'listeners'
+                ]
+            ])
+            ->add('playcount', TextareaType::class, [
+                'attr' => [
+                    'placeholder' => 'playcount'
+                ]
+            ])
+            ->add('tags', TextareaType::class, [
+                'attr' => [
+                    'placeholder' => 'tags'
+                ]
+            ])
             ->add('image', TextareaType::class, [
                 'attr' => [
                     'placeholder' => 'image'

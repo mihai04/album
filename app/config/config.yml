@@ -154,7 +154,7 @@ jms_serializer:
 
 nelmio_api_doc:
   documentation:
-    schemes: [http, https]
+    schemes: [http]
     info:
       title: Music Review API
       description: This is the REST API documentation for the Music Review website.
@@ -177,7 +177,7 @@ nelmio_api_doc:
       - OAuth2: []
   areas:
     path_patterns: # an array of regexps
-      - ^/api/v1/
+      - ^/api
 
 # FOSOAuthServerBundle Configuration
 fos_oauth_server:

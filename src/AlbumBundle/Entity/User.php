@@ -10,8 +10,8 @@ use JMS\Serializer\Annotation as Serializer;
 /**
  * User
  *
- * @ORM\Entity
  * @ORM\Table(name="`user`")
+ * @ORM\Entity(repositoryClass="AlbumBundle\Repository\UserRepository")
  */
 class User extends BaseUser
 {
@@ -23,6 +23,7 @@ class User extends BaseUser
      * @ORM\Column(type="integer")
      */
     protected $id;
+
     /**
      * @var string
      *
@@ -51,6 +52,7 @@ class User extends BaseUser
         $this->setUsername($email);
         return parent::setEmail($email);
     }
+
     /**
      * @return mixed
      */
@@ -58,6 +60,7 @@ class User extends BaseUser
     {
         return $this->id;
     }
+
     /**
      * @return string $fullName
      */
@@ -65,6 +68,7 @@ class User extends BaseUser
     {
         return $this->fullName;
     }
+
     /**
      * @param string $username
      */
@@ -72,6 +76,7 @@ class User extends BaseUser
     {
         $this->username = $username;
     }
+
     /**
      * @param mixed $fullName
      */
