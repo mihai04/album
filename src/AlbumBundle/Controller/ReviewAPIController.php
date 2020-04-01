@@ -81,9 +81,21 @@ class ReviewAPIController extends FOSRestController
         try {
 
             $clientLimit = $request->get('limit');
-            $limit = $this->getParameter('page_limit');
-            if (null !== $clientLimit && ($clientLimit > 1 && $clientLimit < 101)) {
+            $limit = $this->getParameter('reviews_limit');
+            if (!is_null($clientLimit) && $clientLimit != 0) {
+                if (!($clientLimit > 0 && $clientLimit < 101)) {
+                    return $this->handleView($this->view([self::ERROR => 'The limit parameter is out of bounds (1-100).'],
+                        Response::HTTP_BAD_REQUEST));
+                }
                 $limit = $clientLimit;
+            }
+
+            $clientPage = (int) $request->get('page');
+            if (!is_null($clientPage)) {
+                if (!($clientPage >= 0)) {
+                    return $this->handleView($this->view([self::ERROR => 'The page parameter is out of bonds (<1) .'],
+                        Response::HTTP_BAD_REQUEST));
+                }
             }
 
             $paginatedCollection = $this->get('pagination_factory')->createCollection($qb->getQuery(), $request,
@@ -210,7 +222,7 @@ class ReviewAPIController extends FOSRestController
         /* @var Review $review */
         $review = $em->getRepository(Review::class)->find($id);
         if(!$review) {
-            return new JsonResponse([self::ERROR => 'Review not found'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([self::ERROR => 'Review with ['.$id.'] was not found.'], Response::HTTP_NOT_FOUND);
         }
 
         if($review->getReviewer() !== $currentUser && !in_array('ROLE_ADMIN', $currentUser->getRoles())) {

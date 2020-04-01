@@ -41,8 +41,8 @@ class ExceptionListener implements EventSubscriberInterface
 
         if ($exception instanceof APIErrorException) {
             $apiProblem = $exception->getApiError();
-            $response = new JsonResponse(
-                $apiProblem->toArray(),
+            $response = new JsonResponse([
+                $apiProblem->toArray()],
                 $apiProblem->getStatusCode()
             );
 

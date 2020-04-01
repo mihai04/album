@@ -4,13 +4,17 @@
 namespace AlbumBundle\Controller;
 
 use AlbumBundle\Entity\Album;
+use AlbumBundle\Entity\APIError;
 use AlbumBundle\Entity\Review;
 use AlbumBundle\Entity\User;
+use AlbumBundle\Exceptions\APIErrorException;
 use AlbumBundle\Form\AddReviewFormType;
+use Doctrine\ORM\NonUniqueResultException;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
+use Pagerfanta\Exception\OutOfRangeCurrentPageException as OutOfRangeCurrentPageExceptionAlias;
 use Swagger\Annotations as SWG;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +49,12 @@ class AlbumReviewAPIController extends FOSRestController
      *
      * @SWG\Response(
      *     response=404,
-     *     description="Review does not exist!"
+     *     description="Review does not exist."
+     * ),
+     *
+     *  @SWG\Response(
+     *     response=400,
+     *     description="Invalid data given."
      * ),
      *
      * @SWG\Parameter(
@@ -88,12 +97,37 @@ class AlbumReviewAPIController extends FOSRestController
                 Response::HTTP_NOT_FOUND);
         }
 
-        $qb = $em->getRepository(Review::class)
-            ->getReviewsByAlbumID($slug);
+        try {
 
-        $paginatedCollection = $this->get('pagination_factory')->createCollectionBySlug($qb, $request,
-            $this->getParameter('page_limit'), "api_album_reviews_get_album_reviews", $slug);
 
+            $clientLimit = (int)$request->get('limit');
+            $limit = $this->getParameter('reviews_limit');
+            if (!is_null($clientLimit) && $clientLimit != 0) {
+                if (!($clientLimit > 0 && $clientLimit < 101)) {
+                    return $this->handleView($this->view([self::ERROR => 'The limit parameter is out of bounds (1-100).'],
+                        Response::HTTP_BAD_REQUEST));
+                }
+                $limit = $clientLimit;
+            }
+
+            $clientPage = (int)$request->get('page');
+            if (!is_null($clientPage) && $clientPage != 0) {
+                if (!($clientPage >= 0)) {
+                    return $this->handleView($this->view([self::ERROR => 'The page parameter is out of bonds (<1) .'],
+                        Response::HTTP_BAD_REQUEST));
+                }
+            }
+
+            $qb = $em->getRepository(Review::class)
+                ->getReviewsByAlbumID($slug);
+
+            $paginatedCollection = $this->get('pagination_factory')->createCollectionBySlug($qb, $request,
+                $limit, "api_album_reviews_get_album_reviews", $slug);
+
+        }   catch (OutOfRangeCurrentPageExceptionAlias $e) {
+            $apiError = new APIError(Response::HTTP_BAD_REQUEST, $e->getMessage());
+            throw new APIErrorException($apiError);
+        }
         return $this->handleView($this->view($paginatedCollection));
     }
 
@@ -149,15 +183,20 @@ class AlbumReviewAPIController extends FOSRestController
                 Response::HTTP_NOT_FOUND);
         }
 
-        $review = $em->getRepository(Review::class)->find($id);
+        try {
+            $review = $em->getRepository(Review::class)->getReviewByAlbum($slug, $id);
+            // check if album exists
+            if(!$review) {
+                return new JsonResponse([self::ERROR => 'Review with identifier [' . $id .'] was not found!'],
+                    Response::HTTP_NOT_FOUND);
+            }
 
-        // check if album exists
-        if(!$review) {
-            return new JsonResponse([self::ERROR => 'Review with identifier [' . $id .'] was not found!'],
-                Response::HTTP_NOT_FOUND);
+            return $this->handleView($this->view($review, Response::HTTP_OK));
+
+        } catch (NonUniqueResultException $e) {
+            return new JsonResponse([self::ERROR => 'Failed to find review with id [' . $id .'] was not found for album with
+            id [' . $slug . '].'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        return $this->handleView($this->view($review, Response::HTTP_OK));
     }
 
     /**
@@ -228,8 +267,8 @@ class AlbumReviewAPIController extends FOSRestController
 
         // check if the album exists.
         if(!$album) {
-            return new JsonResponse([self::ERROR => 'Album with identifier ['. $slug .'] not found.',
-                Response::HTTP_NOT_FOUND]);
+            return new JsonResponse([self::ERROR => 'Album with identifier ['. $slug .'] was not found.'],
+                Response::HTTP_NOT_FOUND);
         }
 
         /** @var Review $review */
@@ -253,7 +292,6 @@ class AlbumReviewAPIController extends FOSRestController
             return new JsonResponse([self::ERROR => 'Invalid data given! Check the API documentation for parameters 
             constraints.'], Response::HTTP_BAD_REQUEST);
         }
-
 
         try {
 
@@ -352,13 +390,13 @@ class AlbumReviewAPIController extends FOSRestController
         /* @var Album $album */
         $album = $em->getRepository(Album::class)->find($slug);
         if(!$album) {
-            return new JsonResponse([self::ERROR => 'Album not found'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([self::ERROR => 'Album with identifier [' . $slug .'] was not found!'], Response::HTTP_NOT_FOUND);
         }
 
         /* @var Review $review */
         $review = $em->getRepository(Review::class)->find($id);
         if(!$review) {
-            return new JsonResponse([self::ERROR => 'Review not found'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([self::ERROR => 'Review with identifier [' . $id .'] was not found!'], Response::HTTP_NOT_FOUND);
         }
 
         if($review->getReviewer() !== $currentUser && !in_array('ROLE_ADMIN', $currentUser->getRoles())) {
@@ -468,7 +506,8 @@ class AlbumReviewAPIController extends FOSRestController
         /* @var Album $album */
         $album = $em->getRepository(Album::class)->find($slug);
         if(!$album) {
-            return new JsonResponse([self::ERROR => 'Album not found'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([self::ERROR => 'Album with identifier [' . $slug .'] was not found!'],
+                Response::HTTP_NOT_FOUND);
         }
 
         /* @var Review $review */

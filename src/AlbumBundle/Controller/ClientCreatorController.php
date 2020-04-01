@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ClientCreatorController extends Controller
 {
     /**
-     * Retrieve a client.
+     * Retrieve client id and client secret.
      *
      * @Rest\Get("/clients")
      *

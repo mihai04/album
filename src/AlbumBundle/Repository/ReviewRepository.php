@@ -4,6 +4,7 @@
 namespace AlbumBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 
@@ -32,6 +33,46 @@ class ReviewRepository extends EntityRepository
             ->setParameter(':albumID', $albumID);
 
         return $qb->getQuery();
+    }
+
+    /**
+     * Gets all reviews for the given User ID.
+     *
+     * @param $reviewID
+     * @param $userID
+     *
+     * @return Query
+     * @throws NonUniqueResultException
+     */
+    public function getReview($userID, $reviewID)
+    {
+        $qb = $this->createQueryBuilder('review');
+        $qb->where('review.id = :reviewID')
+            ->andWhere('review.reviewer = :userID')
+            ->setParameter(':userID', $userID)
+            ->setParameter(':reviewID', $reviewID);
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * Returns review.
+     *
+     * @param $albumID
+     * @param $reviewID
+     *
+     * @return Query
+     * @throws NonUniqueResultException
+     */
+    public function getReviewByAlbum($albumID, $reviewID)
+    {
+        $qb = $this->createQueryBuilder('review');
+        $qb->where('review.id = :reviewID')
+            ->andWhere('review.album = :albumID')
+            ->setParameter(':albumID', $albumID)
+            ->setParameter(':reviewID', $reviewID);
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**

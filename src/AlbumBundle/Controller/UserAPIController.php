@@ -54,6 +54,16 @@ class UserAPIController extends FOSRestController
      *     description="The field represents the limit of items per page to be returned."
      * ),
      *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Invalid data given."
+     * )
+     *
+     * @SWG\Response(
+     *     response=403,
+     *     description="Fobidden action."
+     * )
+     *
      * @SWG\Tag(name="users"),
      *
      * @Security(name="Bearer")
@@ -76,10 +86,22 @@ class UserAPIController extends FOSRestController
 
         try {
 
-            $clientLimit = $request->get('limit');
-            $limit = $this->getParameter('page_limit');
-            if (null !== $clientLimit && ($clientLimit > 1 && $clientLimit < 101)) {
+            $clientLimit = (int) $request->get('limit');
+            $limit = $this->getParameter('albums_limit');
+            if (!is_null($clientLimit) && $clientLimit != 0) {
+                if (!($clientLimit > 0 && $clientLimit < 101)) {
+                    return $this->handleView($this->view([self::ERROR => 'The limit parameter is out of bounds (1-100).'],
+                        Response::HTTP_BAD_REQUEST));
+                }
                 $limit = $clientLimit;
+            }
+
+            $clientPage = (int) $request->get('page');
+            if (!is_null($clientPage) && $clientPage != 0) {
+                if (!($clientPage >= 0)) {
+                    return $this->handleView($this->view([self::ERROR => 'The page parameter is out of bonds (<1) .'],
+                        Response::HTTP_BAD_REQUEST));
+                }
             }
 
             $paginatedCollection = $this->get('pagination_factory')->createCollection($qb, $request,
@@ -93,7 +115,7 @@ class UserAPIController extends FOSRestController
     }
 
     /**
-     * List a user specified by client.
+     * List a user specified by client (only admins).
      *
      * @Rest\Get("/users/{id}")
      *
@@ -111,6 +133,17 @@ class UserAPIController extends FOSRestController
      *     type="string",
      *     description="The field represents the id of a user."
      * )
+     *
+     * @SWG\Response(
+     *     response=404,
+     *     description="User does not exist."
+     * ),
+     *
+     * @SWG\Response(
+     *     response=403,
+     *     description="Fobidden action."
+     * )
+     *
      * @SWG\Tag(name="users")
      * @Security(name="Bearer")
      *
@@ -119,12 +152,20 @@ class UserAPIController extends FOSRestController
      */
     public function getUserAction($id) {
 
+        /** @var User $user */
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        if(!in_array('ROLE_ADMIN', $user->getRoles())) {
+            return $this->handleView($this->view([self::ERROR => 'Forbidden action you do not have admin rights.'],
+                Response::HTTP_FORBIDDEN));
+        }
+
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository(User::class)->find($id);
 
         // check if user exists.
         if(!$user) {
-            return new JsonResponse([self::ERROR => 'User with id [' . $id .'] was not found!'],
+            return new JsonResponse([self::ERROR => 'User with id [' . $id .'] was not found.'],
                 Response::HTTP_NOT_FOUND);
         }
 

@@ -9,7 +9,7 @@ namespace AlbumBundle\Entity;
  */
 class PaginatedCollection
 {
-    private $items;
+    private $results;
     private $total;
     private $count;
     private $links = array();
@@ -17,14 +17,14 @@ class PaginatedCollection
     /**
      * PaginatedCollection constructor.
      *
-     * @param $items
+     * @param $results
      * @param $total
      */
-    public function __construct($items, $total)
+    public function __construct($results, $total)
     {
-        $this->items = $items;
+        $this->results = $results;
         $this->total = $total;
-        $this->count = count($items);
+        $this->count = count($results);
     }
 
     public function addLink($ref, $url)

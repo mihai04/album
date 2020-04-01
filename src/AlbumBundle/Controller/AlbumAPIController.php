@@ -79,6 +79,11 @@ class AlbumAPIController extends FOSRestController
      *     description="The field represents the limit of results per page."
      * ),
      *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Invalid data given."
+     * )
+     *
      * @SWG\Tag(name="albums")
      * @Security(name="Bearer")
      *
@@ -93,11 +98,22 @@ class AlbumAPIController extends FOSRestController
             ->findAllQueryBuilder();
 
         try {
-
             $clientLimit = (int) $request->get('limit');
-            $limit = $this->getParameter('page_limit');
-            if (null !== $clientLimit && ($clientLimit > 0 && $clientLimit < 101)) {
+            $limit = $this->getParameter('albums_limit');
+            if (!is_null($clientLimit) && $clientLimit != 0) {
+                if (!($clientLimit > 0 && $clientLimit < 101)) {
+                    return $this->handleView($this->view([self::ERROR => 'The limit parameter is out of bounds (1-100).'],
+                        Response::HTTP_BAD_REQUEST));
+                }
                 $limit = $clientLimit;
+            }
+
+            $clientPage = (int) $request->get('page');
+            if (!is_null($clientPage)) {
+                if (!($clientPage >= 0)) {
+                    return $this->handleView($this->view([self::ERROR => 'The page parameter is out of bonds (<1) .'],
+                        Response::HTTP_BAD_REQUEST));
+                }
             }
 
             $paginatedCollection = $this->get('pagination_factory')->createCollection($qb, $request,
@@ -126,7 +142,7 @@ class AlbumAPIController extends FOSRestController
      *
      * @SWG\Response(
      *     response=404,
-     *     description="Album does not exist!"
+     *     description="Album does not exist."
      * )
      * @SWG\Parameter(
      *     name="id",
@@ -203,12 +219,12 @@ class AlbumAPIController extends FOSRestController
      *
      *@SWG\Response(
      *     response=400,
-     *     description="Invalid data given: JSON format required!"
+     *     description="Invalid data given: JSON format required."
      * )
      *
      * @SWG\Response(
      *     response=409,
-     *     description="There is already an album with this ISRC!"
+     *     description="There is already an album with this ISRC."
      * )
      *
      * @SWG\Tag(name="albums")
@@ -248,8 +264,8 @@ class AlbumAPIController extends FOSRestController
                     $album->setImage($fileName);
 
                 } catch (\Exception $e) {
-                    return new JsonResponse([self::ERROR => 'Invalid based 64 encoded image. Add 
-                    [data:image/jpeg;base64,]'], Response::HTTP_BAD_REQUEST);
+                    return new JsonResponse([self::ERROR => 'Invalid based 64 encoded image. Add [data:image/jpeg;base64,]'],
+                        Response::HTTP_BAD_REQUEST);
                 }
 
                 $trackResults = $form['albumTracks']->getData();
@@ -293,7 +309,11 @@ class AlbumAPIController extends FOSRestController
                     Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
-            return $this->handleView($this->view($album, Response::HTTP_CREATED));
+//            return $this->handleView($this->view($album, Response::HTTP_CREATED));
+            return $this->handleView($this->view($album, Response::HTTP_CREATED)->setLocation(
+                $this->generateUrl('view_reviews_by_album', ['id' => $album->getId()])
+            ));
+
         } else {
             return $this->handleView($this->view($form, Response::HTTP_BAD_REQUEST));
         }
@@ -355,12 +375,12 @@ class AlbumAPIController extends FOSRestController
      * )
      * @SWG\Response(
      *     response=404,
-     *     description="Album does not exist!"
+     *     description="Album does not exist."
      * )
      *
      * @SWG\Response(
      *     response=403,
-     *     description="Fobidden action!"
+     *     description="Fobidden action."
      * )
      *
      * @SWG\Tag(name="albums")
@@ -538,7 +558,7 @@ class AlbumAPIController extends FOSRestController
      *
      * @SWG\Response(
      *     response=403,
-     *     description="Fobidden action!"
+     *     description="Fobidden action."
      * )
      *
      * @SWG\Parameter(

@@ -34,7 +34,6 @@ class APIError
         return array_merge(
             $this->extraData,
             array(
-                'status' => $this->statusCode,
                 'error' => $this->errorMessage,
             )
         );

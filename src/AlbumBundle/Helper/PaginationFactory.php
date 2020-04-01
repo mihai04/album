@@ -46,14 +46,17 @@ class PaginationFactory
 
         $page = $request->query->get('page', 1);
         $pagerfanta->setMaxPerPage($maxPerPage);
+        if ($page == 0) {
+            $page = 1;
+        }
         $pagerfanta->setCurrentPage($page);
 
-        $items = [];
+        $results = [];
         foreach ($pagerfanta->getCurrentPageResults() as $result) {
-            $items[] = $result;
+            $results[] = $result;
         }
 
-        return array($pagerfanta, $page, $items);
+        return array($pagerfanta, $page, $results);
     }
 
     /**
@@ -71,9 +74,9 @@ class PaginationFactory
     public function createCollectionBySlug(Query $qb, Request $request, $maxPerPage, $route, $slug,
                                      array $routeParameters = array()) {
 
-        list($pagerfanta, $page, $items) = self::getItems($qb, $request, $maxPerPage);
+        list($pagerfanta, $page, $results) = self::getItems($qb, $request, $maxPerPage);
 
-        $paginatedCollection = new PaginatedCollection($items, $pagerfanta->getNbPages());
+        $paginatedCollection = new PaginatedCollection($results, $pagerfanta->getNbPages());
 
         $createLinkUrl = function ($slug, $targetPage) use ($route, $routeParameters) {
             return $this->router->generate($route, array_merge($routeParameters,
@@ -108,16 +111,16 @@ class PaginationFactory
     public function createCollection(Query $qb, Request $request, $maxPerPage, $route,
                                      array $routeParameters = array()) {
 
-        list($pagerfanta, $page, $items) = self::getItems($qb, $request, $maxPerPage);
+        list($pagerfanta, $page, $results) = self::getItems($qb, $request, $maxPerPage);
 
-        $paginatedCollection = new PaginatedCollection($items, $pagerfanta->getNbPages());
+        $paginatedCollection = new PaginatedCollection($results, $pagerfanta->getNbPages());
 
         $createLinkUrl = function ($targetPage) use ($route, $routeParameters) {
             return $this->router->generate($route, array_merge($routeParameters,
                 array('page' => $targetPage)));
         };
 
-        $paginatedCollection->addLink('self', $createLinkUrl( $page));
+        $paginatedCollection->addLink('self', $createLinkUrl($page));
         $paginatedCollection->addLink('first', $createLinkUrl(1));
         $paginatedCollection->addLink('last', $createLinkUrl($pagerfanta->getNbPages()));
 

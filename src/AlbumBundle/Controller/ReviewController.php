@@ -115,7 +115,7 @@ class ReviewController extends Controller
         $paginator = $this->get('knp_paginator');
         $reviews = $paginator->paginate(
             $query,
-            $request->query->getInt('page', 1), $this->getParameter('page_limit')
+            $request->query->getInt('page', 1), $this->getParameter('albums_limit')
         );
 
         $totalReviews = 0;

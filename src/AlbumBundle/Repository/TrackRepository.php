@@ -4,6 +4,7 @@
 namespace AlbumBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query as QueryAlias;
 
 /**
@@ -26,6 +27,28 @@ class TrackRepository extends EntityRepository
             ->setParameter(':albumID', $albumID);
 
         return $qb->getQuery();
+    }
+
+    /**
+     * Returns track.
+     *
+     * @param $albumID
+     * @param $trackID
+     *
+     * @return QueryAlias
+     * @throws NonUniqueResultException
+     */
+    public function getTrack($albumID, $trackID) {
+
+        $qb = $this->createQueryBuilder('track');
+
+
+        $qb->where('track.id = :trackID')
+            ->andWhere('track.album = :albumID')
+            ->setParameter(':albumID', $albumID)
+            ->setParameter(':trackID', $trackID);
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**

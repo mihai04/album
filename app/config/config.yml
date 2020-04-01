@@ -12,6 +12,10 @@ parameters:
     uploads_directory: '%kernel.project_dir%/web/public/uploads_directory'
     commandName: 'populate:search:entities'
     page_limit: 6
+    albums_limit: 10
+    users_limit: 10
+    tracks_limit: 10
+    reviews_limit: 10
     trending_tracks_limit: 6
     skiddle_limit: 5
     default_limit: 10
@@ -178,6 +182,7 @@ nelmio_api_doc:
   areas:
     path_patterns: # an array of regexps
       - ^/api
+      - ^/clients
 
 # FOSOAuthServerBundle Configuration
 fos_oauth_server:
