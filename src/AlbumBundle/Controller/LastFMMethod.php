@@ -7,7 +7,7 @@ namespace AlbumBundle\Controller;
  * Class LastFMMethod
  * @package AlbumBundle\Controller
  */
-class LastFMMethod
+abstract class LastFMMethod
 {
     const ALBUM_INFO = 'album.getinfo';
     const SEARCH_ALBUM = 'album.search';

@@ -7,7 +7,7 @@ namespace AlbumBundle\Service;
 use AlbumBundle\Entity\FestivalsLocation;
 use GuzzleHttp\Client;
 
-class SkiddleService
+class SkiddleService implements APIConsume
 {
     /** @const string  */
     const SKIDDLE_FM_API = "https://www.skiddle.com/";
@@ -17,9 +17,6 @@ class SkiddleService
 
     /** @const string */
     const EVENTS = "/events/search/";
-
-    /** @const string  */
-    const SKIDDLE_API_KEY = "bef4d493e49f9bd7ac87100d7b4f4570";
 
     /** @const description */
     const DEFAULT_DESCRIPTION = 1;
@@ -50,13 +47,14 @@ class SkiddleService
 
     /**
      * @param FestivalsLocation $festivalsLocation
+     * @param $apiKey
      * @return mixed
      */
-    public function consumeEvents(FestivalsLocation $festivalsLocation)
+    public function consumeEvents(FestivalsLocation $festivalsLocation, $apiKey)
     {
         $options = [
             'query' => [
-                'api_key' => self::SKIDDLE_API_KEY,
+                'api_key' => $apiKey,
                 'limit' => $festivalsLocation->getLimit(),
                 'eventcode' => $festivalsLocation->getEvent(),
                 'description' => self::DEFAULT_DESCRIPTION,

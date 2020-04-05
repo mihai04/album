@@ -8,7 +8,6 @@ use AlbumBundle\Entity\FestivalsLocation;
 use AlbumBundle\Service\SkiddleService;
 use CMEN\GoogleChartsBundle\GoogleCharts\Charts\CalendarChart;
 use DateTime;
-use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,9 +23,13 @@ class SkiddleController extends Controller
     /** @var SkiddleService $skiddleService */
     private $skiddleService;
 
-    public function __construct(SkiddleService $skiddleService)
+    /** @var string */
+    private $apiKey;
+
+    public function __construct(SkiddleService $skiddleService, $apiKey)
     {
         $this->skiddleService = $skiddleService;
+        $this->apiKey = $apiKey;
     }
 
     /**
@@ -39,7 +42,7 @@ class SkiddleController extends Controller
         try {
 
             $festivalsLocation = $this->getfestivalDetails();
-            $skiddlefestivals = $this->get('skiddle.events')->consumeEvents($festivalsLocation);
+            $skiddlefestivals = $this->skiddleService->consumeEvents($festivalsLocation, $this->apiKey);
 
             if (array_key_exists('results', $skiddlefestivals)) {
 
@@ -187,7 +190,7 @@ class SkiddleController extends Controller
         try {
 
             $festivalsLocation = $this->getfestivalDetails();
-            $skiddlefestivals = $this->get('skiddle.events')->consumeEvents($festivalsLocation);
+            $skiddlefestivals = $this->skiddleService->consumeEvents($festivalsLocation, $this->apiKey);
 
             if (array_key_exists('results', $skiddlefestivals)) {
                 $calendarData = [];

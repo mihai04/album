@@ -6,7 +6,6 @@ namespace AlbumBundle\Controller;
 
 use AlbumBundle\Entity\APIError;
 use AlbumBundle\Entity\Review;
-use AlbumBundle\Entity\Track;
 use AlbumBundle\Entity\User;
 use AlbumBundle\Exceptions\APIErrorException;
 use Doctrine\ORM\NonUniqueResultException;

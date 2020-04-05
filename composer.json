@@ -33,6 +33,7 @@
         "elao/enum": "^1.5",
         "fortawesome/font-awesome": "^5.12",
         "friendsofsymfony/oauth-server-bundle": "^1.6",
+        "doctrine/doctrine-cache-bundle": "^1.2",
         "friendsofsymfony/rest-bundle": "^2.7",
         "friendsofsymfony/user-bundle": "^2.1",
         "guzzlehttp/guzzle": "~6.2",

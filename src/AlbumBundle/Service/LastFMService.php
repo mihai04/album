@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Class LastFMService
  * @package AlbumBundle\Helper
  */
-class LastFMService
+class LastFMService implements APIConsume
 {
     /** @const string  */
     const LAST_FM_API = "http://ws.audioscrobbler.com";
@@ -22,28 +22,7 @@ class LastFMService
     const JSON_FORMAT = "json";
 
     /** @const string  */
-    const LAST_FM_API_KEY = "f63ac290937d369e1ac20dceab124169";
-
-    /** @const string  */
     const API_VERSION = "/2.0/";
-
-    /** @var ContainerInterface */
-    private $container;
-
-    /** @var EntityManagerInterface */
-    private $em;
-
-    /**
-     * LastFMService constructor.
-     *
-     * @param ContainerInterface $container
-     * @param EntityManagerInterface $em
-     */
-    public function __construct(ContainerInterface $container, EntityManagerInterface $em)
-    {
-        $this->container = $container;
-        $this->em = $em;
-    }
 
     /**
      * @param array $options
@@ -58,7 +37,7 @@ class LastFMService
             // the default time out
             'timeout' => 2.0,
             'default' => [
-                // a returns response even if there is a failure on the server
+                //returns a response even if there is a failure on the server
                 'exceptions' => false,
             ]]);
 
@@ -73,14 +52,15 @@ class LastFMService
      * @param string $name
      * @param integer $limit
      *
+     * @param $apiKey
      * @return mixed
      */
-    public function searchAlbums($name, $limit)
+    public function searchAlbums($name, $limit, $apiKey)
     {
         $options = [
             'query' => [
-                'method' => 'album.search',
-                'api_key' => self::LAST_FM_API_KEY,
+                'method' => LastFMMethod::SEARCH_ALBUM,
+                'api_key' => $apiKey,
                 'album' => $name,
                 'limit' => $limit,
                 'format' => self::JSON_FORMAT
@@ -94,14 +74,15 @@ class LastFMService
      * @param $albumName
      * @param $artistName
      *
+     * @param $apiKey
      * @return mixed
      */
-    public function getAlbumInfo($albumName, $artistName)
+    public function getAlbumInfo($albumName, $artistName, $apiKey)
     {
         $options = [
             'query' => [
                 'method' => LastFMMethod::ALBUM_INFO,
-                'api_key' => self::LAST_FM_API_KEY,
+                'api_key' => $apiKey,
                 'artist' => $artistName,
                 'album' => $albumName,
                 'format' => self::JSON_FORMAT
@@ -115,14 +96,15 @@ class LastFMService
      * @param $artistName
      * @param $trackName
      *
+     * @param $apiKey
      * @return mixed
      */
-    public function getTrackInfo($artistName, $trackName)
+    public function getTrackInfo($artistName, $trackName, $apiKey)
     {
         $options = [
             'query' => [
                 'method' => LastFMMethod::TRACK_INFO,
-                'api_key' => self::LAST_FM_API_KEY,
+                'api_key' => $apiKey,
                 'artist' => $artistName,
                 'track' => $trackName,
                 'format' => self::JSON_FORMAT
@@ -134,15 +116,16 @@ class LastFMService
 
     /**
      * @param $limit
+     * @param $apiKey
      *
      * @return mixed
      */
-    public function getTopTracks($limit) {
+    public function getTopTracks($limit, $apiKey) {
 
         $options = [
             'query' => [
                 'method' => LastFMMethod::CHART_TOP_TRACKS,
-                'api_key' => self::LAST_FM_API_KEY,
+                'api_key' => $apiKey,
                 'limit' => $limit,
                 'format' => self::JSON_FORMAT
             ]
@@ -154,15 +137,16 @@ class LastFMService
     /**
      * @param $artist
      * @param $limit
+     * @param $apiKey
      *
      * @return mixed
      */
-    public function getSimilar($artist, $limit) {
+    public function getSimilar($artist, $limit, $apiKey) {
 
         $options = [
             'query' => [
                 'method' => LastFMMethod::ARTIST_SIMILAR,
-                'api_key' => self::LAST_FM_API_KEY,
+                'api_key' => $apiKey,
                 'artist' => $artist,
                 'limit' => $limit,
                 'format' => self::JSON_FORMAT
@@ -172,6 +156,4 @@ class LastFMService
 
         return $this->consumeMusic($options);
     }
-
-
 }

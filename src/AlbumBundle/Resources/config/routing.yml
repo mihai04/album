@@ -91,4 +91,8 @@ live_search:
 
 save_searched_album:
     path:     /saveAlbum
-    defaults: { _controller: AlbumBundle\Controller\LastFMController::saveAlbum }
+    defaults: { _controller: AlbumBundle\Controller\LastFMController::saveAlbumAction }
+
+napster_tracks:
+    path:     /tracks
+    defaults: { _controller: AlbumBundle\Controller\NapsterController:viewTopTracksAction }

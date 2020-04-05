@@ -60,7 +60,12 @@ class AlbumHelper
                 }
 
                 if (array_key_exists('summary', $result['album']['wiki'])) {
-                    $album->setSummary($result['album']['wiki']['summary']);
+                    try {
+                        $album->setSummary(preg_replace("/<a href=.*?>(.*?)<\/a>/","",
+                            $result['album']['wiki']['summary']));
+                    } catch (\Exception $exception) {
+
+                    }
                 }
             }
 

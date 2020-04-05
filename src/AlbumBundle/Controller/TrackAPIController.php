@@ -69,7 +69,7 @@ class TrackAPIController extends FOSRestController
      *     description="The field represents the id of an album."
      * )
      * @SWG\Tag(name="tracks")
-     * @Security(name="Bearer")
+     * @Security(name="OAuth2")
      *
      * @param Request $request
      * @param $slug

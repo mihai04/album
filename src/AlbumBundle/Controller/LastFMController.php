@@ -31,14 +31,19 @@ class LastFMController extends Controller
     /** @const string  */
     const POPULATE_SEARCH_ENTITIES = 'populate:search:entities';
 
+    /** @var string */
+    private $apiKey;
+
     /**
      * LastFMController constructor.
      *
      * @param LastFMService $lastFMService
+     * @param $apiKey
      */
-    public function __construct(LastFMService $lastFMService)
+    public function __construct(LastFMService $lastFMService, $apiKey)
     {
         $this->lastFMService = $lastFMService;
+        $this->apiKey = $apiKey;
     }
 
 
@@ -53,12 +58,13 @@ class LastFMController extends Controller
             $albumName = $request->get("album");
             $artistName = $request->get("artist");
 
-            $result = $this->lastFMService->getAlbumInfo($albumName, $artistName);
+            $result = $this->lastFMService->getAlbumInfo($albumName, $artistName, $this->apiKey);
 
             /** @var AlbumResult $albumResult */
             $albumResult = AlbumHelper::processAlbum($result);
 
-            $similar = $this->lastFMService->getSimilar($artistName, $this->getParameter('similar_artist'));
+            $similar = $this->lastFMService->getSimilar($artistName, $this->getParameter('similar_artist'),
+                $this->apiKey);
             $similarArtists = AlbumHelper::processSimilarArtistsResults($similar);
 
             return $this->render('AlbumBundle:Default:viewSearchedAlbum.html.twig', [
@@ -80,14 +86,14 @@ class LastFMController extends Controller
      * @param Request $request
      * @return mixed
      */
-    function saveAlbum(Request $request) {
+    function saveAlbumAction(Request $request) {
 
         try {
 
             $albumName = $request->get("album");
             $artistName = $request->get("artist");
 
-            $result = $this->lastFMService->getAlbumInfo($albumName, $artistName);
+            $result = $this->lastFMService->getAlbumInfo($albumName, $artistName, $this->apiKey);
 
             /** @var AlbumResult $albumResult */
             $albumResult = AlbumHelper::processAlbum($result);
@@ -107,13 +113,12 @@ class LastFMController extends Controller
             $em->flush();
 
             $this->updateEntitiesCommand();
+            $this->addFlash('success', 'Album '. $album->getTitle() .' was successfully created.');
 
         } catch (\Exception $e) {
 
             return $this->render('AlbumBundle:Default:index.html.twig', ['error' => $e->getMessage()]);
         }
-
-        $this->addFlash('success', 'Album '. $album->getTitle() .' was successfully created.');
 
         return$this->redirect($this->generateUrl('view_reviews_by_album', array('id' => $album->getId())),
             Response::HTTP_PERMANENTLY_REDIRECT);
@@ -132,7 +137,7 @@ class LastFMController extends Controller
 
             $limit = $this->getParameter('search_limit');
 
-            $results = $this->lastFMService->searchAlbums($searchTerm, $limit);
+            $results = $this->lastFMService->searchAlbums($searchTerm, $limit, $this->apiKey);
 
             if (array_key_exists("albummatches", $results['results'])) {
 
@@ -174,7 +179,7 @@ class LastFMController extends Controller
         try {
 
             $limit = $this->getParameter('trending_tracks_limit');
-            $results = $this->lastFMService->getTopTracks($limit);
+            $results = $this->lastFMService->getTopTracks($limit, $this->apiKey);
 
             $tracks = [];
             if (array_key_exists('tracks', $results)) {

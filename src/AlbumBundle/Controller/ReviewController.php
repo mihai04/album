@@ -25,6 +25,9 @@ class ReviewController extends Controller
     /** @var LastFMService $lastFMService */
     private $lastFMService;
 
+    /** @const string  */
+    const LAST_FM_API_KEY = "f63ac290937d369e1ac20dceab124169";
+
     /**
      * LastFMController constructor.
      *
@@ -132,7 +135,8 @@ class ReviewController extends Controller
             $albumRating = $totalRating / $totalReviews;
         }
 
-        $similar = $this->lastFMService->getSimilar($album->getArtist(), $this->getParameter('similar_artist'));
+        $similar = $this->lastFMService->getSimilar($album->getArtist(), $this->getParameter('similar_artist'),
+            self::LAST_FM_API_KEY);
         $similarArtists = AlbumHelper::processSimilarArtistsResults($similar);
 
         return $this->render('AlbumBundle:Default:viewByAlbum.html.twig', [

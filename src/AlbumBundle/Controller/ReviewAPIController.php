@@ -3,11 +3,13 @@
 
 namespace AlbumBundle\Controller;
 
+use AlbumBundle\Entity\Album;
 use AlbumBundle\Entity\APIError;
 use AlbumBundle\Entity\Review;
 use AlbumBundle\Entity\User;
 use AlbumBundle\Exceptions\APIErrorException;
 use AlbumBundle\Form\AddReviewFormType;
+use Doctrine\ORM\NonUniqueResultException;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -20,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ReviewAPIController
+ *
  * @package AlbumBundle\Controller
  */
 class ReviewAPIController extends FOSRestController
@@ -31,9 +34,9 @@ class ReviewAPIController extends FOSRestController
     const SUCCESS = 'success';
 
     /**
-     * List all reviews following a pagination system.
+     * List all reviews for a specific album following a pagination system.
      *
-     * @Rest\Get("/reviews")
+     * @Rest\Get("/albums/{slug}/reviews")
      *
      * @SWG\Response(
      *     response=200,
@@ -42,6 +45,16 @@ class ReviewAPIController extends FOSRestController
      *         type="array",
      *         @Model(type=AlbumBundle\Entity\Review::class)
      *     )
+     * ),
+     *
+     * @SWG\Response(
+     *     response=404,
+     *     description="Review does not exist."
+     * ),
+     *
+     *  @SWG\Response(
+     *     response=400,
+     *     description="Invalid data given."
      * ),
      *
      * @SWG\Parameter(
@@ -55,32 +68,38 @@ class ReviewAPIController extends FOSRestController
      *     name="limit",
      *     in="query",
      *     type="integer",
-     *     description="The field represents the limit of items per page to be returned."
+     *     description="The field represents the limit of results per page."
      * ),
      *
      * @SWG\Parameter(
-     *     name="page",
-     *     in="query",
+     *     name="slug",
+     *     in="path",
      *     type="string",
      *     description="The field represents the id of an album."
      * ),
      *
-     * @SWG\Tag(name="reviews"),
+     * @SWG\Tag(name="reviews per album"),
      *
      * @Security(name="Bearer")
      *
      * @param Request $request
+     * @param $slug
      * @return JsonResponse|Response
      */
-    public function getReviewsAction(Request $request)
+    public function getReviewsAction(Request $request, $slug)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $qb = $em->getRepository(Review::class)->findAllQueryBuilder();
+        $album = $em->getRepository(Album::class)->find($slug);
+
+        if (!$album) {
+            return new JsonResponse(['error' => 'Album with id [' . $slug .'] was not found!'],
+                Response::HTTP_NOT_FOUND);
+        }
 
         try {
 
-            $clientLimit = $request->get('limit');
+            $clientLimit = (int)$request->get('limit');
             $limit = $this->getParameter('reviews_limit');
             if (!is_null($clientLimit) && $clientLimit != 0) {
                 if (!($clientLimit > 0 && $clientLimit < 101)) {
@@ -90,18 +109,21 @@ class ReviewAPIController extends FOSRestController
                 $limit = $clientLimit;
             }
 
-            $clientPage = (int) $request->get('page');
-            if (!is_null($clientPage)) {
+            $clientPage = (int)$request->get('page');
+            if (!is_null($clientPage) && $clientPage != 0) {
                 if (!($clientPage >= 0)) {
                     return $this->handleView($this->view([self::ERROR => 'The page parameter is out of bonds (<1) .'],
                         Response::HTTP_BAD_REQUEST));
                 }
             }
 
-            $paginatedCollection = $this->get('pagination_factory')->createCollection($qb->getQuery(), $request,
-                $limit, "api_reviews_get_reviews");
+            $qb = $em->getRepository(Review::class)
+                ->getReviewsByAlbumID($slug);
 
-        } catch (OutOfRangeCurrentPageExceptionAlias $e) {
+            $paginatedCollection = $this->get('pagination_factory')->createCollectionBySlug($qb, $request,
+                $limit, "api_album_reviews_get_album_reviews", $slug);
+
+        }   catch (OutOfRangeCurrentPageExceptionAlias $e) {
             $apiError = new APIError(Response::HTTP_BAD_REQUEST, $e->getMessage());
             throw new APIErrorException($apiError);
         }
@@ -109,9 +131,9 @@ class ReviewAPIController extends FOSRestController
     }
 
     /**
-     * List a review specified by client.
+     * List a review for an album specified by client.
      *
-     * @Rest\Get("/reviews/{id}")
+     * @Rest\Get("/albums/{slug}/reviews/{id}")
      *
      * @SWG\Response(
      *     response=200,
@@ -125,41 +147,185 @@ class ReviewAPIController extends FOSRestController
      *     response=404,
      *     description="Resource does not exist!"
      * )
+     *
+     * @SWG\Parameter(
+     *     name="slug",
+     *     in="path",
+     *     type="string",
+     *     description="The field represents the id of an album."
+     * )
+     *
      * @SWG\Parameter(
      *     name="id",
      *     in="path",
      *     type="string",
      *     description="The field represents the id of a review."
      * )
-     * @SWG\Tag(name="reviews")
+     *
+     * @SWG\Tag(name="reviews per album")
      * @Security(name="Bearer")
      *
+     * @param $slug
      * @param $id
      * @return JsonResponse|Response
      */
-    public function getReviewAction($id)
+    public function getReviewAction($slug, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $review = $em->getRepository(Review::class)->find($id);
+        $album = $em->getRepository(Album::class)
+            ->find($slug);
 
-        // check if review exists
-        if(!$review) {
-            return new JsonResponse([self::ERROR => 'Review with identifier [' . $id .'] was not found!'],
+        // check if album exists
+        if (!$album) {
+            return new JsonResponse([self::ERROR => 'Album with identifier [' . $slug . '] was not found!'],
                 Response::HTTP_NOT_FOUND);
         }
 
-        return $this->handleView($this->view($review, Response::HTTP_OK));
+        try {
+            $review = $em->getRepository(Review::class)->getReviewByAlbum($slug, $id);
+            // check if album exists
+            if(!$review) {
+                return new JsonResponse([self::ERROR => 'Review with identifier [' . $id .'] was not found!'],
+                    Response::HTTP_NOT_FOUND);
+            }
+
+            return $this->handleView($this->view($review, Response::HTTP_OK));
+
+        } catch (NonUniqueResultException $e) {
+            return new JsonResponse([self::ERROR => 'Failed to find review with id [' . $id .'] was not found for album with
+            id [' . $slug . '].'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
-     * Modify a review based on id.
+     * Create a review for a specified album id.
      *
-     * @Rest\Put("/reviews/{id}")
+     * @Rest\Post("/albums/{slug}/reviews")
+     *
+     * @SWG\Post(
+     *     operationId="createReview",
+     *     summary="Create new review entry",
+     *     @SWG\Parameter( 
+     *          name="slug", 
+     *          in="path", 
+     *          description="The field represent the album id.", 
+     *          required=true, 
+     *          type="string" 
+     *     ),
+     *     @SWG\Parameter(
+     *         name="json payload",
+     *         in="body",
+     *         required=true,
+     *         @SWG\Schema(
+     *              type="object",
+     *              @SWG\Property(property="title", type="string", example="My Review Title"), 
+     *              @SWG\Property(property="review", type="string", example="My Album Review"),
+     *              @SWG\Property(property="rating", type="integer", example=4),
+     *           )
+     *        )
+     *     ),
+     * ),
+
+     * @SWG\Response(
+     *     response=201,
+     *     description="Successfully created a review for the specified album.",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @Model(type=AlbumBundle\Entity\Review::class)
+     *     ),
+     * ),
+     *
+     * @SWG\Response(
+     *     response=400,
+     *     description="Invalid data given: JSON format required!"
+     * ),
+     *
+     * @SWG\Response(
+     *     response=404,
+     *     description="Album does not exist!"
+     * ),
+     *
+     * @SWG\Tag(name="reviews per album"),
+     * @Security(name="Bearer")
+     *
+     * @param Request $request
+     * @param $slug
+     * @return JsonResponse|Response
+     */
+    public function postReviewAction(Request $request, $slug) {
+
+        /** @var User $user */
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        // the form is valid and hence create a new Review instance and persist it to the database
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var Album $album */
+        $album = $em->getRepository(Album::class)->find($slug);
+
+        // check if the album exists.
+        if(!$album) {
+            return new JsonResponse([self::ERROR => 'Album with identifier ['. $slug .'] was not found.'],
+                Response::HTTP_NOT_FOUND);
+        }
+
+        /** @var Review $review */
+        $review = new Review();
+
+        // prepare the form and disable csrf_protection
+        $form = $this->createForm(AddReviewFormType::class, $review, ['csrf_protection' => false]);
+
+        // check if the POST data is JSON format
+        if ($request->getContentType() !== 'json') {
+            return new JsonResponse([self::ERROR => 'Invalid data format, only JSON is accepted!'],
+            Response::HTTP_BAD_REQUEST);
+        }
+
+        // json decode the request content and pass it to the form
+        $form->submit(json_decode($request->getContent(), true));
+
+        // validate POST data against the form requirements
+        if (!$form->isValid()) {
+            // the form is not valid and thereby return a status code of 400
+            return new JsonResponse([self::ERROR => 'Invalid data given! Check the API documentation for parameters 
+            constraints.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+
+            $review->setReviewer($user);
+            $review->setAlbum($album);
+            $review->setTitle($form['title']->getData());
+            $review->setTimestamp(new \DateTime());
+
+            $em->persist($review);
+            $em->flush();
+
+        } catch (\Exception $e) {
+
+            return new JsonResponse([self::ERROR => 'Failed to store review for album with identifier ['. $slug .'].',
+                Response::HTTP_INTERNAL_SERVER_ERROR]);
+        }
+
+        return $this->handleView($this->view($review, Response::HTTP_CREATED));
+    }
+
+    /**
+     * Modify a review for a specified album id.
+     *
+     * @Rest\Put("/albums/{slug}/reviews/{id}")
      *
      * @SWG\Put(
      *     operationId="editReview",
-     *     summary="Edit a review based on id.",
+     *     summary="Edit review.",
+     *     @SWG\Parameter( 
+     *          name="slug", 
+     *          in="path", 
+     *          description="The field represent the album id.", 
+     *          required=true, 
+     *          type="string" 
+     *     ),
      *     @SWG\Parameter( 
      *          name="id", 
      *          in="path", 
@@ -202,32 +368,40 @@ class ReviewAPIController extends FOSRestController
      *
      * @SWG\Response(
      *     response=404,
-     *     description="Review does not exist!"
+     *     description="Resource does not exist!"
      * ),
      *
-     * @SWG\Tag(name="reviews"),
+     * @SWG\Tag(name="reviews per album"),
      * @Security(name="Bearer")
      *
      * @param Request $request
+     * @param $slug
      * @param $id
      * @return JsonResponse|Response
      */
-    public function putReviewsAction(Request $request, $id)
+    public function putReviewsAction(Request $request, $slug, $id)
     {
         /** @var User $currentUser */
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
+        /* @var Album $album */
+        $album = $em->getRepository(Album::class)->find($slug);
+        if(!$album) {
+            return new JsonResponse([self::ERROR => 'Album with identifier [' . $slug .'] was not found!'], Response::HTTP_NOT_FOUND);
+        }
+
         /* @var Review $review */
         $review = $em->getRepository(Review::class)->find($id);
         if(!$review) {
-            return new JsonResponse([self::ERROR => 'Review with ['.$id.'] was not found.'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([self::ERROR => 'Review with identifier [' . $id .'] was not found!'], Response::HTTP_NOT_FOUND);
         }
 
         if($review->getReviewer() !== $currentUser && !in_array('ROLE_ADMIN', $currentUser->getRoles())) {
             return new JsonResponse([self::ERROR => 'Forbidden action you are not the owner of this review or you 
-            do not have admin rights!'], Response::HTTP_FORBIDDEN);
+            do not have admin rights!'],
+                Response::HTTP_FORBIDDEN);
         }
 
         /* @var Review $updateReview */
@@ -256,9 +430,9 @@ class ReviewAPIController extends FOSRestController
 
             try {
                 /* @var Review $review */
+                $review->setAlbum($album);
                 $review->setTimestamp(new \DateTime());
                 $review->setReviewer($currentUser);
-                $review->setAlbum($review->getAlbum());
 
                 if(!empty($updateReview->getTitle())) {
                     $review->setTitle($updateReview->getTitle());
@@ -274,7 +448,7 @@ class ReviewAPIController extends FOSRestController
                 $em->flush();
 
             } catch (\Exception $e) {
-                return new JsonResponse([self::ERROR => 'Failed to modify review with id ['. $id .'].',
+                return new JsonResponse([self::ERROR => 'Failed to modify review for album with identifier ['. $slug .'].',
                     Response::HTTP_INTERNAL_SERVER_ERROR]);
             }
 
@@ -286,9 +460,9 @@ class ReviewAPIController extends FOSRestController
     }
 
     /**
-     * Delete a review based on id.
+     * Delete a review for a specified album id.
      *
-     * @Rest\Delete("/reviews/{id}")
+     * @Rest\Delete("/albums/{slug}/reviews/{id}")
      *
      * @SWG\Response(
      *     response=200,
@@ -302,25 +476,38 @@ class ReviewAPIController extends FOSRestController
      *     response=404,
      *     description="Review no found for the specified album!"
      * )
-
+     * @SWG\Parameter(
+     *     name="slug",
+     *     in="path",
+     *     type="string",
+     *     description="The field represents the id of an album."
+     * )
      * @SWG\Parameter(
      *     name="id",
      *     in="path",
      *     type="string",
      *     description="The field represents the id of an the review."
      * )
-     * @SWG\Tag(name="reviews")
+     * @SWG\Tag(name="reviews per album")
      * @Security(name="Bearer")
      *
+     * @param $slug
      * @param $id
      * @return JsonResponse|Response
      */
-    public function deleteReviewsAction($id) {
+    public function deleteReviewsAction($slug, $id) {
 
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
+
+        /* @var Album $album */
+        $album = $em->getRepository(Album::class)->find($slug);
+        if(!$album) {
+            return new JsonResponse([self::ERROR => 'Album with identifier [' . $slug .'] was not found!'],
+                Response::HTTP_NOT_FOUND);
+        }
 
         /* @var Review $review */
         $review = $em->getRepository(Review::class)->find($id);
@@ -340,8 +527,8 @@ class ReviewAPIController extends FOSRestController
             $em->flush();
 
         } catch (\Exception $e) {
-            return new JsonResponse([self::ERROR => 'Failed to delete review ['. $id .'].' . $e->getMessage()],
-                Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse([self::ERROR => 'Failed to delete review ['.$id.'] for album with identifier ['. $slug .'].' .
+                 $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR]);
         }
 
         return $this->handleView($this->view([self::SUCCESS => 'Review with identifier ['. $id .'] was deleted.'],

@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="wrapper">
+        <div class="row" style="background-color: #ffffff">
+            {% if tracks is not defined %}
+                <h1>No tracks data available</h1>
+            {% else %}
+            <h2> Top Weekly Tracks</h2>
+            {% for track in tracks %}
+                <tbody id="album_object_tbody">
+                <div id="albumSet">
+                    <div class="row" style="height: 75%">
+                    {% if track.albumImage is defined %}
+                        <img style="border-radius: 30px" src="{{ asset( track.albumImage ) }}" alt="album">
+                    {% endif %}
+
+                    {% if track.albumName is defined %}
+                        <p><b>Album: </b> {{ track.albumName|capitalize }} </p>
+                    {% endif %}
+
+                    {% if track.artistName is defined %}
+                        <p><b>Artist: </b> {{ track.artistName }} </p>
+                    {% endif %}
+                    </div>
+                <div>
+                    {% if track.name is defined %}
+                    <p><b>Track: </b> {{ track.name }} </p>
+                {% endif %}
+
+                {% if track.previewURL is defined %}
+                    <figure>
+                        <audio
+                                controls
+                                src="{{track.previewURL}}">
+                            Your browser does not support the
+                            <code>audio</code> element.
+                        </audio>
+                    </figure>
+                {% endif %}
+                </div>
+                </div>
+            </tbody>
+            {% endfor %}
+            {% endif %}
+    </div>
+    </div>
+{% endblock %}
+

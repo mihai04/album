@@ -8,7 +8,17 @@ services:
     tags:
       - { name: form.type }
 
+  lastfm.music:
+    class: AlbumBundle\Service\LastFMService
+    arguments:
+      - '@service_container'
+
   skiddle.events:
     class: AlbumBundle\Service\SkiddleService
+    arguments:
+      - '@service_container'
+
+  napster.tracks:
+    class: AlbumBundle\Service\NapsterService
     arguments:
       - '@service_container'

@@ -18,12 +18,16 @@ parameters:
     reviews_limit: 10
     trending_tracks_limit: 6
     skiddle_limit: 5
+    napster_tracks_limit: 6
     default_limit: 10
     skiddle_event: FEST
     page_limit_festivals: 3
     search_limit: 5
     similar_artist: 3
     client_public_id: ~
+    napster_api_key: OGQ4ZDI4MDktMmZlNi00NzRiLTg1ZGMtOWJkZGNhNTEzMzVh
+    last_fm_api_key: f63ac290937d369e1ac20dceab124169
+    skiddle_api_key: bef4d493e49f9bd7ac87100d7b4f4570
 
 framework:
     #esi: ~
@@ -209,3 +213,9 @@ fos_rest:
 
 cmen_google_charts:
   version: "45"
+
+# DoctrineCacheBundle Configuration
+doctrine_cache:
+  providers:
+    my_cache_system:
+      type: file_system

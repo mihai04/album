@@ -50,10 +50,26 @@ services:
     AlbumBundle\:
         resource: '../../src/AlbumBundle/*'
 
+    # pagination
     pagination_factory:
         class: AlbumBundle\Helper\PaginationFactory
         arguments: ['@router']
         public: true
+
+    AlbumBundle\Controller\NapsterController:
+        arguments:
+            - '@napster.tracks'
+            - '%napster_api_key%'
+
+    AlbumBundle\Controller\LastFMController:
+        arguments:
+            - '@lastfm.music'
+            - '%last_fm_api_key%'
+
+    AlbumBundle\Controller\SkiddleController:
+        arguments:
+            - '@skiddle.events'
+            - '%skiddle_api_key%'
 
     # Exception listener
     AlbumBundle\EventListener\ExceptionListener:

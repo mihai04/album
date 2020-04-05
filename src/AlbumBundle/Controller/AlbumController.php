@@ -12,6 +12,7 @@ use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Exception;
 use Knp\Component\Pager\Paginator;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -55,6 +56,7 @@ class AlbumController extends Controller
      * @param Request $request
      *
      * @return Response
+     *
      */
     public function indexAction(Request $request)
     {
@@ -101,10 +103,13 @@ class AlbumController extends Controller
             $rating[$album->getId()] = $albumRating;
         }
 
-        return $this->render('AlbumBundle:Default:index.html.twig', [
+        $response = $this->render('AlbumBundle:Default:index.html.twig', [
             "albums" => $albums,
             "rating" => $rating
         ]);
+
+
+        return $response;
     }
 
     /**
