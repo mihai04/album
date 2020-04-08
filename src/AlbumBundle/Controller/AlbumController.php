@@ -34,6 +34,9 @@ class AlbumController extends Controller
     const TRACK_TIME_FORMAT = '%02d:%02d';
 
     /** @const string  */
+    const LAST_FM_API_KEY = "f63ac290937d369e1ac20dceab124169";
+
+    /** @const string  */
     const INDICES = 'indices';
 
     /** @const string  */
@@ -103,13 +106,10 @@ class AlbumController extends Controller
             $rating[$album->getId()] = $albumRating;
         }
 
-        $response = $this->render('AlbumBundle:Default:index.html.twig', [
+        return $this->render('AlbumBundle:Default:index.html.twig', [
             "albums" => $albums,
             "rating" => $rating
         ]);
-
-
-        return $response;
     }
 
     /**
@@ -157,13 +157,15 @@ class AlbumController extends Controller
                     return $this->redirect($this->generateUrl('add_album'));
                 }
 
-                $albumResult = $this->lastFMService->getAlbumInfo($album->getTitle(),  $album->getArtist());
+                $albumResult = $this->lastFMService->getAlbumInfo($album->getTitle(),  $album->getArtist(),
+                    self::LAST_FM_API_KEY);
                 AlbumHelper::populateAlbum($albumResult, $album);
 
                 /** @var Track $track */
                 foreach ($tracks as $track) {
                     try {
-                        $tracksResults = $this->lastFMService->getTrackInfo($album->getArtist(), $track->getTrackName());
+                        $tracksResults = $this->lastFMService->getTrackInfo($album->getArtist(), $track->getTrackName(),
+                            self::LAST_FM_API_KEY);
                         if (array_key_exists('track', $tracksResults)) {
 
                             if (array_key_exists('duration', $tracksResults['track'])) {

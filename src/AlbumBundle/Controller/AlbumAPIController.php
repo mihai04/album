@@ -309,10 +309,10 @@ class AlbumAPIController extends FOSRestController
                     Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
-//            return $this->handleView($this->view($album, Response::HTTP_CREATED));
-            return $this->handleView($this->view($album, Response::HTTP_CREATED)->setLocation(
-                $this->generateUrl('view_reviews_by_album', ['id' => $album->getId()])
-            ));
+            return $this->handleView($this->view($album, Response::HTTP_CREATED));
+//            return $this->handleView($this->view($album, Response::HTTP_CREATED)->setLocation(
+//                $this->generateUrl('view_reviews_by_album', ['id' => $album->getId()])
+//            ));
 
         } else {
             return $this->handleView($this->view($form, Response::HTTP_BAD_REQUEST));
@@ -405,7 +405,7 @@ class AlbumAPIController extends FOSRestController
         /* @var Album $album */
         $album = $em->getRepository(Album::class)->find($id);
         if (!$album) {
-            return new JsonResponse([self::ERROR => 'Album not found'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([self::ERROR => 'Album with identifier [' . $id . '] not found.'], Response::HTTP_NOT_FOUND);
         }
 
         /* @var Album $updateAlbum */
@@ -611,6 +611,7 @@ class AlbumAPIController extends FOSRestController
                 Response::HTTP_INTERNAL_SERVER_ERROR]);
         }
 
-        return $this->handleView($this->view($album, Response::HTTP_OK));
+        return $this->handleView($this->view(['success' => 'Successfully removed album with id [' . $id . '].'],
+            Response::HTTP_OK));
     }
 }

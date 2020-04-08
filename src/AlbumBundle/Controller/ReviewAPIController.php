@@ -186,8 +186,8 @@ class ReviewAPIController extends FOSRestController
             $review = $em->getRepository(Review::class)->getReviewByAlbum($slug, $id);
             // check if album exists
             if(!$review) {
-                return new JsonResponse([self::ERROR => 'Review with identifier [' . $id .'] was not found!'],
-                    Response::HTTP_NOT_FOUND);
+                return new JsonResponse([self::ERROR => 'Review with identifier [' . $id .'] was not found for album  with id ['.
+                    $slug . '].'], Response::HTTP_NOT_FOUND);
             }
 
             return $this->handleView($this->view($review, Response::HTTP_OK));
@@ -287,9 +287,12 @@ class ReviewAPIController extends FOSRestController
 
         // validate POST data against the form requirements
         if (!$form->isValid()) {
+
+            return $this->handleView($this->view($form, Response::HTTP_BAD_REQUEST));
+
             // the form is not valid and thereby return a status code of 400
-            return new JsonResponse([self::ERROR => 'Invalid data given! Check the API documentation for parameters 
-            constraints.'], Response::HTTP_BAD_REQUEST);
+//            return new JsonResponse([self::ERROR => 'Invalid data given! Check the API documentation for
+// parameters  constraints.'], Response::HTTP_BAD_REQUEST);
         }
 
         try {
@@ -308,7 +311,11 @@ class ReviewAPIController extends FOSRestController
                 Response::HTTP_INTERNAL_SERVER_ERROR]);
         }
 
-        return $this->handleView($this->view($review, Response::HTTP_CREATED));
+          return $this->handleView($this->view($review, Response::HTTP_CREATED));
+
+//        return $this->handleView($this->view(null, Response::HTTP_CREATED)->setLocation(
+//            $this->generateUrl('api_reviews_get_review', ['id' => $review->getId()])
+//        ));
     }
 
     /**
@@ -400,8 +407,7 @@ class ReviewAPIController extends FOSRestController
 
         if($review->getReviewer() !== $currentUser && !in_array('ROLE_ADMIN', $currentUser->getRoles())) {
             return new JsonResponse([self::ERROR => 'Forbidden action you are not the owner of this review or you 
-            do not have admin rights!'],
-                Response::HTTP_FORBIDDEN);
+            do not have admin rights!'], Response::HTTP_FORBIDDEN);
         }
 
         /* @var Review $updateReview */
@@ -420,9 +426,12 @@ class ReviewAPIController extends FOSRestController
 
         // validate PUT data against the form requirements
         if (!$form->isValid()) {
+
+            return $this->handleView($this->view($form, Response::HTTP_BAD_REQUEST));
+
             // the form is not valid and thereby return a status code of 400
-            return new JsonResponse([self::ERROR => 'Invalid data given! Check the API documentation for parameters 
-            constraints.'], Response::HTTP_BAD_REQUEST);
+//            return new JsonResponse([self::ERROR => 'Invalid data given! Check the API documentation for parameters
+//            constraints.'], Response::HTTP_BAD_REQUEST);
         }
 
         if ($form->isValid()) {
@@ -452,7 +461,11 @@ class ReviewAPIController extends FOSRestController
                     Response::HTTP_INTERNAL_SERVER_ERROR]);
             }
 
-            return $this->handleView($this->view($review, Response::HTTP_CREATED));
+//        return $this->handleView($this->view(null, Response::HTTP_CREATED)->setLocation(
+//            $this->generateUrl('api_reviews_get_review', ['id' => $review->getId()])
+//        ));
+
+            return $this->handleView($this->view($review, Response::HTTP_OK));
         }
         else {
             return $this->handleView($this->view($form, Response::HTTP_BAD_REQUEST));

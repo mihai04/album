@@ -115,8 +115,12 @@ class LastFMController extends Controller
             $this->updateEntitiesCommand();
             $this->addFlash('success', 'Album '. $album->getTitle() .' was successfully created.');
 
-        } catch (\Exception $e) {
-
+        }
+        catch (\Exception $e) {
+            if ($e->getPrevious()->getCode() === '23000') {
+                return $this->render('AlbumBundle:Default:index.html.twig',
+                    ['error' => 'A valid, unique, non-existing ISRC is required']);
+            }
             return $this->render('AlbumBundle:Default:index.html.twig', ['error' => $e->getMessage()]);
         }
 

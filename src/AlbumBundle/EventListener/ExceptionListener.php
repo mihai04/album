@@ -9,7 +9,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 
 /**
@@ -52,11 +55,28 @@ class ExceptionListener implements EventSubscriberInterface
 
         } else {
 
-            $message = sprintf(
-                'Error: %s with code: %s',
-                $exception->getMessage(),
-                $exception->getCode()
-            );
+            if ($exception instanceof NotFoundHttpException) {
+                $message = sprintf(
+                    'Error: %s with code: %s.',
+                    $exception->getMessage(),
+                    Response::HTTP_NOT_FOUND
+                );
+            }
+            else if ($exception->getPrevious() instanceof MethodNotAllowedException) {
+                $message = sprintf(
+                    'Error: %s with code: %s.',
+                    $exception->getMessage(),
+                    Response::HTTP_METHOD_NOT_ALLOWED
+                );
+            }
+            else {
+                $message = sprintf(
+                    'Error: %s with code: %s.',
+                    $exception->getMessage(),
+                    $exception->getCode()
+                );
+            }
+
 
             $response = new Response();
             $response->setContent($message);

@@ -278,7 +278,7 @@ class OldReviewAPIController extends FOSRestController
                     Response::HTTP_INTERNAL_SERVER_ERROR]);
             }
 
-            return $this->handleView($this->view($review, Response::HTTP_CREATED));
+            return $this->handleView($this->view($review, Response::HTTP_OK));
         }
         else {
             return $this->handleView($this->view($form, Response::HTTP_BAD_REQUEST));
