@@ -16,7 +16,7 @@ class SkiddleService implements APIConsume
     const API_VERSION = "api/v1/";
 
     /** @const string */
-    const EVENTS = "/events/search/";
+    const EVENTS = "events/search/";
 
     /** @const description */
     const DEFAULT_DESCRIPTION = 1;

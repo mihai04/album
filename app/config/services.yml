@@ -31,6 +31,12 @@ services:
         tags:
             - { name: twig.extension }
 
+#    app.twig_img_extension:
+#        class: AlbumBundle\Twig\Extension\FileExtension
+#        public: false
+#        tags:
+#            - { name: twig.extension }
+
     SearchBundle\:
         resource: '../../src/SearchBundle/*'
         # you can exclude directories or files

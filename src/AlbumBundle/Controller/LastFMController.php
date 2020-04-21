@@ -230,6 +230,7 @@ class LastFMController extends Controller
                 foreach ($sortAscTracks as $entry) {
                     array_push($chartArray, $entry);
                 }
+                array_pop($chartArray);
 
                 $bar->getData()->setArrayToDataTable($chartArray);
                 $bar->getOptions()->setTitle('Trending Tracks:')->setFontSize(26);

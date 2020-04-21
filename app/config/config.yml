@@ -17,7 +17,7 @@ parameters:
     tracks_limit: 10
     reviews_limit: 10
     trending_tracks_limit: 6
-    skiddle_limit: 5
+    skiddle_limit: 10
     napster_tracks_limit: 6
     default_limit: 10
     skiddle_event: FEST

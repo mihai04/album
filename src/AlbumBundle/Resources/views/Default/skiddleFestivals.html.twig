@@ -21,7 +21,8 @@
                         <div class="row col-sm-12">
                             {% if festival.largeimageurl is defined %}
                             <div class="col-sm-5">
-                                    <img alt="{{ festival.largeimageurl }}" src="{{ festival.largeimageurl }}"/>
+                                    <img alt="{{ festival.largeimageurl }}"
+                                         src="{{ festival.largeimageurl }}"/>
                             </div>
                             {% endif %}
                             {% if festival.venue is defined %}
@@ -87,11 +88,13 @@
                             <p><b>Artists present:</b></p>
                             <ul class="row">
                             {% for artist in festival.artists %}
+                                {% if artist is defined %}
                                 <div class="col-sm-6">
                                     {% if artist.name is defined %}
                                         <li>{{ artist.name }}</li>
                                     {% endif %}
                                 </div>
+                                {% endif %}
                             {% endfor %}
                             </ul>
                         {% else %}

@@ -92,7 +92,10 @@ class SkiddleController extends Controller
                     }
 
                     if (array_key_exists('largeimageurl', $skiddleFestival)) {
-                        $festival['largeimageurl'] = $skiddleFestival['largeimageurl'];
+                        $headers=get_headers($skiddleFestival['largeimageurl']);
+                        if (stripos($headers[0],"200 OK")) {
+                            $festival['largeimageurl'] = $skiddleFestival['largeimageurl'];
+                        }
                     }
 
                     if (array_key_exists('link', $skiddleFestival)) {
@@ -121,7 +124,6 @@ class SkiddleController extends Controller
 
                     $artists = [];
                     if (array_key_exists('artists', $skiddleFestival)) {
-
                         $artist = [];
                         foreach ($skiddleFestival['artists'] as $skiddleartist) {
                             if (array_key_exists('artistid', $skiddleartist)) {
@@ -138,15 +140,15 @@ class SkiddleController extends Controller
                         }
                     }
 
-                    if (!empty($artists)) {
+                    if (isset($artists)) {
                         $festival['artists'] = $artists;
                     }
 
-                    if (!empty($festival)) {
+                    if (isset($festival)) {
                         $festivals[] = $festival;
                     }
 
-                    if (!empty($festivalCalendarEntry)) {
+                    if (isset($festivalCalendarEntry)) {
                         $festivalCalendars[] = $festivalCalendarEntry;
                     }
                 }

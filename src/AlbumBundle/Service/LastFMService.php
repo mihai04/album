@@ -35,7 +35,7 @@ class LastFMService implements APIConsume
             // Base URI is used with relative requests
             'base_uri' => self::LAST_FM_API,
             // the default time out
-            'timeout' => 2.0,
+            'timeout' => 2.5,
             'default' => [
                 //returns a response even if there is a failure on the server
                 'exceptions' => false,

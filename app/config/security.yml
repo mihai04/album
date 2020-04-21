@@ -69,3 +69,4 @@ security:
         - { path: ^/admin, role: ROLE_ADMIN }
         - { path: ^/edit_album, role: ROLE_ADMIN }
         - { path: ^/api/v1, role: IS_AUTHENTICATED_FULLY }
+        - { path: ^/clients, roles: IS_AUTHENTICATED_ANONYMOUSLY }
