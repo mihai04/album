@@ -233,7 +233,7 @@ class AlbumAPIController extends FOSRestController
      * @param Request $request
      * @return JsonResponse|Response
      */
-    public function postAlbumAction(Request $request)
+    public function postAlbumsAction(Request $request)
     {
         /** @var Album $album */
         $album = new Album();
@@ -573,7 +573,7 @@ class AlbumAPIController extends FOSRestController
      * @param $id
      * @return JsonResponse|Response
      */
-    public function deleteAlbumAction($id)
+    public function deleteAlbumsAction($id)
     {
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();

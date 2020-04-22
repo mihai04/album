@@ -253,7 +253,7 @@ class ReviewAPIController extends FOSRestController
      * @param $slug
      * @return JsonResponse|Response
      */
-    public function postReviewAction(Request $request, $slug) {
+    public function postReviewsAction(Request $request, $slug) {
 
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -529,7 +529,7 @@ class ReviewAPIController extends FOSRestController
                 Response::HTTP_NOT_FOUND));
         }
 
-        if($review->getReviewer() !== $user && !in_array($user, $user->getRoles())) {
+        if($review->getReviewer() !== $user && !in_array('ROLE_ADMIN', $user->getRoles())) {
             return new JsonResponse([self::ERROR => 'Forbidden action you are not the owner of this review!'],
                 Response::HTTP_FORBIDDEN);
         }

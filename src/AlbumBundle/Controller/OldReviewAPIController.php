@@ -329,7 +329,7 @@ class OldReviewAPIController extends FOSRestController
                 Response::HTTP_NOT_FOUND));
         }
 
-        if($review->getReviewer() !== $user && !in_array($user, $user->getRoles())) {
+        if($review->getReviewer() !== $user && !in_array('ROLE_ADMIN', $user->getRoles())) {
             return new JsonResponse([self::ERROR => 'Forbidden action you are not the owner of this review!'],
                 Response::HTTP_FORBIDDEN);
         }
